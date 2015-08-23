@@ -1,0 +1,1 @@
+select * from bill where addr_1 in ( select addr_1 from bill group by addr_1 having count(*)>1)
