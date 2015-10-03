@@ -18,10 +18,15 @@ import java.net.MalformedURLException;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 
+
+
+
+import javax.swing.table.TableRowSorter;
 
 import net.sf.jcarrierpigeon.WindowPosition;
 import net.sf.jtelegraph.Telegraph;
@@ -51,8 +56,12 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-public class Vrnt_db extends JFrame implements ActionListener {
+public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 
 	/**
 	 * @param args
@@ -68,7 +77,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 	JLabel addr_line_11, addr_line_21, city1, addr_line_12, addr_line_22, city2, addr_line_13, addr_line_23, city3;
 	
 	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no;
-	JComboBox don_type, payment_mode;
+	JComboBox don_type, payment_mode;	
 	JLabel no_p1, name_p1, add_p1, ph_p1, amt_p1, no_p2, name_p2, add_p2, ph_p2, amt_p2, no_p3, name_p3, add_p3, ph_p3, amt_p3;
 	JTextField num_p1, cand_nam_p1,cand_ph_p1, cand_amt_p1, num_p2, cand_nam_p2, cand_ph_p2, cand_amt_p2, num_p3, cand_nam_p3, cand_ph_p3, cand_amt_p3;
 	JTextField addr_11, addr_21, city_town1, addr_12, addr_22, city_town2, addr_13, addr_23, city_town3;
@@ -92,6 +101,8 @@ public class Vrnt_db extends JFrame implements ActionListener {
 	JMenuItem exit = new JMenuItem("Exit");
 	JMenuItem pdf = new JMenuItem("Generate Pdf");
 	JMenuItem refresh = new JMenuItem("Refresh");
+	JMenuItem search = new JMenuItem("Find");
+	JMenuItem saveStatus = new JMenuItem("Save Status");
 	JMenu bill = new JMenu("Bill");
 	JMenuItem cancel = new JMenuItem("Cancel Payment");
 	JMenuItem statement = new JMenuItem("Statement");
@@ -100,16 +111,24 @@ public class Vrnt_db extends JFrame implements ActionListener {
 	JMenu help = new JMenu("Help");
 	JMenuItem about = new JMenuItem("About");
 	JButton view = new JButton("Refresh");
-	DefaultTableModel model = new DefaultTableModel();
+	DefaultTableModel model = new DefaultTableModel(){
+		public boolean isCellEditable(int row, int column){
+			return false;
+		}
+	};
 	DefaultTableModel print_mod = new DefaultTableModel();
 	JTable edit_table = new JTable(model);
+	TableRowSorter sorter;
 	JScrollPane jsp;
 	Dimension dim;
+	HashMap status = new HashMap();
 	JToolBar view_tool = new JToolBar();
 	ImageIcon import_img = new ImageIcon(this.getClass().getResource("import.png"));
 	ImageIcon export_img = new ImageIcon(this.getClass().getResource("export.png"));
 	ImageIcon refresh_img = new ImageIcon(this.getClass().getResource("refresh.png"));
 	ImageIcon pdf_img = new ImageIcon(this.getClass().getResource("pdf.png"));
+	ImageIcon find_img = new ImageIcon(this.getClass().getResource("find.png"));
+	ImageIcon save_img = new ImageIcon(this.getClass().getResource("save.png"));
 	ImageIcon about_img = new ImageIcon(this.getClass().getResource("about.png"));
 	ImageIcon exit_img = new ImageIcon(this.getClass().getResource("exit.png"));
 	ImageIcon cancel_img = new ImageIcon(this.getClass().getResource("cancel.png"));
@@ -149,7 +168,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		tab_pane.addTab("New Entry", new_panel);
 		tab_pane.addTab("View", view_panel);
 		tab_pane.addTab("Update", edit_panel);
-		tab_pane.addTab("Billing", bill_panel);
+		tab_pane.addTab("Billing", bill_panel);		
 		panel.add(tab_pane, BorderLayout.CENTER);
 		//interior();
 		//add(panel);
@@ -164,7 +183,9 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		export.setMnemonic(KeyEvent.VK_E);
 		exit.setMnemonic(KeyEvent.VK_X);
 		pdf.setMnemonic(KeyEvent.VK_P);
+		search.setMnemonic(KeyEvent.VK_F);
 		refresh.setMnemonic(KeyEvent.VK_R);
+		saveStatus.setMnemonic(KeyEvent.VK_S);
 		cancel.setMnemonic(KeyEvent.VK_C);
 		statement.setMnemonic(KeyEvent.VK_S);
 		
@@ -185,6 +206,14 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		pdf.setIcon(pdf_img);
 		pdf.addActionListener(this);
 		pdf.setAccelerator(KeyStroke.getKeyStroke('P', ActionEvent.CTRL_MASK));
+		search.addActionListener(this);
+		search.setIcon(find_img);
+		search.setAccelerator(KeyStroke.getKeyStroke('F', ActionEvent.CTRL_MASK));
+		file.add(search);
+		saveStatus.addActionListener(this);
+		saveStatus.setIcon(save_img);
+		saveStatus.setAccelerator(KeyStroke.getKeyStroke('S', ActionEvent.CTRL_MASK));
+		file.add(saveStatus);
 		file.add(exit);
 		exit.setIcon(exit_img);
 		exit.addActionListener(this);
@@ -226,8 +255,18 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		city_town1 = new JTextField(15);
 		cand_ph_p1 = new JTextField(15);
 		cand_amt_p1 = new JTextField(15);
+		
 		save = new JButton("Save");
 		reset = new JButton("Reset");	
+		
+		cand_amt_p1.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if(ke.getKeyCode() == KeyEvent.VK_ENTER){
+					save.doClick();					
+					cand_amt_p1.transferFocus();
+				}
+			}
+		});
 		
 		//cand_add_p1.setLineWrap(true);
 		//cand_add_p1.setWrapStyleWord(true);
@@ -244,8 +283,9 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		cand_amt_p1.setBorder(border);
 		save.addActionListener(this);
 		reset.addActionListener(this);
-		save.setDefaultCapable(true);
-		getRootPane().setDefaultButton(save);
+		
+//		save.setDefaultCapable(true);
+//		getRootPane().setDefaultButton(save);
 		c.insets = new Insets(15, 15, 10, 10);
 		
 		c.gridx = 0; c.gridy = 0; 
@@ -358,13 +398,16 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		//view_panel.add(view_tool);
 		//view.addActionListener(this);
 		//print.addActionListener(this);
-		
-		
+					
+		sorter = new TableRowSorter<DefaultTableModel>(model);
+		edit_table.setRowSorter(sorter);
+		edit_table.addMouseListener(this);
 		edit_table.setRowHeight(30);
 		Font ff = new Font("Arial", Font.PLAIN, 16);
 		edit_table.setFont(ff);
 		edit_table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
-		edit_table.setEnabled(false);
+		
+//		edit_table.setEnabled(false);
 		//edit_table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		try {
 			Class.forName("org.h2.Driver");
@@ -387,13 +430,15 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			//String st = "create table if not exists details(no int, name varchar(50), address varchar(200))";
 			String st = "select * from details";
 			ResultSet rs = stm.executeQuery(st);
-			model.addColumn("NS NO");
-			model.addColumn("Name");
+			model.addColumn("NS NO");			
+			model.addColumn("Name");			
 			model.addColumn("Address Line 1");
 			model.addColumn("Address Line 2");
 			model.addColumn("City");
 			model.addColumn("Phone Num");
 			model.addColumn("Amount");
+			model.addColumn("Select");
+			
 		/*	while (rs.next()){
 				String no = rs.getString(1);
 				String nam = rs.getString(2);
@@ -413,10 +458,11 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
         
-        jsp = new JScrollPane(edit_table);
+        jsp = new JScrollPane(edit_table);        
         view_panel.add(jsp);
         
 	}
+	
 	
 	void view_tab_data(){
 		
@@ -435,21 +481,36 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			String city1 = rs.getString(5);
 			String num1 = rs.getString(6);
 			Float amount = rs.getFloat(7);
-			model.addRow(new Object[] {no, nam, addr1, addr2, city1, num1, amount});
+			String status = rs.getString(8);
+//			edit_table.getColumnModel().getColumn(7).setCellRenderer(new checkBoxRenderer("unselect"));
+			model.addRow(new Object[] {no, nam, addr1, addr2, city1, num1, amount, status});
 			
 		}
-		edit_table.getColumnModel().getColumn(0).setMaxWidth(100);
-		edit_table.getColumnModel().getColumn(1).setMaxWidth(200);
-		edit_table.getColumnModel().getColumn(2).setMaxWidth(400);
-		edit_table.getColumnModel().getColumn(3).setMaxWidth(350);
-		edit_table.getColumnModel().getColumn(4).setMaxWidth(200);
-		edit_table.getColumnModel().getColumn(5).setMaxWidth(100);
-		edit_table.getColumnModel().getColumn(6).setMaxWidth(100);
+//		edit_table.getColumnModel().getColumn(0).setMaxWidth(100);
+//		edit_table.getColumnModel().getColumn(1).setMaxWidth(200);
+//		edit_table.getColumnModel().getColumn(2).setMaxWidth(400);
+//		edit_table.getColumnModel().getColumn(3).setMaxWidth(350);
+//		edit_table.getColumnModel().getColumn(4).setMaxWidth(200);
+//		edit_table.getColumnModel().getColumn(5).setMaxWidth(100);
+//		edit_table.getColumnModel().getColumn(6).setMaxWidth(100);
 		((JLabel)edit_table.getDefaultRenderer(String.class)).setHorizontalAlignment(JLabel.LEFT);
+		
 	}
 		catch(Exception e){
 			System.err.print(e);
 		}
+	}
+	
+	class checkBoxRenderer extends DefaultTableCellRenderer{
+				
+		public Component getTableCellRendererComponent(JTable table,Object value, boolean isSelected,boolean hasFocus, int row, int column)
+	    {
+			JCheckBox check = new JCheckBox();			
+			
+			return check;
+	    }
+		
+		
 	}
 	
 	void edit_interior(){
@@ -476,6 +537,25 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		edit = new JButton("Update");
 		delete = new JButton("Delete");
 		reset = new JButton("Reset");
+		
+		num_p3.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if(ke.getKeyCode() == KeyEvent.VK_ENTER){
+					find.doClick();
+					num_p3.transferFocus();
+				}
+			}
+		});
+		
+		cand_amt_p3.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if(ke.getKeyCode() == KeyEvent.VK_ENTER){
+					edit.doClick();
+					cand_amt_p3.transferFocus();
+				}
+			}
+		});
+		
 		//cand_add_p3.setLineWrap(true);
 		//cand_add_p3.setWrapStyleWord(true);
 		edit_panel.setLayout(new GridBagLayout());
@@ -635,6 +715,33 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		retrive.addActionListener(this);
 		proceed.addActionListener(this);
 		reset1.addActionListener(this);
+		
+		num_p2.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if(ke.getKeyCode() == KeyEvent.VK_ENTER){
+					retrive.doClick();
+					num_p2.transferFocus();
+				}
+			}
+		});
+		
+		cand_amt_p2.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if((payment_mode.getSelectedIndex() == 0) && (ke.getKeyCode() == KeyEvent.VK_ENTER)){
+					proceed.doClick();
+					cand_amt_p2.transferFocus();
+				}
+			}
+		});
+		
+		branch_nam.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if((payment_mode.getSelectedIndex() != 0) && (ke.getKeyCode() == KeyEvent.VK_ENTER)){
+					proceed.doClick();
+					branch_nam.transferFocus();
+				}
+			}
+		});
 		
 		//cand_add_p2.setLineWrap(true);
 		//cand_add_p2.setWrapStyleWord(true);
@@ -804,7 +911,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		try {
 			stm = conn.createStatement();
 			
-			String st = "create table if not exists details(no varchar(10) primary key, name varchar(100), addr_1 varchar(150), addr_2 varchar(100), city varchar(100), phone_num varchar(20), amount double)";
+			String st = "create table if not exists details(no varchar(10) primary key, name varchar(100), addr_1 varchar(150), addr_2 varchar(100), city varchar(100), phone_num varchar(20), amount double, status varchar(10))";
 			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), name varchar(100), addr_1 varchar(150), addr_2 varchar(100), city varchar(100), type_donatn varchar(10), amt double, pay_mode varchar(10), chqno number(20), issue_date varchar(10), bank varchar(100), branch varchar(100), status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
@@ -1026,7 +1133,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		        Connection conn = DriverManager.
 		            getConnection("jdbc:h2:~/vrnt", "sa", "");
 		        Statement stm = conn.createStatement();
-		        String st = "select * from details";
+		        String st = "select * from details where status = 'Selected'";
 		        ResultSet rs = stm.executeQuery(st);
 		        PdfContentByte canvas = writer.getDirectContentUnder();
 		        while(rs.next()){
@@ -1072,6 +1179,73 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			//JOptionPane.showMessageDialog(null, "Pdf generated successfully...", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} 
 		
+		else if(e.getSource() == search){
+			tab_pane.setSelectedIndex(1);
+			String nameFilter = JOptionPane.showInputDialog(null, "Enter Name to Find");
+			if(nameFilter != null){
+				RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)"+nameFilter, 1);
+			
+				sorter.setRowFilter(rowFilter);
+			}
+			
+		}
+		
+		else if(e.getSource() == saveStatus){
+			tab_pane.setSelectedIndex(1);
+			
+//			for(Object key : status.keySet()){
+//			System.out.println(key + " : "+ status.get(key));
+//		}
+			if(status.size() == 0){
+				Telegraph tele = new Telegraph("Warning", "No Changes to made...", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);
+				TelegraphQueue quee = new TelegraphQueue();
+				quee.add(tele);
+			} else{	
+				
+				Statement stm = null;
+				Connection conn = null;
+				try{
+					Class.forName("org.h2.Driver");
+			        conn = DriverManager.
+			            getConnection("jdbc:h2:~/vrnt", "sa", "");
+			        stm = conn.createStatement();
+				}
+				catch(Exception e1){
+					System.err.println(e1);
+				}
+				
+				Iterator it = status.entrySet().iterator();
+				try{
+					while(it.hasNext()){
+						Map.Entry pair = (Map.Entry)it.next();
+						
+						String st = "update details set status = "+"'"+pair.getValue()+"'"+" where no = "+"'"+pair.getKey()+"'";
+					    stm.executeUpdate(st);
+					    						
+						it.remove();
+					}
+					
+					//clear the hashmap dictionary
+					status.clear();
+					
+					model.setRowCount(0);
+					view_tab_data();
+					
+					Telegraph tele = new Telegraph("Success", "Operations Completed successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+					TelegraphQueue quee = new TelegraphQueue();
+					quee.add(tele);
+					
+				} catch(Exception e1){
+					Telegraph tele = new Telegraph("Error", "Some Problem occured. Try Again Later...", TelegraphType.NOTIFICATION_ERROR, WindowPosition.BOTTOMRIGHT, 4000);
+					TelegraphQueue quee = new TelegraphQueue();
+					quee.add(tele);
+					System.err.println(e1);
+					
+				}
+			
+			}
+		}
+		
 		else if (e.getActionCommand().equals("Exit")){
 			System.exit(1);
 		}
@@ -1080,9 +1254,14 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Content created by vignesh c", "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 		
-		if (e.getActionCommand().equals("Find")){
+		if (e.getSource() == find){
 			Statement stm = null;
 			Connection conn = null;
+			if(num_p3.getText().length() == 0){
+				Telegraph tele = new Telegraph("Warning", "Ns Number Can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);
+    			TelegraphQueue que = new TelegraphQueue();
+    			que.add(tele);
+			} else{
 			try{
 				Class.forName("org.h2.Driver");
 		        conn = DriverManager.
@@ -1137,6 +1316,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			} catch(Exception e6){
 				System.err.println(e6);
 				
+			}
 			}
 			
 		} 
@@ -1252,6 +1432,11 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		if (e.getActionCommand().equals("Retrive")){
 			Statement stm = null;
 			Connection conn = null;
+			if(num_p2.getText().length() == 0){
+				Telegraph tele = new Telegraph("Warning", "Ns Number Can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				TelegraphQueue quee = new TelegraphQueue();
+				quee.add(tele);
+			} else{
 			try{
 				Class.forName("org.h2.Driver");
 		        conn = DriverManager.
@@ -1289,7 +1474,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		        	} 
 		        	else{
 		        		//System.out.println("not found");
-		        		Telegraph tele = new Telegraph("Error", "Entrie not found...", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+		        		Telegraph tele = new Telegraph("Error", "Entrie not found...", TelegraphType.NOTIFICATION_ERROR, WindowPosition.BOTTOMRIGHT, 4000);				
 						TelegraphQueue quee = new TelegraphQueue();
 						quee.add(tele);
 		        		//JOptionPane.showMessageDialog(null, "Entrie not found...", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1300,6 +1485,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			} catch(Exception e6){
 				System.err.println(e6);
 				
+			}
 			}
 		}
 		if (e.getSource().equals(payment_mode)){
@@ -2418,4 +2604,50 @@ public class Vrnt_db extends JFrame implements ActionListener {
 		
 	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+		int row = edit_table.rowAtPoint(e.getPoint());
+		String nsNum = (String)model.getValueAt(row, 0);
+		String select = (String)model.getValueAt(row, 7);
+		if(select.equals("Selected")){
+			model.setValueAt("Deselect", row, 7);
+			select = "Deselect";
+		}
+		else{
+			model.setValueAt("Selected", row, 7);
+			select = "Selected";
+		}
+		
+		status.put(nsNum, select);
+
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 }
