@@ -1349,12 +1349,12 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			} else if(cand_amt_p2.getText().length() == 0){
 				Telegraph tele = new Telegraph("Enter Amount", "Amount can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
-			} else if(payment_mode.getSelectedIndex() != 0) {
-				if (payment_num.getText().length() == 0){
+			} else if((payment_mode.getSelectedIndex() != 0) && (payment_num.getText().length() == 0)) {
 					Telegraph tele = new Telegraph("Enter Cheque/D.D No.", "Cheque/D.D number can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 					que.add(tele);
-				} 
-			} else {
+													
+			} else {				
+				
 				try {
 					Class.forName("org.h2.Driver");
 				} catch (ClassNotFoundException e1) {
@@ -1983,7 +1983,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 				//		table.addCell(new Phrase("Bank"));
 				//		table.addCell(new Phrase("Branch"));
 						
-						table.setHeaderRows(9);
+						//table.setHeaderRows(9);
 						double cashtot=0, chqtot=0, ddtot=0, total, amt;
 			        while(rs.next()){
 			        	
@@ -1995,8 +1995,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			        	// table.addCell(new Phrase(rs.getString(6), n));
 			        	// table.addCell(new Phrase(rs.getString(7), n));
 			        	 table.addCell(new Phrase(rs.getString(5)+"\n"+rs.getString(6)+"\n"+rs.getString(7), n));
-			        	
-			        	
+			        				        	
 			        	
 			        	 table.addCell(new Phrase(rs.getString(8), n));
 			        	// System.out.println(rs.getString(1)+aa);
@@ -2022,7 +2021,8 @@ public class Vrnt_db extends JFrame implements ActionListener {
 			        total = cashtot+chqtot+ddtot;
 			        try {
 			        	 doc.add(new Phrase("Statement From "+startdate+" To "+endate));
-		        		 doc.add(table);
+		        		 
+			        	 doc.add(table);
 		        		 PdfPCell e1 = new PdfPCell(new Phrase("\0"));
 							e1.setColspan(2);
 							e1.setBorder(0);
@@ -2161,6 +2161,7 @@ public class Vrnt_db extends JFrame implements ActionListener {
 				File s = null;
 				try {
 					s = File.createTempFile("vrnt_bill", ".pdf");
+					
 				} catch (IOException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
