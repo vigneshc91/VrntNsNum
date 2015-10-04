@@ -2608,20 +2608,23 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
-		int row = edit_table.rowAtPoint(e.getPoint());
-		String nsNum = (String)model.getValueAt(row, 0);
-		String select = (String)model.getValueAt(row, 7);
-		if(select.equals("Selected")){
-			model.setValueAt("Deselect", row, 7);
-			select = "Deselect";
-		}
-		else{
-			model.setValueAt("Selected", row, 7);
-			select = "Selected";
-		}
 		
-		status.put(nsNum, select);
-
+		int col = edit_table.columnAtPoint(e.getPoint());
+		if(col == 7){
+			int row = edit_table.rowAtPoint(e.getPoint());
+			String nsNum = (String)model.getValueAt(row, 0);
+			String select = (String)model.getValueAt(row, 7);
+			if(select.equals("Selected")){
+				model.setValueAt("Deselect", row, 7);
+				select = "Deselect";
+			}
+			else{
+				model.setValueAt("Selected", row, 7);
+				select = "Selected";
+			}
+			
+			status.put(nsNum, select);
+		}
 		
 	}
 
