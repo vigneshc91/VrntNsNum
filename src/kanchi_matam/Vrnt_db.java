@@ -1042,7 +1042,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        // add application code here
 		        try {
 					Statement stm = conn.createStatement();
-					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+"'"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+city_town1.getText()+"' ,"+" '"+cand_ph_p1.getText()+"',"+cand_amt_p1.getText()+")";
+					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+"'"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+city_town1.getText()+"' ,"+" '"+cand_ph_p1.getText()+"',"+cand_amt_p1.getText()+", 'Selected')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "Saved successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -2611,15 +2611,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		int col = edit_table.columnAtPoint(e.getPoint());
 		if(col == 7){
-			int row = edit_table.rowAtPoint(e.getPoint());
-			String nsNum = (String)model.getValueAt(row, 0);
-			String select = (String)model.getValueAt(row, 7);
+			int row = edit_table.rowAtPoint(e.getPoint());			
+			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
+			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 7).toString();
+			
 			if(select.equals("Selected")){
-				model.setValueAt("Deselect", row, 7);
+				
+				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 7);
 				select = "Deselect";
 			}
 			else{
-				model.setValueAt("Selected", row, 7);
+				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 7);
 				select = "Selected";
 			}
 			
