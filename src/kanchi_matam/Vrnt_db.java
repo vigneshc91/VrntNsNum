@@ -74,13 +74,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JPanel bill_panel = new JPanel();
 	JTabbedPane tab_pane = new JTabbedPane();
 	JLabel donation_type, pay_mode, pay_num, dated, bank_nam, branch, date, receipt;
-	JLabel addr_line_11, addr_line_21, city1, addr_line_12, addr_line_22, city2, addr_line_13, addr_line_23, city3;
+	JLabel addr_line_11, addr_line_21, area1, city1, pin_code1, addr_line_12, addr_line_22, area2, city2, pin_code2, addr_line_13, addr_line_23, area3, city3, pin_code3;
 	
 	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no;
 	JComboBox don_type, payment_mode;	
-	JLabel no_p1, name_p1, add_p1, ph_p1, amt_p1, no_p2, name_p2, add_p2, ph_p2, amt_p2, no_p3, name_p3, add_p3, ph_p3, amt_p3;
-	JTextField num_p1, cand_nam_p1,cand_ph_p1, cand_amt_p1, num_p2, cand_nam_p2, cand_ph_p2, cand_amt_p2, num_p3, cand_nam_p3, cand_ph_p3, cand_amt_p3;
-	JTextField addr_11, addr_21, city_town1, addr_12, addr_22, city_town2, addr_13, addr_23, city_town3;
+	JLabel no_p1, initial_p1, name_p1, add_p1, ph_p1, email_p1, amt_p1, no_p2, initial_p2, name_p2, add_p2, ph_p2, email_p2, amt_p2, no_p3, initial_p3, name_p3, add_p3, ph_p3, email_p3, amt_p3;
+	JTextField num_p1, cand_initial_p1, cand_nam_p1, cand_ph_p1, cand_email_p1, cand_amt_p1, num_p2, cand_initial_p2, cand_nam_p2, cand_ph_p2, cand_email_p2, cand_amt_p2, num_p3, cand_initial_p3, cand_nam_p3, cand_ph_p3, cand_email_p3, cand_amt_p3;
+	JTextField addr_11, addr_21, area_1, city_town1, pin_code_1, addr_12, addr_22, area_2, city_town2, pin_code_2, addr_13, addr_23, area_3, city_town3, pin_code_3;
 	
 	//JTextArea cand_add_p1, cand_add_p2, cand_add_p3;
 	JButton save;
@@ -137,6 +137,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	ImageIcon rece_img = new ImageIcon(this.getClass().getResource("pay.png"));
 	//ImageIcon header = new ImageIcon(this.getClass().getResource("header.png"));
 	Font f;
+	
+	Validator validator = new Validator();
+	
 	Vrnt_db(){
 		super("VRNT");
 		dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -165,10 +168,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		view_interior();
 		edit_interior();
 		bill_interior();
-		tab_pane.addTab("New Entry", new_panel);
+		tab_pane.addTab("New Entry", new JScrollPane(new_panel));
 		tab_pane.addTab("View", view_panel);
-		tab_pane.addTab("Update", edit_panel);
-		tab_pane.addTab("Billing", bill_panel);		
+		tab_pane.addTab("Update", new JScrollPane(edit_panel));
+		tab_pane.addTab("Billing", new JScrollPane(bill_panel));		
 		panel.add(tab_pane, BorderLayout.CENTER);
 		//interior();
 		//add(panel);
@@ -242,18 +245,27 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		name_p1 = new JLabel("Name");
 		//add_p1 = new JLabel("Address");
+		initial_p1 = new JLabel("Initial");
 		addr_line_11 = new JLabel("Address Line 1");
 		addr_line_21 = new JLabel("Address Line 2");
+		area1 = new JLabel("Area");
 		city1 = new JLabel("City");
+		pin_code1 = new JLabel("Pin Code");
 		ph_p1 = new JLabel("Phone Num");
+		email_p1 = new JLabel("Email");
 		amt_p1 = new JLabel("Amount");
+		
 		num_p1 = new JTextField(15);
+		cand_initial_p1 = new JTextField(15);
 		cand_nam_p1 = new JTextField(15);
 		//cand_add_p1 = new JTextArea(4, 15);
 		addr_11 = new JTextField(15);
 		addr_21 = new JTextField(15);
+		area_1 = new JTextField(15);
 		city_town1 = new JTextField(15);
+		pin_code_1 = new JTextField(15);
 		cand_ph_p1 = new JTextField(15);
+		cand_email_p1 = new JTextField(15);
 		cand_amt_p1 = new JTextField(15);
 		
 		save = new JButton("Save");
@@ -274,12 +286,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		GridBagConstraints c = new GridBagConstraints();
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		num_p1.setBorder(border);
+		cand_initial_p1.setBorder(border);
 		cand_nam_p1.setBorder(border);
 		addr_11.setBorder(border);
 		addr_21.setBorder(border);
+		area_1.setBorder(border);
 		city_town1.setBorder(border);
+		pin_code_1.setBorder(border);
 		//cand_add_p1.setBorder(border);
 		cand_ph_p1.setBorder(border);
+		cand_email_p1.setBorder(border);
 		cand_amt_p1.setBorder(border);
 		save.addActionListener(this);
 		reset.addActionListener(this);
@@ -292,34 +308,62 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		new_panel.add(no_p1, c);
 		c.gridx = 1; c.gridy = 0;
 		new_panel.add(num_p1, c);
-		c.gridx = 0; c.gridy = 1;
-		new_panel.add(name_p1, c);
+		
+		c.gridx = 0; c.gridy = 1; 
+		new_panel.add(initial_p1, c);
 		c.gridx = 1; c.gridy = 1;
-		new_panel.add(cand_nam_p1, c);
+		new_panel.add(cand_initial_p1, c);
+		
 		c.gridx = 0; c.gridy = 2;
-		new_panel.add(addr_line_11, c);
+		new_panel.add(name_p1, c);
 		c.gridx = 1; c.gridy = 2;
-		new_panel.add(addr_11, c);
+		new_panel.add(cand_nam_p1, c);
+		
 		c.gridx = 0; c.gridy = 3;
-		new_panel.add(addr_line_21, c);
-		c.gridx = 1; c.gridy = 3;
-		new_panel.add(addr_21, c);
+		new_panel.add(addr_line_11, c);
+		c.gridx = 1; c.gridy = 3;		
+		new_panel.add(addr_11, c);
+		
 		c.gridx = 0; c.gridy = 4;
-		new_panel.add(city1, c);
+		new_panel.add(addr_line_21, c);
 		c.gridx = 1; c.gridy = 4;
+		new_panel.add(addr_21, c);
+		
+		c.gridx = 0; c.gridy = 5; 
+		new_panel.add(area1, c);
+		c.gridx = 1; c.gridy = 5;
+		new_panel.add(area_1, c);
+		
+		
+		c.gridx = 0; c.gridy = 6;
+		new_panel.add(city1, c);
+		c.gridx = 1; c.gridy = 6;
 		new_panel.add(city_town1, c);
 		//panel.add(new JScrollPane(cand_add, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-		c.gridx = 0; c.gridy = 5;
-		new_panel.add(ph_p1, c);
-		c.gridx = 1; c.gridy = 5;
-		new_panel.add(cand_ph_p1, c);
-		c.gridx = 0; c.gridy = 6;
-		new_panel.add(amt_p1, c);
-		c.gridx = 1; c.gridy = 6;
-		new_panel.add(cand_amt_p1, c);
+		
+		c.gridx = 0; c.gridy = 7;
+		new_panel.add(pin_code1, c);
 		c.gridx = 1; c.gridy = 7;
+		new_panel.add(pin_code_1, c);
+		
+		c.gridx = 0; c.gridy = 8;
+		new_panel.add(ph_p1, c);
+		c.gridx = 1; c.gridy = 8;
+		new_panel.add(cand_ph_p1, c);
+		
+		c.gridx = 0; c.gridy = 9;
+		new_panel.add(email_p1, c);
+		c.gridx = 1; c.gridy = 9;
+		new_panel.add(cand_email_p1, c);
+		
+		c.gridx = 0; c.gridy = 10;
+		new_panel.add(amt_p1, c);
+		c.gridx = 1; c.gridy = 10;
+		new_panel.add(cand_amt_p1, c);
+		
+		c.gridx = 1; c.gridy = 11;
 		new_panel.add(save, c);
-		c.gridx = 2; c.gridy = 7;
+		c.gridx = 2; c.gridy = 11;
 		new_panel.add(reset, c);
 	/*	cand_add_p1.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
@@ -516,20 +560,29 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	void edit_interior(){
 		
 		no_p3 = new JLabel("Enter NS No");
+		initial_p3 = new JLabel("Initial");
 		name_p3 = new JLabel("Name");
 		//add_p3 = new JLabel("Address");
 		addr_line_13 = new JLabel("Address Line 1");
 		addr_line_23 = new JLabel("Address Line 2");
+		area3 = new JLabel("Area");
 		city3 = new JLabel("City");
+		pin_code3 = new JLabel("Pin Code");
 		ph_p3 = new JLabel("Phone Num");
+		email_p3 = new JLabel("Email");
 		amt_p3 = new JLabel("Amount");
+		
 		num_p3 = new JTextField(15);
+		cand_initial_p3 = new JTextField(15);
 		cand_nam_p3 = new JTextField(15);
 		//cand_add_p3 = new JTextArea(4, 15);
 		addr_13 = new JTextField(15);
 		addr_23 = new JTextField(15);
+		area_3 = new JTextField(15);
 		city_town3 = new JTextField(15);
+		pin_code_3 = new JTextField(15);
 		cand_ph_p3 = new JTextField(15);
+		cand_email_p3 = new JTextField(15);
 		cand_amt_p3 = new JTextField(15);
 		//save = new JButton("Save");
 		//reset = new JButton("Reset");
@@ -562,18 +615,27 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		GridBagConstraints c = new GridBagConstraints();
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		num_p3.setBorder(border);
+		cand_initial_p3.setBorder(border);
 		cand_nam_p3.setBorder(border);
 		//cand_add_p3.setBorder(border);
 		addr_13.setBorder(border);
 		addr_23.setBorder(border);
+		area_3.setBorder(border);
 		city_town3.setBorder(border);
+		pin_code_3.setBorder(border);
 		cand_ph_p3.setBorder(border);
+		cand_email_p3.setBorder(border);
 		cand_amt_p3.setBorder(border);
+		
 		cand_nam_p3.setEditable(false);
+		cand_initial_p3.setEditable(false);
 		addr_13.setEditable(false);
 		addr_23.setEditable(false);
+		area_3.setEditable(false);
 		city_town3.setEditable(false);
+		pin_code_3.setEditable(false);
 		cand_ph_p3.setEditable(false);
+		cand_email_p3.setEditable(false);
 		//cand_add_p3.setEditable(false);
 		cand_amt_p3.setEditable(false);
 		//save.addActionListener(this);
@@ -582,43 +644,70 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		edit.addActionListener(this);
 		delete.addActionListener(this);
 		reset.addActionListener(this);
+		
 		c.gridx = 0; c.gridy = 0; c.insets = new Insets(15, 15, 10, 10);
 		edit_panel.add(no_p3, c);
 		c.gridx = 1; c.gridy = 0;
 		edit_panel.add(num_p3, c);
 		c.gridx = 2; c.gridy = 0;
 		edit_panel.add(find, c);
+		
 		c.gridx = 0; c.gridy = 1;
-		edit_panel.add(name_p3, c);
+		edit_panel.add(initial_p3, c);
 		c.gridx = 1; c.gridy = 1;
-		edit_panel.add(cand_nam_p3, c);
+		edit_panel.add(cand_initial_p3, c);
+		
 		c.gridx = 0; c.gridy = 2;
-		edit_panel.add(addr_line_13, c);
+		edit_panel.add(name_p3, c);
 		c.gridx = 1; c.gridy = 2;
-		edit_panel.add(addr_13, c);
+		edit_panel.add(cand_nam_p3, c);
+		
 		c.gridx = 0; c.gridy = 3;
-		edit_panel.add(addr_line_23, c);
+		edit_panel.add(addr_line_13, c);
 		c.gridx = 1; c.gridy = 3;
-		edit_panel.add(addr_23, c);
+		edit_panel.add(addr_13, c);
+		
 		c.gridx = 0; c.gridy = 4;
-		edit_panel.add(city3, c);
+		edit_panel.add(addr_line_23, c);
 		c.gridx = 1; c.gridy = 4;
+		edit_panel.add(addr_23, c);
+		
+		c.gridx = 0; c.gridy = 5;
+		edit_panel.add(area3, c);
+		c.gridx = 1; c.gridy = 5;
+		edit_panel.add(area_3, c);
+		
+		c.gridx = 0; c.gridy = 6;
+		edit_panel.add(city3, c);
+		c.gridx = 1; c.gridy = 6;
 		edit_panel.add(city_town3, c);
 		
-		//panel.add(new JScrollPane(cand_add, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-		c.gridx = 0; c.gridy = 5;
-		edit_panel.add(ph_p3, c);
-		c.gridx = 1; c.gridy = 5;
-		edit_panel.add(cand_ph_p3, c);
-		c.gridx = 0; c.gridy = 6;
-		edit_panel.add(amt_p3, c);
-		c.gridx = 1; c.gridy = 6;
-		edit_panel.add(cand_amt_p3, c);
+		c.gridx = 0; c.gridy = 7;
+		edit_panel.add(pin_code3, c);
 		c.gridx = 1; c.gridy = 7;
+		edit_panel.add(pin_code_3, c);
+		
+		//panel.add(new JScrollPane(cand_add, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+		c.gridx = 0; c.gridy = 8;
+		edit_panel.add(ph_p3, c);
+		c.gridx = 1; c.gridy = 8;
+		edit_panel.add(cand_ph_p3, c);
+		
+		c.gridx = 0; c.gridy = 9;
+		edit_panel.add(email_p3, c);
+		c.gridx = 1; c.gridy = 9;
+		edit_panel.add(cand_email_p3, c);
+		
+		c.gridx = 0; c.gridy = 10;
+		edit_panel.add(amt_p3, c);
+		c.gridx = 1; c.gridy = 10;
+		edit_panel.add(cand_amt_p3, c);
+		
+		c.gridx = 1; c.gridy = 11;
 		edit_panel.add(edit, c);
-		c.gridx = 2; c.gridy = 7;
+		c.gridx = 2; c.gridy = 11;
 		edit_panel.add(delete, c);
-		c.gridx = 3; c.gridy = 7;
+		c.gridx = 3; c.gridy = 11;
 		edit_panel.add(reset, c);
 	/*	cand_add_p3.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
@@ -680,26 +769,37 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		});
 		receipt = new JLabel("Receipt No");
 		no_p2 = new JLabel("Enter NS no");
-		
+		initial_p2 = new JLabel("Initial");
 		name_p2 = new JLabel("Name");
 		//add_p2 = new JLabel("Address");
 		addr_line_12 = new JLabel("Address Line 1");
 		addr_line_22 = new JLabel("Address Line 2");
+		area2 = new JLabel("Area");
 		city2 = new JLabel("City");
+		pin_code2 = new JLabel("Pin Code");
+		ph_p2 = new JLabel("Phone Num");
+		email_p2 = new JLabel("Email");
 		amt_p2 = new JLabel("Amount");
+		
 		donation_type = new JLabel("Type of Donation");
 		pay_mode = new JLabel("Mode of Payment");
 		pay_num = new JLabel("cheque/D.D.No");
 		dated = new JLabel("Dated of Issue");
 		bank_nam = new JLabel("Name of the Bank");
 		branch = new JLabel("Branch");
+		
 		receipt_no = new JTextField(15);
 		num_p2 = new JTextField(15);
+		cand_initial_p2 = new JTextField(15);
 		cand_nam_p2 = new JTextField(15);
 		//cand_add_p2 = new JTextArea(4, 15);
 		addr_12 = new JTextField(15);
 		addr_22 = new JTextField(15);
+		area_2 = new JTextField(15);
 		city_town2 = new JTextField(15);
+		pin_code_2 = new JTextField(15);
+		cand_ph_p2 = new JTextField(15);
+		cand_email_p2 = new JTextField(15);
 		cand_amt_p2 = new JTextField(15);
 		payment_num = new JTextField(15);
 		bank_name = new JTextField(15);
@@ -750,11 +850,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		receipt_no.setBorder(border);
 		num_p2.setBorder(border);
+		cand_initial_p2.setBorder(border);
 		cand_nam_p2.setBorder(border);
 		//cand_add_p2.setBorder(border);
 		addr_12.setBorder(border);
 		addr_22.setBorder(border);
+		area_2.setBorder(border);
 		city_town2.setBorder(border);
+		pin_code_2.setBorder(border);
+		cand_ph_p2.setBorder(border);
+		cand_email_p2.setBorder(border);
 		cand_amt_p2.setBorder(border);
 		payment_num.setBorder(border);
 		bank_name.setBorder(border);
@@ -765,64 +870,104 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		c.insets = new Insets(10, 10, 10, 10);
 		c.gridx = 15; c.gridy = 0;
 		bill_panel.add(date, c);
+		
 		c.gridx = 0; c.gridy = 1;
 		bill_panel.add(receipt, c);
 		c.gridx = 1; c.gridy = 1;
 		bill_panel.add(receipt_no, c);
+		
 		c.gridx = 0; c.gridy = 2;
 		bill_panel.add(no_p2, c);
 		c.gridx = 1; c.gridy = 2;
 		bill_panel.add(num_p2, c);
 		c.gridx = 2; c.gridy = 2;
 		bill_panel.add(retrive, c);
+		
 		c.gridx = 0; c.gridy = 3;
-		bill_panel.add(name_p2, c);
+		bill_panel.add(initial_p2, c);
 		c.gridx = 1; c.gridy = 3;
-		bill_panel.add(cand_nam_p2, c);
+		bill_panel.add(cand_initial_p2, c);
+		
+		
 		c.gridx = 0; c.gridy = 4;
-		bill_panel.add(addr_line_12, c);
+		bill_panel.add(name_p2, c);
 		c.gridx = 1; c.gridy = 4;
-		bill_panel.add(addr_12, c);
+		bill_panel.add(cand_nam_p2, c);
+		
 		c.gridx = 0; c.gridy = 5;
-		bill_panel.add(addr_line_22, c);
+		bill_panel.add(addr_line_12, c);
 		c.gridx = 1; c.gridy = 5;
-		bill_panel.add(addr_22, c);
+		bill_panel.add(addr_12, c);
+		
 		c.gridx = 0; c.gridy = 6;
-		bill_panel.add(city2, c);
+		bill_panel.add(addr_line_22, c);
 		c.gridx = 1; c.gridy = 6;
-		bill_panel.add(city_town2, c);
-		//panel.add(new JScrollPane(cand_add, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+		bill_panel.add(addr_22, c);
+		
 		c.gridx = 0; c.gridy = 7;
-		bill_panel.add(donation_type, c);
+		bill_panel.add(area2, c);
 		c.gridx = 1; c.gridy = 7;
-		bill_panel.add(don_type, c);
+		bill_panel.add(area_2, c);
+		
 		c.gridx = 0; c.gridy = 8;
-		bill_panel.add(amt_p2, c);
+		bill_panel.add(city2, c);
 		c.gridx = 1; c.gridy = 8;
-		bill_panel.add(cand_amt_p2, c);
+		bill_panel.add(city_town2, c);
+		
 		c.gridx = 0; c.gridy = 9;
-		bill_panel.add(pay_mode, c);
+		bill_panel.add(pin_code2, c);
 		c.gridx = 1; c.gridy = 9;
-		bill_panel.add(payment_mode, c);
+		bill_panel.add(pin_code_2, c);
+		
 		c.gridx = 0; c.gridy = 10;
-		bill_panel.add(pay_num, c);
+		bill_panel.add(ph_p2, c);
 		c.gridx = 1; c.gridy = 10;
-		bill_panel.add(payment_num, c);
+		bill_panel.add(cand_ph_p2, c);
+		
 		c.gridx = 0; c.gridy = 11;
-		bill_panel.add(dated, c);
+		bill_panel.add(email_p2, c);
 		c.gridx = 1; c.gridy = 11;
-		bill_panel.add(issue_dat, c);
+		bill_panel.add(cand_email_p2, c);
+		
+		//panel.add(new JScrollPane(cand_add, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 		c.gridx = 0; c.gridy = 12;
-		bill_panel.add(bank_nam, c);
+		bill_panel.add(donation_type, c);
 		c.gridx = 1; c.gridy = 12;
-		bill_panel.add(bank_name, c);
+		bill_panel.add(don_type, c);
+		
 		c.gridx = 0; c.gridy = 13;
-		bill_panel.add(branch, c);
+		bill_panel.add(amt_p2, c);
 		c.gridx = 1; c.gridy = 13;
-		bill_panel.add(branch_nam, c);
+		bill_panel.add(cand_amt_p2, c);
+		
+		c.gridx = 0; c.gridy = 14;
+		bill_panel.add(pay_mode, c);
 		c.gridx = 1; c.gridy = 14;
+		bill_panel.add(payment_mode, c);
+		
+		c.gridx = 0; c.gridy = 15;
+		bill_panel.add(pay_num, c);
+		c.gridx = 1; c.gridy = 15;
+		bill_panel.add(payment_num, c);
+		
+		c.gridx = 0; c.gridy = 16;
+		bill_panel.add(dated, c);
+		c.gridx = 1; c.gridy = 16;
+		bill_panel.add(issue_dat, c);
+		
+		c.gridx = 0; c.gridy = 17;
+		bill_panel.add(bank_nam, c);
+		c.gridx = 1; c.gridy = 17;
+		bill_panel.add(bank_name, c);
+		
+		c.gridx = 0; c.gridy = 18;
+		bill_panel.add(branch, c);
+		c.gridx = 1; c.gridy = 18;
+		bill_panel.add(branch_nam, c);
+		
+		c.gridx = 1; c.gridy = 19;
 		bill_panel.add(proceed, c);
-		c.gridx = 2; c.gridy = 14;
+		c.gridx = 2; c.gridy = 19;
 		bill_panel.add(reset1, c);
 		
 		if (payment_mode.getSelectedItem().equals("Cash")){
@@ -911,7 +1056,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		try {
 			stm = conn.createStatement();
 			
-			String st = "create table if not exists details(no varchar(10) primary key, name varchar(100), addr_1 varchar(150), addr_2 varchar(100), city varchar(100), phone_num varchar(20), amount double, status varchar(10))";
+			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10))";
 			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), name varchar(100), addr_1 varchar(150), addr_2 varchar(100), city varchar(100), type_donatn varchar(10), amt double, pay_mode varchar(10), chqno number(20), issue_date varchar(10), bank varchar(100), branch varchar(100), status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
@@ -1004,12 +1149,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		else if (e.getActionCommand().equals("Save")){
 			TelegraphQueue que = new TelegraphQueue();
-			if(num_p1.getText().length() == 0){
+			if(validator.IsValidNsNumber(num_p1.getText())){
 				Telegraph tele = new Telegraph("Enter NS No.", "NS Number can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "NS number can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 				num_p1.setFocusable(true);
-			} else if (cand_nam_p1.getText().length() == 0){
+			} else if(validator.IsValidString(cand_initial_p1.getText())){
+				Telegraph tele = new Telegraph("Enter Initial", "Initial can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+				//JOptionPane.showMessageDialog(null, "NS number can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
+				cand_initial_p1.setFocusable(true);
+			}else if (validator.IsValidString(cand_nam_p1.getText())){
 					Telegraph tele = new Telegraph("Enter Name", "Name can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 					que.add(tele);
 					//JOptionPane.showMessageDialog(null, "Name can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1024,7 +1174,14 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					que.add(tele);
 					//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 					city_town1.setFocusable(true);
-			} else {
+			} else if (pin_code_1.getText().length() != 0 && validator.IsVaidPinCode(pin_code_1.getText())){
+				Telegraph tele = new Telegraph("Invalid Pin Code", "Pin Code format is invalid", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
+				city_town1.setFocusable(true);
+			}
+			
+			else {
 				try {
 					Class.forName("org.h2.Driver");
 				} catch (ClassNotFoundException e1) {
@@ -1082,11 +1239,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		else if (e.getActionCommand().equals("Reset")){
 			num_p1.setText("");
+			cand_initial_p1.setText("");
 			cand_nam_p1.setText("");
 			addr_11.setText("");
 			addr_21.setText("");
+			area_1.setText("");
 			city_town1.setText("");
+			pin_code_1.setText("");
 			cand_ph_p1.setText("");
+			cand_email_p1.setText("");
 			cand_amt_p1.setText("");
 		} 
 		
@@ -1412,20 +1573,30 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		else if (e.getActionCommand().equals("Reset")){
 			num_p3.setText("");
+			cand_initial_p3.setText("");
 			cand_nam_p3.setText("");
 			//cand_add_p3.setText("");
 			addr_13.setText("");
 	        addr_23.setText("");
+	        area_3.setText("");
 	        city_town3.setText("");
+	        pin_code_3.setText("");
 	        cand_ph_p3.setText("");
+	        cand_email_p3.setText("");
 			cand_amt_p3.setText("");
+			
 			num_p3.setEditable(true);
+			cand_initial_p3.setEditable(false);
 			cand_nam_p3.setEditable(false);
+			
 			//cand_add_p3.setEditable(false);
 			 addr_13.setEditable(false);
 		     addr_23.setEditable(false);
+		     area_3.setEditable(false);
 		     city_town3.setEditable(false);
+		     pin_code_3.setEditable(false);
 		     cand_ph_p3.setEditable(false);
+		     cand_email_p3.setEditable(false);
 			cand_amt_p3.setEditable(false);
 		}
 		
@@ -1506,10 +1677,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		if (e.getSource() == reset1){
 			num_p2.setEditable(true);
 			num_p2.setText("");
+			cand_initial_p2.setText("");
 			cand_nam_p2.setText("");
 			addr_12.setText("");
 			addr_22.setText("");
+			area_2.setText("");
 			city_town2.setText("");
+			pin_code_2.setText("");
+			cand_ph_p2.setText("");
+			cand_email_p2.setText("");
 			don_type.setSelectedIndex(0);
 			cand_amt_p2.setText("");
 			payment_mode.setSelectedIndex(0);
