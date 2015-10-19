@@ -1199,7 +1199,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        // add application code here
 		        try {
 					Statement stm = conn.createStatement();
-					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+"'"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+city_town1.getText()+"' ,"+" '"+cand_ph_p1.getText()+"',"+cand_amt_p1.getText()+", 'Selected')";
+					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"',"+cand_amt_p1.getText()+"'"+cand_email_p1.getText()+"', 'Selected', 'Selected')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "Saved successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -1216,11 +1216,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					}
 				}
 				num_p1.setText("");
+				cand_initial_p1.setText("");
 				cand_nam_p1.setText("");
 				addr_11.setText("");
 				addr_21.setText("");
+				area_1.setText("");
 				city_town1.setText("");
+				pin_code_1.setText("");
 				cand_ph_p1.setText("");
+				cand_email_p1.setText("");
 				cand_amt_p1.setText("");
 				try {
 					conn.close();
@@ -1445,22 +1449,29 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        	//System.out.println(s+d);
 		        	//if (s.equals(d)){
 		        		//System.out.println("in");
-		        		cand_nam_p3.setText(rs.getString(2));
-		        		addr_13.setText(rs.getString(3));
-		        		addr_23.setText(rs.getString(4));
-		        		city_town3.setText(rs.getString(5));
-		        		
-		        		cand_ph_p3.setText(rs.getString(6));
-		        		Double f = rs.getDouble(7);
+		        		cand_initial_p3.setText(rs.getString(2));
+		        		cand_nam_p3.setText(rs.getString(3));
+		        		addr_13.setText(rs.getString(4));
+		        		addr_23.setText(rs.getString(5));
+		        		area_3.setText(rs.getString(6));
+		        		city_town3.setText(rs.getString(7));
+		        		pin_code_3.setText(rs.getString(8));
+		        		cand_ph_p3.setText(rs.getString(9));
+		        		cand_email_p3.setText(rs.getString(10));
+		        		Double f = rs.getDouble(11);
 		        		//System.out.println(rs.getString(2));
 		        		cand_amt_p3.setText(f.toString());
 		        		num_p3.setEditable(false);
+		        		cand_initial_p3.setEditable(true);
 		        		cand_nam_p3.setEditable(true);
 		        		//cand_add_p3.setEditable(true);
 		        		addr_13.setEditable(true);
 		        		addr_23.setEditable(true);
+		        		area_3.setEditable(true);
 		        		city_town3.setEditable(true);
+		        		pin_code_3.setEditable(true);
 		        		cand_ph_p3.setEditable(true);
+		        		cand_email_p3.setEditable(true);
 		        		cand_amt_p3.setEditable(true);
 		        		//break;
 		        	} 
@@ -1505,27 +1516,36 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        Connection conn = DriverManager.
 			            getConnection("jdbc:h2:~/vrnt", "sa", "");
 			        Statement stm = conn.createStatement();
-			        String st = "update details set name = "+"'"+cand_nam_p3.getText()+"'"+", "+"addr_1 = "+"'"+addr_13.getText()+"'"+", addr_2 = '"+addr_23.getText()+"', city = '"+city_town3.getText()+"', "+"phone_num = '"+cand_ph_p3.getText()+"', "+"amount = "+cand_amt_p3.getText()+" where no = "+"'"+num_p3.getText()+"'";
+			        String st = "update details set initial = '"+cand_initial_p3.getText()+"', name = '"+cand_nam_p3.getText()+"', "+"addr_1 = "+"'"+addr_13.getText()+"'"+", addr_2 = '"+addr_23.getText()+"', area = '"+area_3.getText()+"', city = '"+city_town3.getText()+"', pin_code = '"+pin_code_3.getText()+"', phone_num = '"+cand_ph_p3.getText()+"', email = '"+cand_email_p3.getText()+"', amount = "+cand_amt_p3.getText()+" where no = "+"'"+num_p3.getText()+"'";
 			        stm.executeUpdate(st);
 			        Telegraph tele = new Telegraph("Success", "Updated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
 					quee.add(tele);
 			        //JOptionPane.showMessageDialog(null, "Updated Successfully...", "Success", JOptionPane.INFORMATION_MESSAGE);
-			        num_p3.setText("");
-			        cand_nam_p3.setText("");
+			        
+					num_p3.setText("");
+					cand_initial_p3.setText("");
+					cand_nam_p3.setText("");
 			       // cand_add_p3.setText("");
 			        addr_13.setText("");
 			        addr_23.setText("");
+			        area_3.setText("");
 			        city_town3.setText("");
+			        pin_code_3.setText("");
 			        cand_ph_p3.setText("");
+			        cand_email_p3.setText("");
 			        cand_amt_p3.setText("");
 			        num_p3.setEditable(true);
+			        cand_initial_p3.setEditable(false);
 			        cand_nam_p3.setEditable(false);
 			        //cand_add_p3.setEditable(false);
 			        addr_13.setEditable(false);
 			        addr_23.setEditable(false);
+			        area_3.setEditable(false);
 			        city_town3.setEditable(false);
+			        pin_code_3.setEditable(false);
 			        cand_ph_p3.setEditable(false);
+			        cand_email_p3.setEditable(false);
 			        cand_amt_p3.setEditable(false);
 				}
 				catch(Exception e2){
@@ -1550,20 +1570,29 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				quee.add(tele);
 		        //JOptionPane.showMessageDialog(null, "Deleted Successfully...", "Success", JOptionPane.INFORMATION_MESSAGE);
 		        num_p3.setText("");
+		        cand_initial_p3.setText("");
 		        cand_nam_p3.setText("");
 		       // cand_add_p3.setText("");
 		        addr_13.setText("");
 		        addr_23.setText("");
+		        area_3.setText("");
+		        area_3.setText("");
 		        city_town3.setText("");
+		        pin_code_3.setText("");
 		        cand_ph_p3.setText("");
+		        cand_email_p3.setText("");
 		        cand_amt_p3.setText("");
 		        num_p3.setEditable(true);
+		        cand_initial_p3.setEditable(false);
 		        cand_nam_p3.setEditable(false);
 		        //cand_add_p3.setEditable(false);
 		        addr_13.setEditable(false);
 		        addr_23.setEditable(false);
+		        area_3.setEditable(false);
 		        city_town3.setEditable(false);
+		        pin_code_3.setEditable(false);
 		        cand_ph_p3.setEditable(false);
+		        cand_email_p3.setEditable(false);
 		        cand_amt_p3.setEditable(false);
 			} catch(Exception e5){
 				System.err.println(e5);
@@ -1630,11 +1659,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        	//System.out.println(s+d);
 		        	//if (s.equals(d)){
 		        		//System.out.println("in");
-		        		cand_nam_p2.setText(rs.getString(2));
-		        		addr_12.setText(rs.getString(3));
-		        		addr_22.setText(rs.getString(4));
-		        		city_town2.setText(rs.getString(5));
-		        		Float f = rs.getFloat(7);
+		        		cand_initial_p2.setText(rs.getString(2));
+		        		cand_nam_p2.setText(rs.getString(3));
+		        		addr_12.setText(rs.getString(4));
+		        		addr_22.setText(rs.getString(5));
+		        		area_2.setText(rs.getString(6));
+		        		city_town2.setText(rs.getString(7));
+		        		pin_code_2.setText(rs.getString(8));
+		        		cand_ph_p2.setText(rs.getString(9));
+		        		cand_email_p2.setText(rs.getString(10));
+		        		Float f = rs.getFloat(11);
 		        		//System.out.println(rs.getString(2));
 		        		//cand_amt_p3.setText(f.toString());
 		        		num_p2.setEditable(false);
