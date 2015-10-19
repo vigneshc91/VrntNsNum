@@ -121,7 +121,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	TableRowSorter sorter;
 	JScrollPane jsp;
 	Dimension dim;
-	HashMap status = new HashMap();
+	HashMap annualReportStatus = new HashMap();
+	HashMap prasadamStatus = new HashMap();
 	JToolBar view_tool = new JToolBar();
 	ImageIcon import_img = new ImageIcon(this.getClass().getResource("import.png"));
 	ImageIcon export_img = new ImageIcon(this.getClass().getResource("export.png"));
@@ -478,10 +479,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			model.addColumn("Name");			
 			model.addColumn("Address Line 1");
 			model.addColumn("Address Line 2");
+			model.addColumn("Area");
 			model.addColumn("City");
-			model.addColumn("Phone Num");
+			model.addColumn("Pin Code");
 			model.addColumn("Amount");
-			model.addColumn("Select");
+			model.addColumn("Annual Report");
+			model.addColumn("Prasadam");
 			
 		/*	while (rs.next()){
 				String no = rs.getString(1);
@@ -519,15 +522,18 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		while (rs.next()){
 			String no = rs.getString(1);
-			String nam = rs.getString(2);
-			String addr1 = rs.getString(3);
-			String addr2 = rs.getString(4);
-			String city1 = rs.getString(5);
-			String num1 = rs.getString(6);
-			Float amount = rs.getFloat(7);
-			String status = rs.getString(8);
+			String nam = rs.getString(3) + " " + rs.getString(2);
+			String addr1 = rs.getString(4);
+			String addr2 = rs.getString(5);
+			String area1 = rs.getString(6);
+			String city1 = rs.getString(7);
+			String pinCode1 = rs.getString(8);
+//			String num1 = rs.getString(6);
+			Float amount = rs.getFloat(11);
+			String annualReport = rs.getString(12);
+			String prasadam = rs.getString(13);
 //			edit_table.getColumnModel().getColumn(7).setCellRenderer(new checkBoxRenderer("unselect"));
-			model.addRow(new Object[] {no, nam, addr1, addr2, city1, num1, amount, status});
+			model.addRow(new Object[] {no, nam, addr1, addr2, area1, city1, pinCode1, amount, annualReport, prasadam});
 			
 		}
 //		edit_table.getColumnModel().getColumn(0).setMaxWidth(100);
@@ -1178,7 +1184,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				Telegraph tele = new Telegraph("Invalid Pin Code", "Pin Code format is invalid", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
-				city_town1.setFocusable(true);
+				pin_code_1.setFocusable(true);
 			}
 			
 			else {
@@ -1361,7 +1367,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 //			for(Object key : status.keySet()){
 //			System.out.println(key + " : "+ status.get(key));
 //		}
-			if(status.size() == 0){
+			if(annualReportStatus.size() == 0 || prasadamStatus.size() == 0){
 				Telegraph tele = new Telegraph("Warning", "No Changes to made...", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);
 				TelegraphQueue quee = new TelegraphQueue();
 				quee.add(tele);
@@ -1379,19 +1385,35 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					System.err.println(e1);
 				}
 				
-				Iterator it = status.entrySet().iterator();
+				Iterator annualReportIterator = annualReportStatus.entrySet().iterator();
+				Iterator prasadamIterator = prasadamStatus.entrySet().iterator();
 				try{
-					while(it.hasNext()){
-						Map.Entry pair = (Map.Entry)it.next();
-						
-						String st = "update details set status = "+"'"+pair.getValue()+"'"+" where no = "+"'"+pair.getKey()+"'";
-					    stm.executeUpdate(st);
-					    						
-						it.remove();
+					if(annualReportStatus.size() != 0){
+						while(annualReportIterator.hasNext()){
+							Map.Entry pair = (Map.Entry)annualReportIterator.next();
+							
+							String st = "update details set annual_report = "+"'"+pair.getValue()+"'"+" where no = "+"'"+pair.getKey()+"'";
+						    stm.executeUpdate(st);
+						    						
+							annualReportIterator.remove();
+						} 
+						//clear the hashmap dictionary
+						annualReportStatus.clear();
+					}
+					if(prasadamStatus.size() != 0){
+						while(prasadamIterator.hasNext()){
+							Map.Entry pair = (Map.Entry)prasadamIterator.next();
+							
+							String st = "update details set prasadam = "+"'"+pair.getValue()+"'"+" where no = "+"'"+pair.getKey()+"'";
+						    stm.executeUpdate(st);
+						    						
+						    prasadamIterator.remove();
+						} 
+						//clear the hashmap dictionary
+						prasadamStatus.clear();
 					}
 					
-					//clear the hashmap dictionary
-					status.clear();
+					
 					
 					model.setRowCount(0);
 					view_tab_data();
@@ -1495,22 +1517,35 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		else if(e.getActionCommand().equals("Update")){
 			TelegraphQueue que = new TelegraphQueue();
-			if (cand_nam_p3.getText().length() == 0){
+			
+			if(validator.IsValidString(cand_initial_p3.getText())){
+				Telegraph tele = new Telegraph("Enter Initial", "Initial can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+				//JOptionPane.showMessageDialog(null, "NS number can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
+				cand_initial_p3.setFocusable(true);
+			}else if (validator.IsValidString(cand_nam_p3.getText())){
 				Telegraph tele = new Telegraph("Enter Name", "Name can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
-				//JOptionPane.showMessageDialog(null, "Name can't be empty", "Error", JOptionPane.ERROR_MESSAGE);
+				//JOptionPane.showMessageDialog(null, "Name can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 				cand_nam_p3.setFocusable(true);
-			}else if(addr_13.getText().length() == 0){
-					Telegraph tele = new Telegraph("Enter Address Line 1", "Address Line 1 can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
-					que.add(tele);
-					//JOptionPane.showMessageDialog(null, "Address can't be empty", "Error", JOptionPane.ERROR_MESSAGE);
-					addr_13.setFocusable(true);
-			} else if(city_town3.getText().length() == 0){
-					Telegraph tele = new Telegraph("Enter City", "City can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
-					que.add(tele);
-					//JOptionPane.showMessageDialog(null, "Address can't be empty", "Error", JOptionPane.ERROR_MESSAGE);
-					city_town3.setFocusable(true);
-			} else {
+			} else if (addr_13.getText().length() == 0){
+				Telegraph tele = new Telegraph("Enter Address", "Address line 1 can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
+				addr_13.setFocusable(true);
+			} else if (city_town3.getText().length() == 0){
+				Telegraph tele = new Telegraph("Enter City", "City can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
+				city_town3.setFocusable(true);
+			} else if (pin_code_3.getText().length() != 0 && validator.IsVaidPinCode(pin_code_3.getText())){
+				Telegraph tele = new Telegraph("Invalid Pin Code", "Pin Code format is invalid", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
+				pin_code_3.setFocusable(true);
+			}
+				
+			 else {
 				try{
 					Class.forName("org.h2.Driver");
 			        Connection conn = DriverManager.
@@ -2820,22 +2855,38 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		
 		int col = edit_table.columnAtPoint(e.getPoint());
-		if(col == 7){
+		if(col == 9){
 			int row = edit_table.rowAtPoint(e.getPoint());			
 			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
-			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 7).toString();
+			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 9).toString();
 			
 			if(select.equals("Selected")){
 				
-				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 7);
+				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 9);
 				select = "Deselect";
 			}
 			else{
-				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 7);
+				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 9);
 				select = "Selected";
 			}
 			
-			status.put(nsNum, select);
+			annualReportStatus.put(nsNum, select);
+		}else if(col == 9){
+			int row = edit_table.rowAtPoint(e.getPoint());			
+			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
+			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 10).toString();
+			
+			if(select.equals("Selected")){
+				
+				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 10);
+				select = "Deselect";
+			}
+			else{
+				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 10);
+				select = "Selected";
+			}
+			
+			prasadamStatus.put(nsNum, select);
 		}
 		
 	}
