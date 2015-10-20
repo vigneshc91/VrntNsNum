@@ -78,8 +78,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	
 	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no;
 	JComboBox don_type, payment_mode;	
-	JLabel no_p1, initial_p1, name_p1, add_p1, ph_p1, email_p1, amt_p1, no_p2, initial_p2, name_p2, add_p2, ph_p2, email_p2, amt_p2, no_p3, initial_p3, name_p3, add_p3, ph_p3, email_p3, amt_p3;
-	JTextField num_p1, cand_initial_p1, cand_nam_p1, cand_ph_p1, cand_email_p1, cand_amt_p1, num_p2, cand_initial_p2, cand_nam_p2, cand_ph_p2, cand_email_p2, cand_amt_p2, num_p3, cand_initial_p3, cand_nam_p3, cand_ph_p3, cand_email_p3, cand_amt_p3;
+	JLabel no_p1, initial_p1, name_p1, add_p1, ph_p1, email_p1, amt_p1, other_ns_num_p1, no_p2, initial_p2, name_p2, add_p2, ph_p2, email_p2, amt_p2, other_ns_num_p2, no_p3, initial_p3, name_p3, add_p3, ph_p3, email_p3, amt_p3, other_ns_num_p3;
+	JTextField num_p1, cand_initial_p1, cand_nam_p1, cand_ph_p1, cand_email_p1, cand_amt_p1, cand_other_ns_num_p1, num_p2, cand_initial_p2, cand_nam_p2, cand_ph_p2, cand_email_p2, cand_amt_p2, cand_other_ns_num_p2, num_p3, cand_initial_p3, cand_nam_p3, cand_ph_p3, cand_email_p3, cand_amt_p3, cand_other_ns_num_p3;
 	JTextField addr_11, addr_21, area_1, city_town1, pin_code_1, addr_12, addr_22, area_2, city_town2, pin_code_2, addr_13, addr_23, area_3, city_town3, pin_code_3;
 	
 	//JTextArea cand_add_p1, cand_add_p2, cand_add_p3;
@@ -255,6 +255,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		ph_p1 = new JLabel("Phone Num");
 		email_p1 = new JLabel("Email");
 		amt_p1 = new JLabel("Amount");
+		other_ns_num_p1 = new JLabel("Other Relatives NS No");
 		
 		num_p1 = new JTextField(15);
 		cand_initial_p1 = new JTextField(15);
@@ -268,15 +269,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		cand_ph_p1 = new JTextField(15);
 		cand_email_p1 = new JTextField(15);
 		cand_amt_p1 = new JTextField(15);
+		cand_other_ns_num_p1 = new JTextField(15);
 		
 		save = new JButton("Save");
 		reset = new JButton("Reset");	
 		
-		cand_amt_p1.addKeyListener(new KeyAdapter(){
+		cand_other_ns_num_p1.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent ke){
 				if(ke.getKeyCode() == KeyEvent.VK_ENTER){
 					save.doClick();					
-					cand_amt_p1.transferFocus();
+					cand_other_ns_num_p1.transferFocus();
 				}
 			}
 		});
@@ -298,6 +300,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		cand_ph_p1.setBorder(border);
 		cand_email_p1.setBorder(border);
 		cand_amt_p1.setBorder(border);
+		cand_other_ns_num_p1.setBorder(border);
 		save.addActionListener(this);
 		reset.addActionListener(this);
 		
@@ -362,9 +365,14 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		c.gridx = 1; c.gridy = 10;
 		new_panel.add(cand_amt_p1, c);
 		
+		c.gridx = 0; c.gridy = 11;
+		new_panel.add(other_ns_num_p1, c);
 		c.gridx = 1; c.gridy = 11;
+		new_panel.add(cand_other_ns_num_p1, c);
+		
+		c.gridx = 1; c.gridy = 12;
 		new_panel.add(save, c);
-		c.gridx = 2; c.gridy = 11;
+		c.gridx = 2; c.gridy = 12;
 		new_panel.add(reset, c);
 	/*	cand_add_p1.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
@@ -530,8 +538,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String pinCode1 = rs.getString(8);
 //			String num1 = rs.getString(6);
 			Float amount = rs.getFloat(11);
-			String annualReport = rs.getString(12);
-			String prasadam = rs.getString(13);
+			String annualReport = rs.getString(13);
+			String prasadam = rs.getString(14);
 //			edit_table.getColumnModel().getColumn(7).setCellRenderer(new checkBoxRenderer("unselect"));
 			model.addRow(new Object[] {no, nam, addr1, addr2, area1, city1, pinCode1, amount, annualReport, prasadam});
 			
@@ -577,6 +585,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		ph_p3 = new JLabel("Phone Num");
 		email_p3 = new JLabel("Email");
 		amt_p3 = new JLabel("Amount");
+		other_ns_num_p3 = new JLabel("Other Relatives NS No");
 		
 		num_p3 = new JTextField(15);
 		cand_initial_p3 = new JTextField(15);
@@ -590,6 +599,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		cand_ph_p3 = new JTextField(15);
 		cand_email_p3 = new JTextField(15);
 		cand_amt_p3 = new JTextField(15);
+		cand_other_ns_num_p3 = new JTextField(15);
+		
 		//save = new JButton("Save");
 		//reset = new JButton("Reset");
 		find = new JButton("Find");
@@ -632,6 +643,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		cand_ph_p3.setBorder(border);
 		cand_email_p3.setBorder(border);
 		cand_amt_p3.setBorder(border);
+		cand_other_ns_num_p3.setBorder(border);
 		
 		cand_nam_p3.setEditable(false);
 		cand_initial_p3.setEditable(false);
@@ -644,6 +656,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		cand_email_p3.setEditable(false);
 		//cand_add_p3.setEditable(false);
 		cand_amt_p3.setEditable(false);
+		cand_other_ns_num_p3.setEditable(false);
 		//save.addActionListener(this);
 		//reset.addActionListener(this);
 		find.addActionListener(this);
@@ -709,11 +722,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		c.gridx = 1; c.gridy = 10;
 		edit_panel.add(cand_amt_p3, c);
 		
+		c.gridx = 0; c.gridy = 11;
+		edit_panel.add(other_ns_num_p3, c);
 		c.gridx = 1; c.gridy = 11;
+		edit_panel.add(cand_other_ns_num_p3, c);
+		
+		c.gridx = 1; c.gridy = 12;
 		edit_panel.add(edit, c);
-		c.gridx = 2; c.gridy = 11;
+		c.gridx = 2; c.gridy = 12;
 		edit_panel.add(delete, c);
-		c.gridx = 3; c.gridy = 11;
+		c.gridx = 3; c.gridy = 12;
 		edit_panel.add(reset, c);
 	/*	cand_add_p3.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
@@ -1155,17 +1173,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		else if (e.getActionCommand().equals("Save")){
 			TelegraphQueue que = new TelegraphQueue();
-			if(validator.IsValidNsNumber(num_p1.getText())){
+			if(!validator.IsValidNsNumber(num_p1.getText())){
 				Telegraph tele = new Telegraph("Enter NS No.", "NS Number can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "NS number can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 				num_p1.setFocusable(true);
-			} else if(validator.IsValidString(cand_initial_p1.getText())){
+			} else if(cand_initial_p1.getText().length() == 0){
 				Telegraph tele = new Telegraph("Enter Initial", "Initial can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "NS number can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 				cand_initial_p1.setFocusable(true);
-			}else if (validator.IsValidString(cand_nam_p1.getText())){
+			}else if (cand_nam_p1.getText().length() == 0){
 					Telegraph tele = new Telegraph("Enter Name", "Name can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 					que.add(tele);
 					//JOptionPane.showMessageDialog(null, "Name can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1180,7 +1198,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					que.add(tele);
 					//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 					city_town1.setFocusable(true);
-			} else if (pin_code_1.getText().length() != 0 && validator.IsVaidPinCode(pin_code_1.getText())){
+			} else if (pin_code_1.getText().length() != 0 && !validator.IsVaidPinCode(pin_code_1.getText())){
 				Telegraph tele = new Telegraph("Invalid Pin Code", "Pin Code format is invalid", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1205,7 +1223,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        // add application code here
 		        try {
 					Statement stm = conn.createStatement();
-					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"',"+cand_amt_p1.getText()+"'"+cand_email_p1.getText()+"', 'Selected', 'Selected')";
+					
+					double amount = 0;
+					if(cand_amt_p1.getText().length() != 0)
+						amount =  Double.parseDouble(cand_amt_p1.getText());
+					
+					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"', '"+cand_email_p1.getText()+"', "+amount+", '"+cand_other_ns_num_p1.getText()+"', 'Selected', 'Selected')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "Saved successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -1232,6 +1255,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				cand_ph_p1.setText("");
 				cand_email_p1.setText("");
 				cand_amt_p1.setText("");
+				cand_other_ns_num_p1.setText("");
 				try {
 					conn.close();
 				} catch (SQLException e1) {
@@ -1259,6 +1283,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			cand_ph_p1.setText("");
 			cand_email_p1.setText("");
 			cand_amt_p1.setText("");
+			cand_other_ns_num_p1.setText("");
 		} 
 		
 		else if (e.getActionCommand().equals("Refresh")){
@@ -1483,6 +1508,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        		Double f = rs.getDouble(11);
 		        		//System.out.println(rs.getString(2));
 		        		cand_amt_p3.setText(f.toString());
+		        		cand_other_ns_num_p3.setText(rs.getString(12));
+		        		
 		        		num_p3.setEditable(false);
 		        		cand_initial_p3.setEditable(true);
 		        		cand_nam_p3.setEditable(true);
@@ -1495,6 +1522,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        		cand_ph_p3.setEditable(true);
 		        		cand_email_p3.setEditable(true);
 		        		cand_amt_p3.setEditable(true);
+		        		cand_other_ns_num_p3.setEditable(true);
 		        		//break;
 		        	} 
 		        	else{
@@ -1516,14 +1544,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		} 
 		
 		else if(e.getActionCommand().equals("Update")){
-			TelegraphQueue que = new TelegraphQueue();
-			
-			if(validator.IsValidString(cand_initial_p3.getText())){
+			TelegraphQueue que = new TelegraphQueue();			
+			if(cand_initial_p3.getText().length() == 0){
 				Telegraph tele = new Telegraph("Enter Initial", "Initial can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "NS number can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 				cand_initial_p3.setFocusable(true);
-			}else if (validator.IsValidString(cand_nam_p3.getText())){
+			}else if (cand_nam_p3.getText().length() == 0){
 				Telegraph tele = new Telegraph("Enter Name", "Name can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "Name can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1538,7 +1565,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
 				city_town3.setFocusable(true);
-			} else if (pin_code_3.getText().length() != 0 && validator.IsVaidPinCode(pin_code_3.getText())){
+			} else if (pin_code_3.getText().length() != 0 && !validator.IsVaidPinCode(pin_code_3.getText())){
 				Telegraph tele = new Telegraph("Invalid Pin Code", "Pin Code format is invalid", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 				//JOptionPane.showMessageDialog(null, "Address can't be empty...", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1551,7 +1578,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        Connection conn = DriverManager.
 			            getConnection("jdbc:h2:~/vrnt", "sa", "");
 			        Statement stm = conn.createStatement();
-			        String st = "update details set initial = '"+cand_initial_p3.getText()+"', name = '"+cand_nam_p3.getText()+"', "+"addr_1 = "+"'"+addr_13.getText()+"'"+", addr_2 = '"+addr_23.getText()+"', area = '"+area_3.getText()+"', city = '"+city_town3.getText()+"', pin_code = '"+pin_code_3.getText()+"', phone_num = '"+cand_ph_p3.getText()+"', email = '"+cand_email_p3.getText()+"', amount = "+cand_amt_p3.getText()+" where no = "+"'"+num_p3.getText()+"'";
+			        String st = "update details set initial = '"+cand_initial_p3.getText()+"', name = '"+cand_nam_p3.getText()+"', "+"addr_1 = "+"'"+addr_13.getText()+"'"+", addr_2 = '"+addr_23.getText()+"', area = '"+area_3.getText()+"', city = '"+city_town3.getText()+"', pincode = '"+pin_code_3.getText()+"', phone_num = '"+cand_ph_p3.getText()+"', email = '"+cand_email_p3.getText()+"', amount = "+cand_amt_p3.getText()+", other_ns_num = '"+cand_other_ns_num_p3.getText()+"' where no = "+"'"+num_p3.getText()+"'";
 			        stm.executeUpdate(st);
 			        Telegraph tele = new Telegraph("Success", "Updated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -1570,6 +1597,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        cand_ph_p3.setText("");
 			        cand_email_p3.setText("");
 			        cand_amt_p3.setText("");
+			        cand_other_ns_num_p3.setText("");
 			        num_p3.setEditable(true);
 			        cand_initial_p3.setEditable(false);
 			        cand_nam_p3.setEditable(false);
@@ -1582,6 +1610,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        cand_ph_p3.setEditable(false);
 			        cand_email_p3.setEditable(false);
 			        cand_amt_p3.setEditable(false);
+			        cand_other_ns_num_p3.setEditable(false);
 				}
 				catch(Exception e2){
 					System.err.println(e2);
@@ -1617,6 +1646,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        cand_ph_p3.setText("");
 		        cand_email_p3.setText("");
 		        cand_amt_p3.setText("");
+		        cand_other_ns_num_p3.setText("");
+		        
 		        num_p3.setEditable(true);
 		        cand_initial_p3.setEditable(false);
 		        cand_nam_p3.setEditable(false);
@@ -1629,6 +1660,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        cand_ph_p3.setEditable(false);
 		        cand_email_p3.setEditable(false);
 		        cand_amt_p3.setEditable(false);
+		        cand_other_ns_num_p3.setEditable(false);
 			} catch(Exception e5){
 				System.err.println(e5);
 			}
@@ -1648,6 +1680,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	        cand_ph_p3.setText("");
 	        cand_email_p3.setText("");
 			cand_amt_p3.setText("");
+			cand_other_ns_num_p3.setText("");
 			
 			num_p3.setEditable(true);
 			cand_initial_p3.setEditable(false);
@@ -1661,7 +1694,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		     pin_code_3.setEditable(false);
 		     cand_ph_p3.setEditable(false);
 		     cand_email_p3.setEditable(false);
-			cand_amt_p3.setEditable(false);
+		     cand_amt_p3.setEditable(false);
+		     cand_other_ns_num_p3.setEditable(false);
 		}
 		
 		if (e.getActionCommand().equals("Retrive")){
@@ -2855,7 +2889,24 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		
 		int col = edit_table.columnAtPoint(e.getPoint());
-		if(col == 9){
+		
+		if(col == 8){
+			int row = edit_table.rowAtPoint(e.getPoint());			
+			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
+			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 8).toString();
+			
+			if(select.equals("Selected")){
+				
+				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 8);
+				select = "Deselect";
+			}
+			else{
+				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 8);
+				select = "Selected";
+			}
+			
+			annualReportStatus.put(nsNum, select);
+		}else if(col == 9){
 			int row = edit_table.rowAtPoint(e.getPoint());			
 			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
 			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 9).toString();
@@ -2867,22 +2918,6 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			}
 			else{
 				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 9);
-				select = "Selected";
-			}
-			
-			annualReportStatus.put(nsNum, select);
-		}else if(col == 9){
-			int row = edit_table.rowAtPoint(e.getPoint());			
-			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
-			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 10).toString();
-			
-			if(select.equals("Selected")){
-				
-				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 10);
-				select = "Deselect";
-			}
-			else{
-				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 10);
 				select = "Selected";
 			}
 			
