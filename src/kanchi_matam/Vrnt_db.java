@@ -73,10 +73,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JPanel edit_panel = new JPanel();
 	JPanel bill_panel = new JPanel();
 	JTabbedPane tab_pane = new JTabbedPane();
-	JLabel donation_type, pay_mode, pay_num, dated, bank_nam, branch, date, receipt;
+	JLabel donation_type, pay_mode, pay_num, dated, bank_nam, branch, date, receipt, bank_recvd;
 	JLabel addr_line_11, addr_line_21, area1, city1, pin_code1, addr_line_12, addr_line_22, area2, city2, pin_code2, addr_line_13, addr_line_23, area3, city3, pin_code3;
 	
-	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no;
+	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no, bank_received;
 	JComboBox don_type, payment_mode;	
 	JLabel no_p1, initial_p1, name_p1, add_p1, ph_p1, email_p1, amt_p1, other_ns_num_p1, no_p2, initial_p2, name_p2, add_p2, ph_p2, email_p2, amt_p2, other_ns_num_p2, no_p3, initial_p3, name_p3, add_p3, ph_p3, email_p3, amt_p3, other_ns_num_p3;
 	JTextField num_p1, cand_initial_p1, cand_nam_p1, cand_ph_p1, cand_email_p1, cand_amt_p1, cand_other_ns_num_p1, num_p2, cand_initial_p2, cand_nam_p2, cand_ph_p2, cand_email_p2, cand_amt_p2, cand_other_ns_num_p2, num_p3, cand_initial_p3, cand_nam_p3, cand_ph_p3, cand_email_p3, cand_amt_p3, cand_other_ns_num_p3;
@@ -749,8 +749,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	public void bill_interior(){
-		String[] pay = {"CORPUS","REVENUE"};
-		String[] acc = {"Cash","Cheque","D.D"};
+		String[] pay = {"CORPUS DONATION", "GENERAL DONATION", "FOREIGN CORPUS", "FOREIGN DONATION", "RENT"};
+		String[] acc = {"CASH","CHQ","A/C TRANSFER"};
 		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date d = new java.util.Date();
@@ -807,10 +807,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		donation_type = new JLabel("Type of Donation");
 		pay_mode = new JLabel("Mode of Payment");
-		pay_num = new JLabel("cheque/D.D.No");
-		dated = new JLabel("Dated of Issue");
-		bank_nam = new JLabel("Name of the Bank");
+		pay_num = new JLabel("cheque/Transfer No");
+		dated = new JLabel("Cheque/Transfer Date");
+		bank_nam = new JLabel("Bank Drawn");
 		branch = new JLabel("Branch");
+		bank_recvd = new JLabel("Bank Received");
 		
 		receipt_no = new JTextField(15);
 		num_p2 = new JTextField(15);
@@ -829,8 +830,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_name = new JTextField(15);
 		branch_nam = new JTextField(15);
 		issue_dat = new JTextField(15);
+		bank_received = new JTextField(15);
 		don_type = new JComboBox(pay);
 		payment_mode = new JComboBox(acc);
+		
 		don_type.addActionListener(this);
 		payment_mode.addActionListener(this);
 		retrive = new JButton("Retrive");
@@ -889,6 +892,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_name.setBorder(border);
 		issue_dat.setBorder(border);
 		branch_nam.setBorder(border);
+		bank_received.setBorder(border);
 		//don_type.setBorder(border);
 		//payment_mode.setBorder(border);
 		c.insets = new Insets(10, 10, 10, 10);
@@ -989,16 +993,22 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		c.gridx = 1; c.gridy = 18;
 		bill_panel.add(branch_nam, c);
 		
+		c.gridx = 0; c.gridy = 19;
+		bill_panel.add(bank_recvd, c);
 		c.gridx = 1; c.gridy = 19;
+		bill_panel.add(bank_received, c);
+		
+		c.gridx = 1; c.gridy = 20;
 		bill_panel.add(proceed, c);
-		c.gridx = 2; c.gridy = 19;
+		c.gridx = 2; c.gridy = 20;
 		bill_panel.add(reset1, c);
 		
-		if (payment_mode.getSelectedItem().equals("Cash")){
+		if (payment_mode.getSelectedItem().equals("CASH")){
 			payment_num.setEditable(false);
 			bank_name.setEditable(false);
 			branch_nam.setEditable(false);
 			issue_dat.setEditable(false);
+			bank_received.setEditable(false);
 		}
 		
 		try{
@@ -1329,25 +1339,53 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        Connection conn = DriverManager.
 		            getConnection("jdbc:h2:~/vrnt", "sa", "");
 		        Statement stm = conn.createStatement();
-		        String st = "select * from details where status = 'Selected'";
+		        String st = "select * from details where annual_report = 'Selected'";
 		        ResultSet rs = stm.executeQuery(st);
 		        PdfContentByte canvas = writer.getDirectContentUnder();
 		        while(rs.next()){
-		        	Phrase h = null;
 		        	
-		        	 if (rs.getString(4) != null && rs.getString(5) != null){
-		        	//para.add(rs.getString(1)+rs.getString(2)+rs.getString(3));
-		        	h = new Phrase("NS NO "+rs.getString(1)+"\n"+rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4)+"\n"+rs.getString(5), n);
-		        	//ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, h, 10, 800-x, 0);
-		        	//x+=10;
+		        	
+		        	String resultAddress = "NS No: "+rs.getString(1)+"\n"+rs.getString(3)+" "+rs.getString(2);
+		        	
+		        	//address line 1 can't be empty so directly append it
+		        	resultAddress += "\n"+rs.getString(4);
+		        	
+		        	//address line 2 can be empty so we must check it before append
+		        	if(rs.getString(5) != null)
+		        		resultAddress += "\n"+rs.getString(5);
+		        	
+		        	//area can also be empty
+		        	if(rs.getString(6) != null)
+		        		resultAddress += "\n"+rs.getString(6);
+		        	
+		        	//city can't be empty anyhow checking for type safety
+		        	if(rs.getString(7) != null)
+		        		resultAddress += "\n"+rs.getString(7);
+		        	
+		        	//pin code can be empty
+		        	if(rs.getString(8) != null)
+		        		resultAddress += "\n"+rs.getString(8);
+		        	
+		        	//phone number can be empty
+		        	if(rs.getString(9) != null)
+		        		resultAddress += "\n"+rs.getString(9);
+		        	
+		        	Phrase h = new Phrase(resultAddress);
+		        	
+		        	/*if (rs.getString(4) != null && rs.getString(5) != null){
+		        		//para.add(rs.getString(1)+rs.getString(2)+rs.getString(3));
+		        		h = new Phrase("NS NO "+rs.getString(1)+"\n"+rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4)+"\n"+rs.getString(5), n);
+		        		//ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, h, 10, 800-x, 0);
+		        	//	x+=10;
 		        	 } else if (rs.getString(4) == null && rs.getString(5) != null) {
 		        		 h = new Phrase("NS NO "+rs.getString(1)+"\n"+rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(5), n);
 		        	 
 		        	 } else if (rs.getString(4) != null && rs.getString(5) == null){
 		        		 h = new Phrase("NS NO "+rs.getString(1)+"\n"+rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4), n);
 		        		 
-		        	 }
-		        	 PdfPCell cell = new PdfPCell(h);
+		        	 }*/
+		        	 
+		        	PdfPCell cell = new PdfPCell(h);
 		        	 cell.setFixedHeight(100f);
 		        	table.addCell(cell);
 		        	
@@ -1763,17 +1801,19 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			}
 		}
 		if (e.getSource().equals(payment_mode)){
-			if (payment_mode.getSelectedItem().equals("Cash")){
+			if (payment_mode.getSelectedItem().equals("CASH")){
 				payment_num.setEditable(false);
 				bank_name.setEditable(false);
 				branch_nam.setEditable(false);
 				issue_dat.setEditable(false);
+				bank_received.setEditable(false);
 			}
 			else {
 				payment_num.setEditable(true);
 				bank_name.setEditable(true);
 				branch_nam.setEditable(true);
 				issue_dat.setEditable(true);
+				bank_received.setEditable(true);
 			}
 		}
 		
@@ -1796,6 +1836,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			issue_dat.setText("");
 			bank_name.setText("");
 			branch_nam.setText("");
+			bank_received.setText("");
 			
 			
 		}
@@ -2115,10 +2156,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			num_p2.setEditable(true);
 			num_p2.setText("");
+			cand_initial_p2.setText("");
 			cand_nam_p2.setText("");
 			addr_12.setText("");
 			addr_22.setText("");
+			area_2.setText("");
 			city_town2.setText("");
+			pin_code_2.setText("");
+			cand_ph_p2.setText("");
+			cand_email_p2.setText("");
 			don_type.setSelectedIndex(0);
 			cand_amt_p2.setText("");
 			payment_mode.setSelectedIndex(0);
@@ -2126,6 +2172,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			issue_dat.setText("");
 			bank_name.setText("");
 			branch_nam.setText("");
+			bank_received.setText("");
 			try{
 				Class.forName("org.h2.Driver");
 	   			Connection conn1=DriverManager.getConnection("jdbc:h2:~/vrnt","sa","");
