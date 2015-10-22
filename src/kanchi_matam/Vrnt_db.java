@@ -1091,7 +1091,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			stm = conn.createStatement();
 			
 			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10))";
-			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), name varchar(100), addr_1 varchar(150), addr_2 varchar(100), city varchar(100), type_donatn varchar(10), amt double, pay_mode varchar(10), chqno number(20), issue_date varchar(10), bank varchar(100), branch varchar(100), status varchar(10))";
+			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno number(30), issue_date varchar(10), bank varchar(100), branch varchar(100), bank_received varchar(100),  status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
 		} catch (SQLException e1) {
@@ -1884,7 +1884,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				}
 		        try {
 					Statement stm = conn.createStatement();
-					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+city_town2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', "+pay_num+", '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', 'cleared'"+")";
+					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', "+pay_num+", '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getText()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					if(num_p2.getText().length() != 0){
 						String st1 = "select amount from details where no = '"+num_p2.getText()+"'";
