@@ -861,11 +861,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			}
 		});
 		
-		branch_nam.addKeyListener(new KeyAdapter(){
+		bank_received.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent ke){
 				if((payment_mode.getSelectedIndex() != 0) && (ke.getKeyCode() == KeyEvent.VK_ENTER)){
 					proceed.doClick();
-					branch_nam.transferFocus();
+					bank_received.transferFocus();
 				}
 			}
 		});
@@ -1416,8 +1416,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		else if(e.getSource() == search){
 			tab_pane.setSelectedIndex(1);
 			String nameFilter = JOptionPane.showInputDialog(null, "Enter Name to Find");
+			int[] ar = {0,1,2,3,4,5,6,7}; 
 			if(nameFilter != null){
-				RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)"+nameFilter, 1);
+				RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)"+nameFilter, ar);
 			
 				sorter.setRowFilter(rowFilter);
 			}
@@ -2341,16 +2342,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        	 table.addCell(new Phrase(rs.getString(1), n));
 			        	 table.addCell(new Phrase(String.valueOf(rs.getDate(2)), n));
 			        	 table.addCell(new Phrase(rs.getString(3), n));
-			        	 table.addCell(new Phrase(rs.getString(4), n));
-			        	 table.addCell(new Phrase(String.valueOf(rs.getInt(7)), n));
-			        	 amt = rs.getDouble(5);
+			        	 table.addCell(new Phrase(rs.getString(5) + rs.getString(4), n));
+			        	 table.addCell(new Phrase(String.valueOf(rs.getInt(16)), n));
+			        	 amt = rs.getDouble(14);
 			        	 table.addCell(new Phrase(String.valueOf(amt), n));
 			        	 String sss = rs.getString(6);
-			        	 if (sss.equals("Cash")){
+			        	 if (sss.equals("CASH")){
 			        		 cashtot += amt;
-			        	 } else if(sss.equals("Cheque")){
+			        	 } else if(sss.equals("CHQ")){
 			        		 chqtot += amt;
-			        	 } else if(sss.equals("D.D")){
+			        	 } else if(sss.equals("A/C TRANSFER")){
 			        		 ddtot += amt;
 			        	 }
 			        	
@@ -2502,24 +2503,24 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        	 table.addCell(new Phrase(rs.getString(1), n));
 			        	 table.addCell(new Phrase(String.valueOf(rs.getDate(2)), n));
 			        	 table.addCell(new Phrase(rs.getString(3), n));
-			        	 table.addCell(new Phrase(rs.getString(4), n));
+			        	 table.addCell(new Phrase(rs.getString(5) + rs.getString(4), n));
 			        	// table.addCell(new Phrase(rs.getString(5), n));
 			        	// table.addCell(new Phrase(rs.getString(6), n));
 			        	// table.addCell(new Phrase(rs.getString(7), n));
-			        	 table.addCell(new Phrase(rs.getString(5)+"\n"+rs.getString(6)+"\n"+rs.getString(7), n));
+			        	 table.addCell(new Phrase(rs.getString(6)+"\n"+rs.getString(7)+"\n"+rs.getString(8)+"\n"+rs.getString(9)+" - "+rs.getString(10), n));
 			        				        	
 			        	
-			        	 table.addCell(new Phrase(rs.getString(8), n));
+			        	 table.addCell(new Phrase(rs.getString(13), n));
 			        	// System.out.println(rs.getString(1)+aa);
-			        	 amt = rs.getDouble(9);
+			        	 amt = rs.getDouble(14);
 			        	 table.addCell(new Phrase(String.valueOf(amt), n));
-			        	 String sss = rs.getString(10);
+			        	 String sss = rs.getString(15);
 			        	 table.addCell(new Phrase(sss, n));
 			        	// table.addCell(new Phrase(String.valueOf(rs.getInt(11)), n));
 			        	// table.addCell(new Phrase(rs.getString(12), n));
 			        	// table.addCell(new Phrase(rs.getString(13), n));
 			        	// table.addCell(new Phrase(rs.getString(14), n));
-			        	table.addCell(new Phrase(String.valueOf(rs.getInt(11))+"\n"+rs.getString(12)+"\n"+rs.getString(13)+"\n"+rs.getString(14), n));
+			        	table.addCell(new Phrase(String.valueOf(rs.getInt(16))+"\n"+rs.getString(17)+"\n"+rs.getString(18)+"\n"+rs.getString(19), n));
 			        	
 			        	 if (sss.equals("Cash")){
 			        		 cashtot += amt;
