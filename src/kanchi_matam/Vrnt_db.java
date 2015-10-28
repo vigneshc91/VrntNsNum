@@ -1957,34 +1957,75 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			Phrase vrnt = new Phrase("VEDA RAKSHNA NIDHI TRUST (Regd.)", fi);
 			Phrase vrnt_add = new Phrase("No.64/31, SUBRAMANIYAN STREET, WEST MAMBALAM, CHENNAI - 600 033.", ni);
 			Phrase mail = new Phrase("e-mail: vrnt@vsnl.net \t Tel: 044-24740549", si);
-			Phrase donat = new Phrase(don_type.getSelectedItem()+" Donation", si);
+			
+			
+			
 			//Phrase ph = new Phrase("Tel: 044-24740549");
 			a = new PdfPCell(h);
 			b = new PdfPCell(pan);
 			c = new PdfPCell(vrnt);
 			d = new PdfPCell(vrnt_add);
 			f = new PdfPCell(mail);
-			g = new PdfPCell(donat);
+			
 			//g = new PdfPCell(ph);
 			a.setColspan(2);
 			//b.setColspan(3);
 			c.setColspan(3);
 			d.setColspan(3);
 			f.setColspan(3);
-			g.setColspan(3);
+//			g.setColspan(3);
 			a.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			b.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			c.setHorizontalAlignment(Element.ALIGN_CENTER);
 			d.setHorizontalAlignment(Element.ALIGN_CENTER);
 			f.setHorizontalAlignment(Element.ALIGN_CENTER);
-			g.setHorizontalAlignment(Element.ALIGN_CENTER);
+			
 			//g.setHorizontalAlignment(Element.ALIGN_CENTER);
+			
+			Phrase rece = new Phrase("Receipt Number: "+receipt_no.getText(), si);
+			
+			Phrase donat = new Phrase(don_type.getSelectedItem()+" Donation", si);
+			g = new PdfPCell(donat);
+			g.setHorizontalAlignment(Element.ALIGN_CENTER);
+			
+			Phrase dat = new Phrase("Date: "+date.getText(), si);
+			
+			Phrase rs = new Phrase("AMOUNT Rs. "+cand_amt_p2.getText(), si);
+			Phrase nsno = new Phrase("N.S No: "+num_p2.getText(), si);
+			
+			Phrase rup = new Phrase("RUPEES "+result.toUpperCase()+" ONLY", si);
+			String address = addr_12.getText();
+			if(addr_22.getText().length() != 0)
+				address += "\n"+addr_22.getText();
+			if(area_2.getText().length() != 0)
+				address += "\n"+area_2.getText();
+			if(city_town2.getText().length() != 0)
+				address += "\n"+city_town2.getText();
+			if(pin_code_2.getText().length() != 0)
+				address += " "+pin_code_2.getText();
+			if(cand_ph_p2.getText().length() != 0)
+				address += "Ph No: "+cand_ph_p2.getText();
+			if(cand_email_p2.getText().length() != 0)
+				address += "Email: "+cand_email_p2.getText();
+			
+			Phrase addr = new Phrase(address);
+			
+			Phrase mod = new Phrase("Mode Of Receipt: "+payment_mode.getSelectedItem(), si);
+			Phrase chq = new Phrase("CHQ No: "+payment_num.getText(), si);
+			Phrase dated = new Phrase("Date: "+issue_dat.getText(), si);
+			Phrase bank = new Phrase("Bank Drawn: "+bank_name.getText(), si);
+			Phrase branch = new Phrase("Branch: "+branch_nam.getText(), si);
+			
+			Phrase don_for = new Phrase("This Donation is for Corpus of the Trust");
+			Phrase sign_don = new Phrase("Signature of Donor", si);
+			Phrase sign_rec = new Phrase("Signature of Receiver", si);
+			Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
 			
 			Phrase t = new Phrase("To", si);
 			PdfPCell to = new PdfPCell(t);
 			to.setColspan(3);
 			
-			Phrase nam = new Phrase("     "+cand_nam_p2.getText(), si);
+			Phrase nam = new Phrase(cand_nam_p2.getText()+" "+cand_initial_p2.getText(), si);
 			Phrase addr1 = new Phrase("       "+addr_12.getText(), ni);
 			Phrase addr2 = null;
 			Phrase city = null;
@@ -1996,22 +2037,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				city = new Phrase("\0", ni);
 			}
 			
-			Phrase rece = new Phrase("Receipt No: "+receipt_no.getText(), si);
-			Phrase dat = new Phrase("Date: "+date.getText(), si);
-			Phrase nsno = new Phrase("N.S No: "+num_p2.getText(), si);
+			
+			
+			
 			Phrase amt = new Phrase("Donation towards "+don_type.getSelectedItem()+" fund", si);
-			Phrase rs = new Phrase("Rs. "+cand_amt_p2.getText(), si);
-			Phrase rup = new Phrase("Rupees "+result+" only", si);
+			
 			Phrase pay = new Phrase("Payment Details", si);
-			Phrase mod = new Phrase("Mode Of Payment: "+payment_mode.getSelectedItem(), si);
-			Phrase chq = new Phrase("Cheque / DD No: "+payment_num.getText(), si);
-			Phrase dated = new Phrase("Dated: "+issue_dat.getText(), si);
-			Phrase bank = new Phrase("Bank: "+bank_name.getText(), si);
-			Phrase branch = new Phrase("Branch: "+branch_nam.getText(), si);
+			
+			
 			Phrase emp = new Phrase("\0");
-			Phrase sign_don = new Phrase("Signature of Donor", si);
-			Phrase sign_rec = new Phrase("Signature of Receiver", si);
-			Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
+			
 			Phrase ins1 = new Phrase("1. Donations to the trust are exempt from income Tax Section 80-G of income Tax Act.", ni);
 			Phrase ins2 = new Phrase("2. Please quote your N.S No. given above in future correspondence with us.", ni);
 			PdfPCell nam_c = new PdfPCell(nam);
