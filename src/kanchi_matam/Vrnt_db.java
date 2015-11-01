@@ -99,15 +99,26 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JMenuItem Import = new JMenuItem("Import");
 	JMenuItem export = new JMenuItem("Export");
 	JMenuItem exit = new JMenuItem("Exit");
+	
+	JMenu annualReport = new JMenu("Annual Report");
+	JMenuItem csvAnnualReport = new JMenuItem("CSV");
+	JMenuItem pdfAnnualReport = new JMenuItem("PDF");
+	
+	JMenu prasadam = new JMenu("Prasadam");
+	JMenuItem csvPrasadam = new JMenuItem("CSV");
+	JMenuItem pdfPrasadam = new JMenuItem("PDF");
+	
 	JMenuItem pdf = new JMenuItem("Generate Pdf");
 	JMenuItem refresh = new JMenuItem("Refresh");
 	JMenuItem search = new JMenuItem("Find");
 	JMenuItem saveStatus = new JMenuItem("Save Status");
+	
 	JMenu bill = new JMenu("Bill");
 	JMenuItem cancel = new JMenuItem("Cancel Payment");
 	JMenuItem statement = new JMenuItem("Statement");
 	JMenuItem stmt_full = new JMenuItem("Complete Statement");
 	JMenuItem recep = new JMenuItem("Receipt");
+	
 	JMenu help = new JMenu("Help");
 	JMenuItem about = new JMenuItem("About");
 	JButton view = new JButton("Refresh");
@@ -186,7 +197,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		Import.setMnemonic(KeyEvent.VK_I);
 		export.setMnemonic(KeyEvent.VK_E);
 		exit.setMnemonic(KeyEvent.VK_X);
-		pdf.setMnemonic(KeyEvent.VK_P);
+		
+		annualReport.setMnemonic(KeyEvent.VK_A);
+		csvAnnualReport.setMnemonic(KeyEvent.VK_C);
+		pdfAnnualReport.setMnemonic(KeyEvent.VK_P);
+		
+		prasadam.setMnemonic(KeyEvent.VK_P);
+		csvPrasadam.setMnemonic(KeyEvent.VK_C);
+		pdfPrasadam.setMnemonic(KeyEvent.VK_P);
+		
+//		pdf.setMnemonic(KeyEvent.VK_P);
 		search.setMnemonic(KeyEvent.VK_F);
 		refresh.setMnemonic(KeyEvent.VK_R);
 		saveStatus.setMnemonic(KeyEvent.VK_S);
@@ -206,10 +226,23 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		refresh.setIcon(refresh_img);
 		refresh.addActionListener(this);
 		refresh.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-		file.add(pdf);
-		pdf.setIcon(pdf_img);
-		pdf.addActionListener(this);
-		pdf.setAccelerator(KeyStroke.getKeyStroke('P', ActionEvent.CTRL_MASK));
+//		file.add(pdf);
+//		pdf.setIcon(pdf_img);
+//		pdf.addActionListener(this);
+//		pdf.setAccelerator(KeyStroke.getKeyStroke('P', ActionEvent.CTRL_MASK));
+		
+		file.add(annualReport);		
+		csvAnnualReport.addActionListener(this);
+		annualReport.add(csvAnnualReport);
+		pdfAnnualReport.addActionListener(this);
+		annualReport.add(pdfAnnualReport);
+		
+		file.add(prasadam);
+		csvPrasadam.addActionListener(this);
+		prasadam.add(csvPrasadam);
+		pdfPrasadam.addActionListener(this);
+		prasadam.add(pdfPrasadam);
+		
 		search.addActionListener(this);
 		search.setIcon(find_img);
 		search.setAccelerator(KeyStroke.getKeyStroke('F', ActionEvent.CTRL_MASK));
@@ -1299,9 +1332,36 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		else if (e.getActionCommand().equals("Refresh")){
 			model.setRowCount(0);
 			view_tab_data();
-		} 
+		}
 		
-		else if (e.getActionCommand().equals("Generate Pdf")){
+		else if (e.getSource() == csvAnnualReport){
+			int ret = chose.showSaveDialog(this);
+			File s;
+			if(ret == JFileChooser.APPROVE_OPTION){
+				s = chose.getSelectedFile();
+				String file_name = s.toString();
+				if (!file_name.toLowerCase().endsWith(".csv")){
+					s = new File(file_name+".csv");
+				}
+				Connection conn = null;
+				try{
+					Class.forName("org.h2.Driver");
+					conn = DriverManager.
+						    getConnection("jdbc:h2:~/vrnt", "sa", "");
+					Statement stm = conn.createStatement();
+					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where annual_report = \'Selected\'')";
+					stm.executeUpdate(st);
+					Telegraph tele = new Telegraph("Success", "CSV Generated Successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+					TelegraphQueue que = new TelegraphQueue();
+					que.add(tele);
+					//JOptionPane.showMessageDialog(null, "Successfully Exported...", "Success", JOptionPane.INFORMATION_MESSAGE);
+				} catch(Exception e7){
+					System.err.println(e7);
+				}
+			}
+		}
+		
+		else if (e.getSource() == pdfAnnualReport){
 			int x = 0, y = 0;
 			PdfWriter writer = null;
 			int ret = gen_pdf.showSaveDialog(this);
@@ -1411,7 +1471,146 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			TelegraphQueue que = new TelegraphQueue();
 			que.add(tele);
 			//JOptionPane.showMessageDialog(null, "Pdf generated successfully...", "Success", JOptionPane.INFORMATION_MESSAGE);
-		} 
+		}
+		
+		else if (e.getSource() == csvPrasadam){
+			int ret = chose.showSaveDialog(this);
+			File s;
+			if(ret == JFileChooser.APPROVE_OPTION){
+				s = chose.getSelectedFile();
+				String file_name = s.toString();
+				if (!file_name.toLowerCase().endsWith(".csv")){
+					s = new File(file_name+".csv");
+				}
+				Connection conn = null;
+				try{
+					Class.forName("org.h2.Driver");
+					conn = DriverManager.
+						    getConnection("jdbc:h2:~/vrnt", "sa", "");
+					Statement stm = conn.createStatement();
+					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where prasadam = \'Selected\'')";
+					stm.executeUpdate(st);
+					Telegraph tele = new Telegraph("Success", "CSV Generated Successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+					TelegraphQueue que = new TelegraphQueue();
+					que.add(tele);
+					//JOptionPane.showMessageDialog(null, "Successfully Exported...", "Success", JOptionPane.INFORMATION_MESSAGE);
+				} catch(Exception e7){
+					System.err.println(e7);
+				}
+			}
+		}
+		
+		else if (e.getSource() == pdfPrasadam){
+			int x = 0, y = 0;
+			PdfWriter writer = null;
+			int ret = gen_pdf.showSaveDialog(this);
+			File s = null;
+			if (ret == JFileChooser.APPROVE_OPTION){
+				s = gen_pdf.getSelectedFile();
+				String stm = s.toString();
+				if(!stm.endsWith(".pdf")){
+					s = new File(stm+".pdf");
+				}
+			}
+			Document doc = new Document();
+			try {
+				writer = PdfWriter.getInstance(doc, new FileOutputStream(s));
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (DocumentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			doc.setPageSize(PageSize.A4);
+			doc.setMargins(30, 30, 10, 10);
+			doc.setMarginMirroring(true);
+			doc.open();
+			com.itextpdf.text.Font n = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 11);
+			PdfPTable table = new PdfPTable(3);
+			table.setComplete(true);
+			table.setWidthPercentage(110);
+			
+			//Paragraph para = new Paragraph();
+			//para.setAlignment(Element.RECTANGLE);
+			try{
+				Class.forName("org.h2.Driver");
+		        Connection conn = DriverManager.
+		            getConnection("jdbc:h2:~/vrnt", "sa", "");
+		        Statement stm = conn.createStatement();
+		        String st = "select * from details where prasadam = 'Selected'";
+		        ResultSet rs = stm.executeQuery(st);
+		        PdfContentByte canvas = writer.getDirectContentUnder();
+		        while(rs.next()){
+		        	
+		        	
+		        	String resultAddress = "NS No: "+rs.getString(1)+"\n"+rs.getString(3)+" "+rs.getString(2);
+		        	
+		        	//address line 1 can't be empty so directly append it
+		        	resultAddress += "\n"+rs.getString(4);
+		        	
+		        	//address line 2 can be empty so we must check it before append
+		        	if(rs.getString(5) != null)
+		        		resultAddress += "\n"+rs.getString(5);
+		        	
+		        	//area can also be empty
+		        	if(rs.getString(6) != null)
+		        		resultAddress += "\n"+rs.getString(6);
+		        	
+		        	//city can't be empty anyhow checking for type safety
+		        	if(rs.getString(7) != null)
+		        		resultAddress += "\n"+rs.getString(7);
+		        	
+		        	//pin code can be empty
+		        	if(rs.getString(8) != null)
+		        		resultAddress += "\n"+rs.getString(8);
+		        	
+		        	//phone number can be empty
+		        	if(rs.getString(9) != null)
+		        		resultAddress += "\n"+rs.getString(9);
+		        	
+		        	Phrase h = new Phrase(resultAddress);
+		        	
+		        	/*if (rs.getString(4) != null && rs.getString(5) != null){
+		        		//para.add(rs.getString(1)+rs.getString(2)+rs.getString(3));
+		        		h = new Phrase("NS NO "+rs.getString(1)+"\n"+rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4)+"\n"+rs.getString(5), n);
+		        		//ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, h, 10, 800-x, 0);
+		        	//	x+=10;
+		        	 } else if (rs.getString(4) == null && rs.getString(5) != null) {
+		        		 h = new Phrase("NS NO "+rs.getString(1)+"\n"+rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(5), n);
+		        	 
+		        	 } else if (rs.getString(4) != null && rs.getString(5) == null){
+		        		 h = new Phrase("NS NO "+rs.getString(1)+"\n"+rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4), n);
+		        		 
+		        	 }*/
+		        	 
+		        	PdfPCell cell = new PdfPCell(h);
+		        	 cell.setFixedHeight(100f);
+		        	table.addCell(cell);
+		        	
+		        }
+		        
+		        table.addCell("");
+		        table.addCell("");
+		        //table.addCell("");
+			}
+			catch(Exception e4){
+				System.err.println(e4);
+			}
+			try {
+				doc.add(table);
+				
+			} catch (DocumentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			doc.close();
+			//System.out.println("sucess");
+			Telegraph tele = new Telegraph("Success", "Pdf generated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+			TelegraphQueue que = new TelegraphQueue();
+			que.add(tele);
+			//JOptionPane.showMessageDialog(null, "Pdf generated successfully...", "Success", JOptionPane.INFORMATION_MESSAGE);
+		}
 		
 		else if(e.getSource() == search){
 			tab_pane.setSelectedIndex(1);
