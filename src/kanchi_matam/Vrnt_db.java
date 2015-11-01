@@ -1951,13 +1951,18 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			NumberFormat formatter = new RuleBasedNumberFormat(RuleBasedNumberFormat.SPELLOUT);
 			String result = formatter.format(Integer.parseInt(cand_amt_p2.getText()));
-			Phrase h = new Phrase("SRI GURUBHYO NAMAHA", ni);
+//			Phrase h = new Phrase("SRI GURUBHYO NAMAHA", ni);
+			Phrase h = new Phrase(" ", ni);
 			
-			Phrase pan = new Phrase("PAN No.: AAATV3147P", ni);
-			Phrase vrnt = new Phrase("VEDA RAKSHNA NIDHI TRUST (Regd.)", fi);
-			Phrase vrnt_add = new Phrase("No.64/31, SUBRAMANIYAN STREET, WEST MAMBALAM, CHENNAI - 600 033.", ni);
-			Phrase mail = new Phrase("e-mail: vrnt@vsnl.net \t Tel: 044-24740549", si);
+//			Phrase pan = new Phrase("PAN No.: AAATV3147P", ni);
+//			Phrase vrnt = new Phrase("VEDA RAKSHNA NIDHI TRUST (Regd.)", fi);
+//			Phrase vrnt_add = new Phrase("No.64/31, SUBRAMANIYAN STREET, WEST MAMBALAM, CHENNAI - 600 033.", ni);
+//			Phrase mail = new Phrase("e-mail: vrnt@vsnl.net \t Tel: 044-24740549", si);
 			
+			Phrase pan = new Phrase(" ", ni);
+			Phrase vrnt = new Phrase(" ", fi);
+			Phrase vrnt_add = new Phrase(" ", ni);
+			Phrase mail = new Phrase(" ", si);
 			
 			
 			//Phrase ph = new Phrase("Tel: 044-24740549");
@@ -1993,37 +1998,40 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			Phrase rs = new Phrase("AMOUNT Rs. "+cand_amt_p2.getText(), si);
 			Phrase nsno = new Phrase("N.S No: "+num_p2.getText(), si);
 			
-			Phrase rup = new Phrase("RUPEES "+result.toUpperCase()+" ONLY", si);
-			String address = "";
-//			if(addr_12.getText().length() != 0)
-//				address += addr_12.getText();
-			if(addr_22.getText().length() != 0)
-				address += "\n"+addr_22.getText();
-			if(area_2.getText().length() != 0)
-				address += "\n"+area_2.getText();
-			if(city_town2.getText().length() != 0)
-				address += "\n"+city_town2.getText();
-			if(pin_code_2.getText().length() != 0)
-				address += " "+pin_code_2.getText();
-			if(cand_ph_p2.getText().length() != 0)
-				address += "\nPh No: "+cand_ph_p2.getText();
-			if(cand_email_p2.getText().length() != 0)
-				address += "\nEmail: "+cand_email_p2.getText();
+			Phrase rup = new Phrase("RUPEES "+result.toUpperCase()+" ONLY", ni);
+			String address = ""; int emptyAddressCount = 0;
 			
-			Phrase addr = new Phrase(address, si);
+			address += (addr_12.getText().length() != 0) ?  addr_12.getText() : emptyAddressCount++;
+				
+			address += (addr_22.getText().length() != 0) ? "\n"+addr_22.getText() : emptyAddressCount++;
+			
+			address += (area_2.getText().length() != 0) ? "\n"+area_2.getText() : emptyAddressCount++;
+			
+			address += (city_town2.getText().length() != 0) ? "\n"+city_town2.getText() : emptyAddressCount++;
+			
+			address += (pin_code_2.getText().length() != 0) ? " "+pin_code_2.getText() : " ";
+			
+			address += (cand_ph_p2.getText().length() != 0) ? "\nPh No: "+cand_ph_p2.getText() : emptyAddressCount++;
+			
+			address += (cand_email_p2.getText().length() != 0) ? "\nEmail: "+cand_email_p2.getText() : emptyAddressCount++;
+			
+			for(int i=0; i<emptyAddressCount; i++)
+				address += "\n";
+			
+			Phrase addr = new Phrase(address, ni);
 			
 			String paymentDetails = ""; 
 			paymentDetails += "Mode Of Receipt: "+payment_mode.getSelectedItem();
-			paymentDetails += "\n" + "CHQ No: "+payment_num.getText() + " " +"Date: "+issue_dat.getText();
-			paymentDetails += "\n" + "Bank Drawn: "+bank_name.getText();
-			paymentDetails += "\n" + "Branch: "+branch_nam.getText();
+			paymentDetails += "\n" + "CHQ No: "+((payment_num.getText().length() != 0) ? payment_num.getText() : " N/A ") + " " +"Date: "+((issue_dat.getText().length() != 0) ? issue_dat.getText() : " N/A ");
+			paymentDetails += "\n" + "Bank Drawn: "+((bank_name.getText().length() != 0) ? bank_name.getText() : " N/A ");
+			paymentDetails += "\n" + "Branch: "+((branch_nam.getText().length() != 0) ? branch_nam.getText() : " N/A ");
 			Phrase mod = new Phrase(paymentDetails, si);
 //			Phrase chq = new Phrase(paymentDetails, si);
 //			Phrase dated = new Phrase(paymentDetails, si);
 //			Phrase bank = new Phrase(paymentDetails, si);
 //			Phrase branch = new Phrase(paymentDetails, si);
 			
-			Phrase don_for = new Phrase("This Donation is for Corpus of the Trust", si);
+			Phrase don_for = new Phrase("This Donation is for Corpus of the Trust", ni);
 			Phrase sign_don = new Phrase("Signature of Donor", si);
 			Phrase sign_rec = new Phrase("Signature of Receiver", si);
 			Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
@@ -2032,11 +2040,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			PdfPCell to = new PdfPCell(t);
 			to.setColspan(3);
 			String name = cand_nam_p2.getText()+" "+cand_initial_p2.getText();
-			name += addr_12.getText().length() != 0 ? "\n"+addr_12.getText() : "\n"+" - ";
+//			name += addr_12.getText().length() != 0 ? "\n"+addr_12.getText() : "\n"+" - ";
 			Phrase nam = new Phrase(name, si);
-			Phrase addr1 = new Phrase("       "+addr_12.getText(), ni);
-			Phrase addr2 = null;
-			Phrase city = null;
+//			Phrase addr1 = new Phrase("       "+addr_12.getText(), ni);
+//			Phrase addr2 = null;
+//			Phrase city = null;
 			
 			
 			/*if (addr_22.getText().length() != 0){
@@ -2057,15 +2065,19 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			Phrase emp = new Phrase("\0");
 			
-			Phrase ins1 = new Phrase("1. Donations to the trust are exempt from income Tax Section 80-G of income Tax Act.", ni);
-			Phrase ins2 = new Phrase("2. Please quote your N.S No. given above in future correspondence with us.", ni);
+//			Phrase ins1 = new Phrase("1. Donations to the trust are exempt from income Tax Section 80-G of income Tax Act.", ni);
+//			Phrase ins2 = new Phrase("2. Please quote your N.S No. given above in future correspondence with us.", ni);
+			
+			Phrase ins1 = new Phrase(" ", ni);
+			Phrase ins2 = new Phrase(" ", ni);
 			PdfPCell nam_c = new PdfPCell(nam);
 			PdfPCell address_c = new PdfPCell(addr);
-			PdfPCell addr1_c = new PdfPCell(addr1);
-			PdfPCell addr2_c = new PdfPCell(addr2);
-			PdfPCell city_c = new PdfPCell(city);
+//			PdfPCell addr1_c = new PdfPCell(addr1);
+//			PdfPCell addr2_c = new PdfPCell(addr2);
+//			PdfPCell city_c = new PdfPCell(city);
 			PdfPCell rece_c = new PdfPCell(rece);
 			PdfPCell dat_c = new PdfPCell(dat);
+			dat_c.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			PdfPCell nsno_c = new PdfPCell(nsno);
 			PdfPCell amt_c = new PdfPCell(amt);
 			PdfPCell rs_c = new PdfPCell(rs);
@@ -2078,6 +2090,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 //			PdfPCell branch_c = new PdfPCell(branch);
 			PdfPCell don_for_c = new PdfPCell(don_for);
 			PdfPCell empty = new PdfPCell(emp);
+			
 			PdfPCell sign_don_c = new PdfPCell(sign_don);
 			PdfPCell sign_rec_c = new PdfPCell(sign_rec);
 			PdfPCell trust_c = new PdfPCell(trust);
@@ -2112,11 +2125,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			nam_c.setBorder(0);
 			rece_c.setBorder(0);
 			address_c.setBorder(0);
-			addr1_c.setBorder(0);
+//			addr1_c.setBorder(0);
 			dat_c.setBorder(0);
-			addr2_c.setBorder(0);
+//			addr2_c.setBorder(0);
 			nsno_c.setBorder(0);
-			city_c.setBorder(0);
+//			city_c.setBorder(0);
 			amt_c.setBorder(0);
 			rs_c.setBorder(0);
 			rup_c.setBorder(0);
@@ -2133,21 +2146,26 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			ins1_c.setBorder(0);
 			ins2_c.setBorder(0);
 			PdfContentByte cb = writer.getDirectContent();
-			cb.roundRectangle(20, doc.getPageSize().getHeight()/2+5, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
-			cb.roundRectangle(20, 40, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
+//			cb.roundRectangle(20, doc.getPageSize().getHeight()/2+5, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
+//			cb.roundRectangle(20, 40, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
 			
 			//cb.closePath();
-			cb.stroke();
-			com.itextpdf.text.Image donor_img = null;
-			com.itextpdf.text.Image off_img = null;
+//			cb.stroke();
+//			com.itextpdf.text.Image donor_img = null;
+//			com.itextpdf.text.Image off_img = null;
+			com.itextpdf.text.Image  sign = null;
+			PdfPCell signature = null;
+			
 			try {
-				donor_img = Image.getInstance(this.getClass().getResource("donr.png"));
-				off_img = Image.getInstance(this.getClass().getResource("off.png"));
-				donor_img.scaleAbsolute(150, 150);
-				
-				off_img.scaleAbsolute(150, 150);
-				donor_img.setAbsolutePosition(120, doc.getPageSize().getHeight()/2+50);
-				off_img.setAbsolutePosition(120, 90);
+//				donor_img = Image.getInstance(this.getClass().getResource("donr.png"));
+//				off_img = Image.getInstance(this.getClass().getResource("off.png"));
+				sign = Image.getInstance(this.getClass().getResource("ET-SIGN.png"));
+				signature = new PdfPCell(sign);
+//				donor_img.scaleAbsolute(150, 150);
+				sign.scaleAbsolute(150, 40);
+//				off_img.scaleAbsolute(150, 150);
+//				donor_img.setAbsolutePosition(120, doc.getPageSize().getHeight()/2+50);
+//				off_img.setAbsolutePosition(120, 90);
 				
 			} catch (BadElementException e3) {
 				// TODO Auto-generated catch block
@@ -2158,7 +2176,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			} catch (IOException e3) {
 				// TODO Auto-generated catch block
 				e3.printStackTrace();
-			} 
+			}
+			signature.setBorder(0);
+			signature.setColspan(3);
+			signature.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			for (int i = 0; i < 2; i++){
 			tab.addCell(a);
 			tab.addCell(b);
@@ -2167,10 +2188,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(f);
 			
 			tab.addCell(empty);
+			
 //			tab.addCell(to);			
 			tab.addCell(rece_c);
 			tab.addCell(g);
 			tab.addCell(dat_c);
+			tab.addCell(empty);
 			
 			tab.addCell(rs_c);
 			tab.addCell(nsno_c);
@@ -2194,11 +2217,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 //			tab.addCell(bank_c);
 //			tab.addCell(branch_c);
 			tab.addCell(don_for_c);
-			
+			tab.addCell(empty);
+			tab.addCell(empty);
+			tab.addCell(empty);
 			tab.addCell(empty);
 //			tab.addCell(pay_c);
+//			tab.addCell(empty);
 			
-			tab.addCell(empty);
+			
+			
+			tab.addCell(signature);
 			tab.addCell(sign_don_c);
 			tab.addCell(sign_rec_c);
 			tab.addCell(trust_c);
@@ -2207,14 +2235,14 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(ins2_c);
 			if (i == 0){
 				tab.addCell(empty);
-				//tab.addCell(empty);
+				tab.addCell(empty);
 			}
 			}
 			//tab.addCell(g);
 			try {
 				doc.add(tab);
-				doc.add(donor_img);
-				doc.add(off_img);
+//				doc.add(donor_img);
+//				doc.add(off_img);
 			} catch (DocumentException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
