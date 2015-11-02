@@ -2150,42 +2150,19 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			NumberFormat formatter = new RuleBasedNumberFormat(RuleBasedNumberFormat.SPELLOUT);
 			String result = formatter.format(Integer.parseInt(cand_amt_p2.getText()));
-//			Phrase h = new Phrase("SRI GURUBHYO NAMAHA", ni);
-			Phrase h = new Phrase(" ", ni);
-			
-//			Phrase pan = new Phrase("PAN No.: AAATV3147P", ni);
-//			Phrase vrnt = new Phrase("VEDA RAKSHNA NIDHI TRUST (Regd.)", fi);
-//			Phrase vrnt_add = new Phrase("No.64/31, SUBRAMANIYAN STREET, WEST MAMBALAM, CHENNAI - 600 033.", ni);
-//			Phrase mail = new Phrase("e-mail: vrnt@vsnl.net \t Tel: 044-24740549", si);
-			
-			Phrase pan = new Phrase(" ", ni);
+
+
 			Phrase vrnt = new Phrase(" ", fi);
-			Phrase vrnt_add = new Phrase(" ", ni);
-			Phrase mail = new Phrase(" ", si);
+
 			
 			
-			//Phrase ph = new Phrase("Tel: 044-24740549");
-			a = new PdfPCell(h);
-			b = new PdfPCell(pan);
+
+
+
 			c = new PdfPCell(vrnt);
-			d = new PdfPCell(vrnt_add);
-			f = new PdfPCell(mail);
-			
-			//g = new PdfPCell(ph);
-			a.setColspan(2);
-			//b.setColspan(3);
-			c.setColspan(3);
-			d.setColspan(3);
-			f.setColspan(3);
-//			g.setColspan(3);
-			a.setHorizontalAlignment(Element.ALIGN_RIGHT);
-			b.setHorizontalAlignment(Element.ALIGN_RIGHT);
-			c.setHorizontalAlignment(Element.ALIGN_CENTER);
-			d.setHorizontalAlignment(Element.ALIGN_CENTER);
-			f.setHorizontalAlignment(Element.ALIGN_CENTER);
-			
-			//g.setHorizontalAlignment(Element.ALIGN_CENTER);
-			
+
+			c.setFixedHeight(40);
+
 			Phrase rece = new Phrase("Receipt Number: "+receipt_no.getText(), si);
 			
 			Phrase donat = new Phrase(don_type.getSelectedItem().toString(), si);
@@ -2225,38 +2202,20 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			paymentDetails += "\n" + "Bank Drawn: "+((bank_name.getText().length() != 0) ? bank_name.getText() : " N/A ");
 			paymentDetails += "\n" + "Branch: "+((branch_nam.getText().length() != 0) ? branch_nam.getText() : " N/A ");
 			Phrase mod = new Phrase(paymentDetails, si);
-//			Phrase chq = new Phrase(paymentDetails, si);
-//			Phrase dated = new Phrase(paymentDetails, si);
-//			Phrase bank = new Phrase(paymentDetails, si);
-//			Phrase branch = new Phrase(paymentDetails, si);
+
 			
 			Phrase don_for = new Phrase("This Donation is for Corpus of the Trust", ni);
 			Phrase sign_don = new Phrase("Signature of Donor", si);
 			Phrase sign_rec = new Phrase("Signature of Receiver", si);
 			Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
 			
-			Phrase t = new Phrase("To", si);
-			PdfPCell to = new PdfPCell(t);
-			to.setColspan(3);
+
 			String name = cand_nam_p2.getText()+" "+cand_initial_p2.getText();
-//			name += addr_12.getText().length() != 0 ? "\n"+addr_12.getText() : "\n"+" - ";
+
 			Phrase nam = new Phrase(name, si);
-//			Phrase addr1 = new Phrase("       "+addr_12.getText(), ni);
-//			Phrase addr2 = null;
-//			Phrase city = null;
+
 			
-			
-			/*if (addr_22.getText().length() != 0){
-			addr2 = new Phrase("       "+addr_22.getText(), ni);
-			city = new Phrase("       "+city_town2.getText(), ni);
-			} else{
-				addr2 =  new Phrase("       "+city_town2.getText(), ni);
-				city = new Phrase("\0", ni);
-			}*/
-			
-			
-			
-			
+
 			Phrase amt = new Phrase("Donation towards "+don_type.getSelectedItem()+" fund", si);
 			
 			Phrase pay = new Phrase("Payment Details", si);
@@ -2264,29 +2223,30 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			Phrase emp = new Phrase("\0");
 			
-//			Phrase ins1 = new Phrase("1. Donations to the trust are exempt from income Tax Section 80-G of income Tax Act.", ni);
-//			Phrase ins2 = new Phrase("2. Please quote your N.S No. given above in future correspondence with us.", ni);
 			
 			Phrase ins1 = new Phrase(" ", ni);
-			Phrase ins2 = new Phrase(" ", ni);
+			
 			PdfPCell nam_c = new PdfPCell(nam);
+			nam_c.setFixedHeight(20);
+			
 			PdfPCell address_c = new PdfPCell(addr);
-//			PdfPCell addr1_c = new PdfPCell(addr1);
-//			PdfPCell addr2_c = new PdfPCell(addr2);
-//			PdfPCell city_c = new PdfPCell(city);
+			address_c.setFixedHeight(80);
+			
+
 			PdfPCell rece_c = new PdfPCell(rece);
+			
 			PdfPCell dat_c = new PdfPCell(dat);
 			dat_c.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
 			PdfPCell nsno_c = new PdfPCell(nsno);
 			PdfPCell amt_c = new PdfPCell(amt);
 			PdfPCell rs_c = new PdfPCell(rs);
+			
 			PdfPCell rup_c = new PdfPCell(rup);
 			PdfPCell pay_c = new PdfPCell(pay);
 			PdfPCell mod_c = new PdfPCell(mod);
-//			PdfPCell chq_c = new PdfPCell(chq);
-//			PdfPCell dated_c = new PdfPCell(dated);
-//			PdfPCell bank_c = new PdfPCell(bank);
-//			PdfPCell branch_c = new PdfPCell(branch);
+			mod_c.setFixedHeight(80);
+
 			PdfPCell don_for_c = new PdfPCell(don_for);
 			PdfPCell empty = new PdfPCell(emp);
 			
@@ -2294,57 +2254,46 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			PdfPCell sign_rec_c = new PdfPCell(sign_rec);
 			PdfPCell trust_c = new PdfPCell(trust);
 			PdfPCell ins1_c = new PdfPCell(ins1);
-			PdfPCell ins2_c = new PdfPCell(ins2);
+			ins1_c.setFixedHeight(20);
+
 			empty.setFixedHeight(6);
-//			nam_c.setColspan(2);
-//			addr1_c.setColspan(2);
-//			addr2_c.setColspan(2);
-//			city_c.setColspan(3);
-//			amt_c.setColspan(2);
-//			rup_c.setColspan(3);
+
 			pay_c.setColspan(2);
-//			chq_c.setColspan(2);
+
 			rs_c.setColspan(2);
 			rup_c.setColspan(2);
 			mod_c.setColspan(2);
-//			bank_c.setColspan(2);
-//			branch_c.setColspan(3);
+
 			empty.setColspan(3);
 			don_for_c.setColspan(3);
 			ins1_c.setColspan(3);
-			ins2_c.setColspan(3);
-			a.setBorder(0);
-			b.setBorder(0);
+
+
 			c.setBorder(0);
-			d.setBorder(0);
-			f.setBorder(0);
 			g.setBorder(0);
 			empty.setBorder(0);
-			to.setBorder(0);
+
 			nam_c.setBorder(0);
 			rece_c.setBorder(0);
 			address_c.setBorder(0);
-//			addr1_c.setBorder(0);
+
 			dat_c.setBorder(0);
-//			addr2_c.setBorder(0);
+
 			nsno_c.setBorder(0);
-//			city_c.setBorder(0);
+
 			amt_c.setBorder(0);
 			rs_c.setBorder(0);
 			rup_c.setBorder(0);
 			pay_c.setBorder(0);
 			mod_c.setBorder(0);
-//			chq_c.setBorder(0);
-//			dated_c.setBorder(0);
-//			bank_c.setBorder(0);
-//			branch_c.setBorder(0);
+
 			don_for_c.setBorder(0);
 			sign_don_c.setBorder(0);
 			sign_rec_c.setBorder(0);
 			trust_c.setBorder(0);
 			ins1_c.setBorder(0);
-			ins2_c.setBorder(0);
-			PdfContentByte cb = writer.getDirectContent();
+
+//			PdfContentByte cb = writer.getDirectContent();
 //			cb.roundRectangle(20, doc.getPageSize().getHeight()/2+5, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
 //			cb.roundRectangle(20, 40, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
 			
@@ -2361,7 +2310,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				sign = Image.getInstance(this.getClass().getResource("ET-SIGN.png"));
 				signature = new PdfPCell(sign);
 //				donor_img.scaleAbsolute(150, 150);
-				sign.scaleAbsolute(150, 40);
+
+				sign.scaleAbsolute(120, 20);
 //				off_img.scaleAbsolute(150, 150);
 //				donor_img.setAbsolutePosition(120, doc.getPageSize().getHeight()/2+50);
 //				off_img.setAbsolutePosition(120, 90);
@@ -2380,15 +2330,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			signature.setColspan(3);
 			signature.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			for (int i = 0; i < 2; i++){
-			tab.addCell(a);
-			tab.addCell(b);
+
 			tab.addCell(c);
-			tab.addCell(d);
-			tab.addCell(f);
+
 			
 			tab.addCell(empty);
 			
-//			tab.addCell(to);			
+			
 			tab.addCell(rece_c);
 			tab.addCell(g);
 			tab.addCell(dat_c);
@@ -2405,23 +2353,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(address_c);
 			
 			
-//			tab.addCell(addr2_c);
-			
-//			tab.addCell(city_c);
-//			tab.addCell(empty);
-//			tab.addCell(amt_c);
-			
-//			tab.addCell(chq_c);
-//			tab.addCell(dated_c);
-//			tab.addCell(bank_c);
-//			tab.addCell(branch_c);
+
 			tab.addCell(don_for_c);
+
 			tab.addCell(empty);
-			tab.addCell(empty);
-			tab.addCell(empty);
-			tab.addCell(empty);
-//			tab.addCell(pay_c);
-//			tab.addCell(empty);
 			
 			
 			
@@ -2431,15 +2366,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(trust_c);
 			tab.addCell(empty);
 			tab.addCell(ins1_c);
-			tab.addCell(ins2_c);
+
+			
 			if (i == 0){
 				tab.addCell(empty);
 				tab.addCell(empty);
 			}
 			}
-			//tab.addCell(g);
+
 			try {
 				doc.add(tab);
+				
 //				doc.add(donor_img);
 //				doc.add(off_img);
 			} catch (DocumentException e2) {
