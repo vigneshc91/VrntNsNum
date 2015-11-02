@@ -231,16 +231,22 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 //		pdf.addActionListener(this);
 //		pdf.setAccelerator(KeyStroke.getKeyStroke('P', ActionEvent.CTRL_MASK));
 		
-		file.add(annualReport);		
+		file.add(annualReport);
+		annualReport.setIcon(stmt_img);
 		csvAnnualReport.addActionListener(this);
+		csvAnnualReport.setIcon(rece_img);
 		annualReport.add(csvAnnualReport);
 		pdfAnnualReport.addActionListener(this);
+		pdfAnnualReport.setIcon(pdf_img);
 		annualReport.add(pdfAnnualReport);
 		
 		file.add(prasadam);
+		prasadam.setIcon(st_img);
 		csvPrasadam.addActionListener(this);
+		csvPrasadam.setIcon(rece_img);
 		prasadam.add(csvPrasadam);
 		pdfPrasadam.addActionListener(this);
+		pdfPrasadam.setIcon(pdf_img);
 		prasadam.add(pdfPrasadam);
 		
 		search.addActionListener(this);
