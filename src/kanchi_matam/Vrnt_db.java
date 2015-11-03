@@ -3207,6 +3207,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			prasadamStatus.put(nsNum, select);
 		}
 		
+		if(e.getClickCount() == 2){
+			
+			if(col == 0 || col == 1){
+				int row = edit_table.rowAtPoint(e.getPoint());			
+				String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
+				new UserDetails().ViewDetails(nsNum);
+			}
+		}
+		
 	}
 
 	@Override
