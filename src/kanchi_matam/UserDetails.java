@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -18,21 +20,27 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import com.itextpdf.text.Element;
 import com.itextpdf.text.TabStop.Alignment;
 
-public class UserDetails extends JFrame implements ActionListener, KeyListener {
+public class UserDetails extends JFrame implements ActionListener {
 	
 	private String nsNum;
 	Dimension dim;
 	double totalAmountSpend;
+	
+	
 	JPanel panel = new JPanel();
 	DefaultTableModel model = new DefaultTableModel(){
 		public boolean isCellEditable(int row, int column){
@@ -51,7 +59,7 @@ public class UserDetails extends JFrame implements ActionListener, KeyListener {
 	JTable listTable = new JTable(listModel);
 	
 	JScrollPane userTableScroll, listTableScroll;
-	JLabel totalAmountDonated = new JLabel();
+	JLabel totalAmountDonated = new JLabel("",SwingConstants.CENTER);
 	
 	public void CreateFrame(){
 		dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -62,13 +70,14 @@ public class UserDetails extends JFrame implements ActionListener, KeyListener {
 		setVisible(true);
 		
 		
-		BorderLayout layout = new BorderLayout();
-		BoxLayout boxLayout = new BoxLayout(panel, 1);
+//		BorderLayout layout = new BorderLayout();
+		BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.PAGE_AXIS);
 		
 		panel.setLayout(boxLayout);
 		getContentPane().add(panel);
 		panel.add(user_table);
 		
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		Font ff = new Font("Arial", Font.PLAIN, 18);
 		
@@ -93,11 +102,7 @@ public class UserDetails extends JFrame implements ActionListener, KeyListener {
 		model.addColumn("Annual Report");
 		model.addColumn("Prasadam");
 		
-		listModel.addColumn("Receipt Date");
-		listModel.addColumn("Receipt Number");
-		listModel.addColumn("Amount");
-		listModel.addColumn("Mode Of Payment");
-		listModel.addColumn("Bank Received");
+		
 		
 		AddData();
 		
@@ -163,6 +168,18 @@ public class UserDetails extends JFrame implements ActionListener, KeyListener {
 			
 			ResultSet rs1 = stm1.executeQuery(receipt);
 			
+			if(!rs1.first()){
+				
+				listModel.addColumn("Donation Details");
+				listModel.addRow(new Object[] {"No entries found"});
+			} else {
+				
+				listModel.addColumn("Receipt Date");
+				listModel.addColumn("Receipt Number");
+				listModel.addColumn("Amount");
+				listModel.addColumn("Mode Of Payment");
+				listModel.addColumn("Bank Received");
+				
 			while(rs1.next()){
 				
 				int receiptNumber = rs1.getInt(1);
@@ -174,9 +191,13 @@ public class UserDetails extends JFrame implements ActionListener, KeyListener {
 				String bankReceived = rs1.getString(20);
 				String modeAndNum = mode.equals("CASH") ? mode : mode + " - " + num;
 				String bankRec = (mode.equals("CASH") && bankReceived.length() == 0) ? "CASH" : bankReceived;
+				
+				
+				
 				listModel.addRow(new Object[] {receiptDate, receiptNumber, amount, modeAndNum, bankRec});
 				
 				}
+			}
 			
 			conn.close();
 			
@@ -187,10 +208,40 @@ public class UserDetails extends JFrame implements ActionListener, KeyListener {
 		
 	}
 	
+	
+	
 	public void ViewDetails(String nsNum){
 		this.nsNum = nsNum;
 		
+		
 		CreateFrame();
+		//Hijack the keyboard manager
+		KeyboardFocusManager manager =
+		         KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		
+		manager.addKeyEventDispatcher( new KeyDispatcher());
+		
+	}
+	
+	 
+	//Custom dispatcher
+	class KeyDispatcher extends UserDetails implements KeyEventDispatcher {
+	    public boolean dispatchKeyEvent(KeyEvent e) {
+	       
+//	    	System.out.println(e.getID());
+	    	if(e.getKeyCode() == 27){
+//	    		System.out.println("inside "+e.getKeyCode());
+	    		
+	    		new UserDetails().dispose();
+	    		
+	    	}
+	    		
+//	    	if(e.getID() == KeyEvent.KEY_TYPED)
+//	            System.out.println( "typed " + e.getKeyCode() );
+	 
+	        //Allow the event to be redispatched
+	        return false;
+	    }
 	}
 
 	@Override
@@ -199,24 +250,5 @@ public class UserDetails extends JFrame implements ActionListener, KeyListener {
 		
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-		if(e.getKeyCode() == e.VK_ESCAPE){
-			this.dispose();
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }
