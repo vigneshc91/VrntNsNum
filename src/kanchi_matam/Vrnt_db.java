@@ -2247,10 +2247,21 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 			PdfWriter writer = null;
 			
+			File vrntBill = new File("Vrnt Donation Bill");
+			if(!vrntBill.exists()){
+				try{
+					vrntBill.mkdir();
+				} catch(Exception e1){
+					System.err.println(e1);
+				}
+			}
+			
 			File s = null;
 			try {
-				s = File.createTempFile("vrnt_bill", ".pdf");
-			} catch (IOException e2) {
+//				s = File.createTempFile("vrnt_bill", ".pdf");
+				
+				s = new File(vrntBill.getAbsolutePath()+"/Bill_"+receipt_no.getText()+".pdf");
+			} catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
@@ -2568,14 +2579,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				quee.add(tele);
 				//JOptionPane.showMessageDialog(null,"Some problem might be occured in Database","Warning!",JOptionPane.WARNING_MESSAGE);
 			}
+			
+//			s.deleteOnExit();
+			doc.close();
 			try {
 				Desktop.getDesktop().open(s);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			s.deleteOnExit();
-			doc.close(); 
 			//print_interior();
 		  }
 		} 
