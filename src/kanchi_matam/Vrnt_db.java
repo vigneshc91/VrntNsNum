@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -26,6 +27,7 @@ import javax.swing.table.TableColumn;
 
 
 
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import net.sf.jcarrierpigeon.WindowPosition;
@@ -46,6 +48,7 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.log.SysoLogger;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -72,9 +75,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JPanel view_panel = new JPanel();
 	JPanel edit_panel = new JPanel();
 	JPanel bill_panel = new JPanel();
+	JPanel donationRegisterPanel = new JPanel();
+	
 	JTabbedPane tab_pane = new JTabbedPane();
 	JLabel donation_type, pay_mode, pay_num, dated, bank_nam, branch, date, receipt, bank_recvd;
 	JLabel addr_line_11, addr_line_21, area1, city1, pin_code1, addr_line_12, addr_line_22, area2, city2, pin_code2, addr_line_13, addr_line_23, area3, city3, pin_code3;
+	JLabel viewTabStatusBar;
 	
 	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no, bank_received;
 	JComboBox don_type, payment_mode;	
@@ -112,6 +118,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JMenuItem refresh = new JMenuItem("Refresh");
 	JMenuItem search = new JMenuItem("Find");
 	JMenuItem saveStatus = new JMenuItem("Save Status");
+	JMenuItem donationRegisterCsv = new JMenuItem("Export Donation");
 	
 	JMenu bill = new JMenu("Bill");
 	JMenuItem cancel = new JMenuItem("Cancel Payment");
@@ -127,10 +134,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			return false;
 		}
 	};
+	DefaultTableModel donationRegisterTableModel = new DefaultTableModel(){
+		public boolean isCellEditable(int row, int column){
+			return false;
+		}
+	};
 	DefaultTableModel print_mod = new DefaultTableModel();
 	JTable edit_table = new JTable(model);
+	JTable donationRegisterTable = new JTable(donationRegisterTableModel);
+	
 	TableRowSorter sorter;
-	JScrollPane jsp;
+	JScrollPane jsp, jspDonationRegister;
 	Dimension dim;
 	HashMap annualReportStatus = new HashMap();
 	HashMap prasadamStatus = new HashMap();
@@ -149,6 +163,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	ImageIcon rece_img = new ImageIcon(this.getClass().getResource("pay.png"));
 	//ImageIcon header = new ImageIcon(this.getClass().getResource("header.png"));
 	Font f;
+	
+	DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	
 	Validator validator = new Validator();
 	
@@ -180,10 +196,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		view_interior();
 		edit_interior();
 		bill_interior();
+		DonationInterior();
+		
 		tab_pane.addTab("New Entry", new JScrollPane(new_panel));
 		tab_pane.addTab("View", view_panel);
 		tab_pane.addTab("Update", new JScrollPane(edit_panel));
 		tab_pane.addTab("Billing", new JScrollPane(bill_panel));		
+		tab_pane.addTab("Donation Register", new JScrollPane(donationRegisterPanel));
 		panel.add(tab_pane, BorderLayout.CENTER);
 		//interior();
 		//add(panel);
@@ -210,6 +229,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		search.setMnemonic(KeyEvent.VK_F);
 		refresh.setMnemonic(KeyEvent.VK_R);
 		saveStatus.setMnemonic(KeyEvent.VK_S);
+		donationRegisterCsv.setMnemonic(KeyEvent.VK_D);
 		cancel.setMnemonic(KeyEvent.VK_C);
 		statement.setMnemonic(KeyEvent.VK_S);
 		
@@ -257,6 +277,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		saveStatus.setIcon(save_img);
 		saveStatus.setAccelerator(KeyStroke.getKeyStroke('S', ActionEvent.CTRL_MASK));
 		file.add(saveStatus);
+		
+		donationRegisterCsv.addActionListener(this);
+		donationRegisterCsv.setIcon(rece_img);
+		donationRegisterCsv.setAccelerator(KeyStroke.getKeyStroke('D', ActionEvent.CTRL_MASK));
+		file.add(donationRegisterCsv);
+		
 		file.add(exit);
 		exit.setIcon(exit_img);
 		exit.addActionListener(this);
@@ -428,143 +454,71 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	public void view_interior(){
-	/*	no_p2 = new JLabel("No");
-		name_p2 = new JLabel("Name");
-		add_p2 = new JLabel("Address");
-		amt_p2 = new JLabel("Amount");
-		num_p2 = new JTextField(15);
-		cand_nam_p2 = new JTextField(15);
-		cand_add_p2 = new JTextArea(4, 15);
-		cand_amt_p2 = new JTextField(15);
-		first = new JButton("First");
-		last = new JButton("Last");
-		prev = new JButton("Previous");
-		next = new JButton("Next");
-		cand_add_p2.setLineWrap(true);
-		cand_add_p2.setWrapStyleWord(true);
-		view_panel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		Border border = BorderFactory.createLineBorder(Color.BLACK);
-		num_p2.setBorder(border);
-		cand_nam_p2.setBorder(border);
-		cand_add_p2.setBorder(border);
-		cand_amt_p2.setBorder(border);
-		first.addActionListener(this);
-		last.addActionListener(this);
-		prev.addActionListener(this);
-		next.addActionListener(this);
-		//save.addActionListener(this);
-		//reset.addActionListener(this);
-		c.gridx = 0; c.gridy = 0; c.insets = new Insets(15, 15, 10, 10);
-		view_panel.add(no_p2, c);
-		c.gridx = 1; c.gridy = 0;
-		view_panel.add(num_p2, c);
-		c.gridx = 0; c.gridy = 1;
-		view_panel.add(name_p2, c);
-		c.gridx = 1; c.gridy = 1;
-		view_panel.add(cand_nam_p2, c);
-		c.gridx = 0; c.gridy = 2;
-		view_panel.add(add_p2, c);
-		c.gridx = 1; c.gridy = 2;
-		view_panel.add(cand_add_p2, c);
-		//panel.add(new JScrollPane(cand_add, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-		c.gridx = 0; c.gridy = 3;
-		view_panel.add(amt_p2, c);
-		c.gridx = 1; c.gridy = 3;
-		view_panel.add(cand_amt_p2, c);
-		c.gridx = 0; c.gridy = 4;
-		view_panel.add(first, c);
-		c.gridx = 1; c.gridy = 4;
-		view_panel.add(prev, c);
-		c.gridx = 2; c.gridy = 4;
-		view_panel.add(next, c);
-		c.gridx = 3; c.gridy = 4;
-		view_panel.add(last, c); */
-		view_panel.setLayout(new BorderLayout());
-		//print = new JButton("Print");
-		//view_panel.add(print);
-		//view_panel.add(view);
+		viewTabStatusBar = new JLabel("");
 		
-		//view.setBounds(100, 300, 100, 20);
-		//view_tool.add(view);
-		//view_panel.add(view_tool);
-		//view.addActionListener(this);
-		//print.addActionListener(this);
+		BorderLayout layout = new BorderLayout();
+		view_panel.setLayout(layout);
 					
 		sorter = new TableRowSorter<DefaultTableModel>(model);
 		edit_table.setRowSorter(sorter);
 		edit_table.addMouseListener(this);
 		edit_table.setRowHeight(30);
 		Font ff = new Font("Arial", Font.PLAIN, 16);
+		viewTabStatusBar.setFont(ff);
 		edit_table.setFont(ff);
 		edit_table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
 		
+		InputMap im = edit_table.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap am = edit_table.getActionMap();
+
+		KeyStroke escapeKey = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+
+		im.put(escapeKey, "Action.escape");
+		am.put("Action.escape", new AbstractAction() {
+		    public void actionPerformed(ActionEvent evt) {
+		    	
+		    	RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)");
+				
+				sorter.setRowFilter(rowFilter);  
+		    }
+		});
+		
+		model.addColumn("NS NO");			
+		model.addColumn("Name");			
+		model.addColumn("Address Line 1");
+		model.addColumn("Address Line 2");
+		model.addColumn("Area");
+		model.addColumn("City");
+		model.addColumn("Pin Code");
+		model.addColumn("Amount");
+		model.addColumn("Annual Report");
+		model.addColumn("Prasadam");
+		
+		view_tab_data();
+		
 //		edit_table.setEnabled(false);
 		//edit_table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		try {
-			Class.forName("org.h2.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        Connection conn = null;
-		try {
-			conn = DriverManager.
-			    getConnection("jdbc:h2:~/vrnt", "sa", "");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        // add application code here
-		Statement stm;
-		try {
-			stm = conn.createStatement();
-			//String st = "create table if not exists details(no int, name varchar(50), address varchar(200))";
-			String st = "select * from details";
-			ResultSet rs = stm.executeQuery(st);
-			model.addColumn("NS NO");			
-			model.addColumn("Name");			
-			model.addColumn("Address Line 1");
-			model.addColumn("Address Line 2");
-			model.addColumn("Area");
-			model.addColumn("City");
-			model.addColumn("Pin Code");
-			model.addColumn("Amount");
-			model.addColumn("Annual Report");
-			model.addColumn("Prasadam");
-			
-		/*	while (rs.next()){
-				String no = rs.getString(1);
-				String nam = rs.getString(2);
-				String addr = rs.getString(3);
-				Float amount = rs.getFloat(4);
-				model.addRow(new Object[] {no, nam, addr, amount});
-			} */
-			view_tab_data();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-        try {
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
+		    
         jsp = new JScrollPane(edit_table);        
-        view_panel.add(jsp);
         
+        view_panel.add(jsp, layout.CENTER);
+        view_panel.add(viewTabStatusBar, layout.SOUTH);
 	}
 	
 	
 	void view_tab_data(){
+		int count = 0, annualCount = 0, prasadamCount = 0;
 		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	    centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+	    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+	    rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
+	    
 		try{
 			Connection conn = DriverManager.
 				    getConnection("jdbc:h2:~/vrnt", "sa", "");
 			Statement stm = conn.createStatement();
-			String st = "select * from details";
+			String st = "select * from details order by last_updated_at";
 			ResultSet rs = stm.executeQuery(st);
 		
 		while (rs.next()){
@@ -579,18 +533,26 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			Float amount = rs.getFloat(11);
 			String annualReport = rs.getString(13);
 			String prasadam = rs.getString(14);
+			
+			count++;
+			if(annualReport.equals("Selected"))annualCount++;
+			if(prasadam.equals("Selected"))prasadamCount++;
+			
 //			edit_table.getColumnModel().getColumn(7).setCellRenderer(new checkBoxRenderer("unselect"));
 			model.addRow(new Object[] {no, nam, addr1, addr2, area1, city1, pinCode1, amount, annualReport, prasadam});
 			
 		}
-//		edit_table.getColumnModel().getColumn(0).setMaxWidth(100);
-//		edit_table.getColumnModel().getColumn(1).setMaxWidth(200);
-//		edit_table.getColumnModel().getColumn(2).setMaxWidth(400);
-//		edit_table.getColumnModel().getColumn(3).setMaxWidth(350);
-//		edit_table.getColumnModel().getColumn(4).setMaxWidth(200);
-//		edit_table.getColumnModel().getColumn(5).setMaxWidth(100);
-//		edit_table.getColumnModel().getColumn(6).setMaxWidth(100);
-		((JLabel)edit_table.getDefaultRenderer(String.class)).setHorizontalAlignment(JLabel.LEFT);
+		
+		viewTabStatusBar.setText("    Total Count : "+count+"    Annual Report Count : "+annualCount+"    Prasadam Count : "+prasadamCount);
+				
+				
+		edit_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		edit_table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+		edit_table.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
+		edit_table.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
+		edit_table.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+
+		
 		
 	}
 		catch(Exception e){
@@ -608,6 +570,118 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	    }
 		
 		
+	}
+	
+	public void DonationInterior(){
+		donationRegisterPanel.setLayout(new BorderLayout());
+		donationRegisterTable.addMouseListener(this);
+//		donationRegisterTable.setRowHeight(150);
+		
+		Font ff = new Font("Arial", Font.PLAIN, 16);
+		donationRegisterTable.setFont(ff);
+		donationRegisterTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
+		donationRegisterTable.getTableHeader().setPreferredSize(new Dimension(100, 100));
+		
+		donationRegisterTableModel.addColumn("Receipt Date");
+		donationRegisterTableModel.addColumn("Receipt No.");
+		donationRegisterTableModel.addColumn("Ns No.");
+		donationRegisterTableModel.addColumn("Name");
+		donationRegisterTableModel.addColumn("Contact");
+		donationRegisterTableModel.addColumn("Type of Donation");
+		donationRegisterTableModel.addColumn("Amount");
+		donationRegisterTableModel.addColumn("Mode of Receipt");
+		donationRegisterTableModel.addColumn("<html><center>Cheque / <br>Transfer <br>No.</center></html>");
+		donationRegisterTableModel.addColumn("<html><center>Cheque / <br>Transfer <br>Date</center></html>");
+		donationRegisterTableModel.addColumn("<html><center>Bank <br>Drawn</center></html>");
+		donationRegisterTableModel.addColumn("Branch");
+		donationRegisterTableModel.addColumn("<html><center>Bank <br>Received</center></html>");
+		
+		try{
+			Connection conn = DriverManager.
+				    getConnection("jdbc:h2:~/vrnt", "sa", "");
+			Statement stm = conn.createStatement();
+			String st = "select * from bill where status = 'cleared'";
+			ResultSet rs = stm.executeQuery(st);
+		
+		while (rs.next()){
+			int receiptNo = rs.getInt(1);
+			Date receiptDate = rs.getDate(2);
+			String nsNum = rs.getString(3);
+			String nam = rs.getString(5) + " " + rs.getString(4);
+			String addr1 = rs.getString(6);
+			String addr2 = rs.getString(7);
+			String area1 = rs.getString(8);
+			String city1 = rs.getString(9);
+			String pinCode1 = rs.getString(10);
+			String ph = rs.getString(11);
+			String email = rs.getString(12);
+			
+			String address = "<html>"+addr1;
+			address += (addr2.length() != 0) ? "<br>"+addr2 : "";
+			address += (area1.length() != 0) ? "<br>"+area1 : "";
+			address += (city1.length() != 0) ? "<br>"+city1 : "";
+			address += (pinCode1.length() != 0) ? "  "+pinCode1 : "";
+			address += (ph.length() != 0) ? "<br>"+ph : "";
+			address += (email.length() != 0) ? "<br>"+email : "";
+			address += "</html>";
+			String donType = rs.getString(13);
+			
+			
+
+			double amount = rs.getDouble(14);
+			String mode = rs.getString(15);
+			String chqNum = rs.getString(16);
+			String issueDate = rs.getString(17);
+			String bank = rs.getString(18);
+			String branch = rs.getString(19);
+			String bankRecvd = rs.getString(20);
+			
+			String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
+			
+			donationRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nsNum, nam, address, donType, amount, mode, chqNum, issueDate, bank, branch, bankRec});
+		}
+		} catch (Exception e){
+			System.err.println(e);
+		}
+		
+		
+		
+		    for (int row = 0; row < donationRegisterTable.getRowCount(); row++)
+		    {
+		        int rowHeight = donationRegisterTable.getRowHeight();
+
+		        for (int column = 0; column < donationRegisterTable.getColumnCount(); column++)
+		        {
+		            Component comp = donationRegisterTable.prepareRenderer(donationRegisterTable.getCellRenderer(row, column), row, column);
+		            rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+		        }
+
+		        donationRegisterTable.setRowHeight(row, rowHeight);
+		    }
+		    
+		    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		    centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		    rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
+		    
+		    donationRegisterTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(10).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(11).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
+		    
+		    
+		 jspDonationRegister = new JScrollPane(donationRegisterTable);        
+	     donationRegisterPanel.add(jspDonationRegister);
+	}
+	
+	public <T> String getTableComponent(T field, String property){
+		return "<html><"+property+">"+field+"</"+property+"></html>";
 	}
 	
 	void edit_interior(){
@@ -1107,6 +1181,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		print_frame.setVisible(true);
 	}
 	
+	public String GetCurrentDateTime(){
+		Calendar cal = Calendar.getInstance();
+		String currentDateTime = dateformat.format(cal.getTime());
+		
+		return currentDateTime;
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
@@ -1129,8 +1210,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		try {
 			stm = conn.createStatement();
 			
-			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10))";
-			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno number(30), issue_date varchar(10), bank varchar(100), branch varchar(100), bank_received varchar(100),  status varchar(10))";
+			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10), last_updated_at timestamp)";
+			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), bank_received varchar(100),  status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
 		} catch (SQLException e1) {
@@ -1277,7 +1358,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					if(cand_amt_p1.getText().length() != 0)
 						amount =  Double.parseDouble(cand_amt_p1.getText());
 					
-					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"', '"+cand_email_p1.getText()+"', "+amount+", '"+cand_other_ns_num_p1.getText()+"', 'Selected', 'Selected')";
+					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"', '"+cand_email_p1.getText()+"', "+amount+", '"+cand_other_ns_num_p1.getText()+"', 'Selected', 'Selected', last_updated_at = '"+GetCurrentDateTime()+"')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "Saved successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -1636,7 +1717,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 //			for(Object key : status.keySet()){
 //			System.out.println(key + " : "+ status.get(key));
 //		}
-			if(annualReportStatus.size() == 0 || prasadamStatus.size() == 0){
+			if(annualReportStatus.size() == 0 && prasadamStatus.size() == 0){
 				Telegraph tele = new Telegraph("Warning", "No Changes to made...", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);
 				TelegraphQueue quee = new TelegraphQueue();
 				quee.add(tele);
@@ -1699,6 +1780,49 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					
 				}
 			
+			}
+		}
+		
+		else if (e.getSource() == donationRegisterCsv){
+			int ret = chose.showSaveDialog(this);
+			File s;
+			if(ret == JFileChooser.APPROVE_OPTION){
+				s = chose.getSelectedFile();
+				String file_name = s.toString();
+				if (!file_name.toLowerCase().endsWith(".csv")){
+					s = new File(file_name+".csv");
+				}
+				
+				 try{
+				        TableModel model = donationRegisterTable.getModel();
+				        FileWriter excel = new FileWriter(s);
+
+				        for(int i = 0; i < model.getColumnCount(); i++){
+				            excel.write(model.getColumnName(i).replaceAll("<[^>]*>", "") + ",");				            
+				        }
+
+				        excel.write("\n");
+
+				        for(int i=0; i< model.getRowCount(); i++) {				        	
+				            for(int j=0; j < model.getColumnCount(); j++) {
+				            	if(model.getValueAt(i,j) != null)
+				            		excel.write(model.getValueAt(i,j).toString().replaceAll(",", " ").replaceAll("<[br^>]*>", " ").replaceAll("<[^>]*>", "")+",");				                
+				            }
+				            excel.write("\n");
+				        }
+
+				        excel.close();
+				        
+				        Telegraph tele = new Telegraph("Success", "Donation Register Successfully Exported...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+						TelegraphQueue que = new TelegraphQueue();
+						que.add(tele);
+
+				 	}catch(IOException e1){ 
+				    	System.out.println(e1); 
+				    	Telegraph tele = new Telegraph("Error", "Some Problem Occured...", TelegraphType.NOTIFICATION_ERROR, WindowPosition.BOTTOMRIGHT, 4000);
+						TelegraphQueue que = new TelegraphQueue();
+						que.add(tele);
+				    }
 			}
 		}
 		
@@ -1822,7 +1946,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        Connection conn = DriverManager.
 			            getConnection("jdbc:h2:~/vrnt", "sa", "");
 			        Statement stm = conn.createStatement();
-			        String st = "update details set initial = '"+cand_initial_p3.getText()+"', name = '"+cand_nam_p3.getText()+"', "+"addr_1 = "+"'"+addr_13.getText()+"'"+", addr_2 = '"+addr_23.getText()+"', area = '"+area_3.getText()+"', city = '"+city_town3.getText()+"', pincode = '"+pin_code_3.getText()+"', phone_num = '"+cand_ph_p3.getText()+"', email = '"+cand_email_p3.getText()+"', amount = "+cand_amt_p3.getText()+", other_ns_num = '"+cand_other_ns_num_p3.getText()+"' where no = "+"'"+num_p3.getText()+"'";
+			        String st = "update details set initial = '"+cand_initial_p3.getText()+"', name = '"+cand_nam_p3.getText()+"', "+"addr_1 = "+"'"+addr_13.getText()+"'"+", addr_2 = '"+addr_23.getText()+"', area = '"+area_3.getText()+"', city = '"+city_town3.getText()+"', pincode = '"+pin_code_3.getText()+"', phone_num = '"+cand_ph_p3.getText()+"', email = '"+cand_email_p3.getText()+"', amount = "+cand_amt_p3.getText()+", other_ns_num = '"+cand_other_ns_num_p3.getText()+"', last_updated_at = '"+GetCurrentDateTime()+"'  where no = "+"'"+num_p3.getText()+"'";
 			        stm.executeUpdate(st);
 			        Telegraph tele = new Telegraph("Success", "Updated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -2090,7 +2214,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				}
 		        try {
 					Statement stm = conn.createStatement();
-					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', "+pay_num+", '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getText()+"', 'cleared'"+")";
+					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+pay_num+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getText()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					if(num_p2.getText().length() != 0){
 						String st1 = "select amount from details where no = '"+num_p2.getText()+"'";
@@ -2578,7 +2702,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        	 table.addCell(new Phrase(String.valueOf(rs.getDate(2)), n));
 			        	 table.addCell(new Phrase(rs.getString(3), n));
 			        	 table.addCell(new Phrase(rs.getString(5) + rs.getString(4), n));
-			        	 table.addCell(new Phrase(String.valueOf(rs.getInt(16)), n));
+			        	 table.addCell(new Phrase(String.valueOf(rs.getString(16)), n));
 			        	 amt = rs.getDouble(14);
 			        	 table.addCell(new Phrase(String.valueOf(amt), n));
 			        	 String sss = rs.getString(6);
@@ -2755,7 +2879,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        	// table.addCell(new Phrase(rs.getString(12), n));
 			        	// table.addCell(new Phrase(rs.getString(13), n));
 			        	// table.addCell(new Phrase(rs.getString(14), n));
-			        	table.addCell(new Phrase(String.valueOf(rs.getInt(16))+"\n"+rs.getString(17)+"\n"+rs.getString(18)+"\n"+rs.getString(19), n));
+			        	table.addCell(new Phrase(String.valueOf(rs.getString(16))+"\n"+rs.getString(17)+"\n"+rs.getString(18)+"\n"+rs.getString(19), n));
 			        	
 			        	 if (sss.equals("Cash")){
 			        		 cashtot += amt;
