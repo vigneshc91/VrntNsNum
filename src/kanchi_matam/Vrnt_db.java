@@ -1436,7 +1436,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					conn = DriverManager.
 						    getConnection("jdbc:h2:~/vrnt", "sa", "");
 					Statement stm = conn.createStatement();
-					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where annual_report = \'Selected\'')";
+					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where annual_report = ''Selected'' ')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "CSV Generated Successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue que = new TelegraphQueue();
@@ -1575,7 +1575,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					conn = DriverManager.
 						    getConnection("jdbc:h2:~/vrnt", "sa", "");
 					Statement stm = conn.createStatement();
-					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where prasadam = \'Selected\'')";
+					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where prasadam = ''Selected'' ')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "CSV Generated Successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue que = new TelegraphQueue();
