@@ -116,6 +116,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	
 	JMenuItem pdf = new JMenuItem("Generate Pdf");
 	JMenuItem refresh = new JMenuItem("Refresh");
+	JMenuItem refreshDonationRegister = new JMenuItem("Refresh Donation");
 	JMenuItem search = new JMenuItem("Find");
 	JMenuItem saveStatus = new JMenuItem("Save Status");
 	JMenuItem donationRegisterCsv = new JMenuItem("Export Donation");
@@ -246,6 +247,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		refresh.setIcon(refresh_img);
 		refresh.addActionListener(this);
 		refresh.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+		
+		refreshDonationRegister.setIcon(refresh_img);
+		refreshDonationRegister.addActionListener(this);
+		file.add(refreshDonationRegister);
+		
 //		file.add(pdf);
 //		pdf.setIcon(pdf_img);
 //		pdf.addActionListener(this);
@@ -596,6 +602,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		donationRegisterTableModel.addColumn("Branch");
 		donationRegisterTableModel.addColumn("<html><center>Bank <br>Received</center></html>");
 		
+		DonationRegisterTableData();				    
+		    
+		jspDonationRegister = new JScrollPane(donationRegisterTable);        
+		donationRegisterPanel.add(jspDonationRegister);
+	}
+	
+	void DonationRegisterTableData(){
 		try{
 			Connection conn = DriverManager.
 				    getConnection("jdbc:h2:~/vrnt", "sa", "");
@@ -603,61 +616,60 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String st = "select * from bill where status = 'cleared'";
 			ResultSet rs = stm.executeQuery(st);
 		
-		while (rs.next()){
-			int receiptNo = rs.getInt(1);
-			Date receiptDate = rs.getDate(2);
-			String nsNum = rs.getString(3);
-			String nam = rs.getString(5) + " " + rs.getString(4);
-			String addr1 = rs.getString(6);
-			String addr2 = rs.getString(7);
-			String area1 = rs.getString(8);
-			String city1 = rs.getString(9);
-			String pinCode1 = rs.getString(10);
-			String ph = rs.getString(11);
-			String email = rs.getString(12);
-			
-			String address = "<html>"+addr1;
-			address += (addr2.length() != 0) ? "<br>"+addr2 : "";
-			address += (area1.length() != 0) ? "<br>"+area1 : "";
-			address += (city1.length() != 0) ? "<br>"+city1 : "";
-			address += (pinCode1.length() != 0) ? "  "+pinCode1 : "";
-			address += (ph.length() != 0) ? "<br>"+ph : "";
-			address += (email.length() != 0) ? "<br>"+email : "";
-			address += "</html>";
-			String donType = rs.getString(13);
-			
-			
-
-			double amount = rs.getDouble(14);
-			String mode = rs.getString(15);
-			String chqNum = rs.getString(16);
-			String issueDate = rs.getString(17);
-			String bank = rs.getString(18);
-			String branch = rs.getString(19);
-			String bankRecvd = rs.getString(20);
-			
-			String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
-			
-			donationRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nsNum, nam, address, donType, amount, mode, chqNum, issueDate, bank, branch, bankRec});
-		}
+			while (rs.next()){
+				int receiptNo = rs.getInt(1);
+				Date receiptDate = rs.getDate(2);
+				String nsNum = rs.getString(3);
+				String nam = rs.getString(5) + " " + rs.getString(4);
+				String addr1 = rs.getString(6);
+				String addr2 = rs.getString(7);
+				String area1 = rs.getString(8);
+				String city1 = rs.getString(9);
+				String pinCode1 = rs.getString(10);
+				String ph = rs.getString(11);
+				String email = rs.getString(12);
+				
+				String address = "<html>"+addr1;
+				address += (addr2.length() != 0) ? "<br>"+addr2 : "";
+				address += (area1.length() != 0) ? "<br>"+area1 : "";
+				address += (city1.length() != 0) ? "<br>"+city1 : "";
+				address += (pinCode1.length() != 0) ? "  "+pinCode1 : "";
+				address += (ph.length() != 0) ? "<br>"+ph : "";
+				address += (email.length() != 0) ? "<br>"+email : "";
+				address += "</html>";
+				String donType = rs.getString(13);
+				
+				
+	
+				double amount = rs.getDouble(14);
+				String mode = rs.getString(15);
+				String chqNum = rs.getString(16);
+				String issueDate = rs.getString(17);
+				String bank = rs.getString(18);
+				String branch = rs.getString(19);
+				String bankRecvd = rs.getString(20);
+				
+				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
+				
+				donationRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nsNum, nam, address, donType, amount, mode, chqNum, issueDate, bank, branch, bankRec});
+			}
+	
 		} catch (Exception e){
 			System.err.println(e);
 		}
 		
-		
-		
-		    for (int row = 0; row < donationRegisterTable.getRowCount(); row++)
+		for (int row = 0; row < donationRegisterTable.getRowCount(); row++)
+		{
+		    int rowHeight = donationRegisterTable.getRowHeight();
+
+		    for (int column = 0; column < donationRegisterTable.getColumnCount(); column++)
 		    {
-		        int rowHeight = donationRegisterTable.getRowHeight();
+		        Component comp = donationRegisterTable.prepareRenderer(donationRegisterTable.getCellRenderer(row, column), row, column);
+		        rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+		     }
 
-		        for (int column = 0; column < donationRegisterTable.getColumnCount(); column++)
-		        {
-		            Component comp = donationRegisterTable.prepareRenderer(donationRegisterTable.getCellRenderer(row, column), row, column);
-		            rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
-		        }
-
-		        donationRegisterTable.setRowHeight(row, rowHeight);
-		    }
+		    donationRegisterTable.setRowHeight(row, rowHeight);
+		}
 		    
 		    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		    centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -674,14 +686,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		    donationRegisterTable.getColumnModel().getColumn(10).setCellRenderer(centerRenderer);
 		    donationRegisterTable.getColumnModel().getColumn(11).setCellRenderer(centerRenderer);
 		    donationRegisterTable.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
-		    
-		    
-		 jspDonationRegister = new JScrollPane(donationRegisterTable);        
-	     donationRegisterPanel.add(jspDonationRegister);
-	}
-	
-	public <T> String getTableComponent(T field, String property){
-		return "<html><"+property+">"+field+"</"+property+"></html>";
+
+
 	}
 	
 	void edit_interior(){
@@ -1419,6 +1425,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		else if (e.getActionCommand().equals("Refresh")){
 			model.setRowCount(0);
 			view_tab_data();
+		}
+		
+		else if (e.getSource() == refreshDonationRegister){
+			donationRegisterTableModel.setRowCount(0);
+			DonationRegisterTableData();
 		}
 		
 		else if (e.getSource() == csvAnnualReport){
@@ -2206,15 +2217,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					e1.printStackTrace();
 				}
 		        // add application code here
-				String pay_num;
-				if (payment_num.getText().length() == 0){
-					pay_num = null;
-				} else {
-					pay_num = payment_num.getText();
-				}
+				
 		        try {
 					Statement stm = conn.createStatement();
-					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+pay_num+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getText()+"', 'cleared'"+")";
+					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getText()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					if(num_p2.getText().length() != 0){
 						String st1 = "select amount from details where no = '"+num_p2.getText()+"'";
