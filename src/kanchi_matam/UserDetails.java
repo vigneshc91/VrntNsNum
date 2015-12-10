@@ -149,10 +149,10 @@ public class UserDetails extends JFrame implements ActionListener {
 			String email = rs.getString(10);
 			
 			String address = "<html>"+addr1;
-			address += (addr2.length() != 0) ? "<br>"+addr2 : "";
-			address += (area1.length() != 0) ? "<br>"+area1 : "";
-			address += (city1.length() != 0) ? "<br>"+city1 : "";
-			address += (pinCode1.length() != 0) ? " - "+pinCode1 : "";
+			address += (addr2 != null && addr2.length() != 0) ? "<br>"+addr2 : "";
+			address += (area1 != null && area1.length() != 0) ? "<br>"+area1 : "";
+			address += (city1 != null && city1.length() != 0) ? "<br>"+city1 : "";
+			address += (pinCode1 != null && pinCode1.length() != 0) ? " - "+pinCode1 : "";
 			
 			
 			totalAmountSpend = rs.getDouble(11);

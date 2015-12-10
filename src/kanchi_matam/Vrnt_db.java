@@ -39,6 +39,7 @@ import org.freixas.jcalendar.JCalendar;
 
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.RuleBasedNumberFormat;
+import com.ibm.icu.util.Currency;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -62,6 +63,7 @@ import java.util.Calendar;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
@@ -524,7 +526,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			Connection conn = DriverManager.
 				    getConnection("jdbc:h2:~/vrnt", "sa", "");
 			Statement stm = conn.createStatement();
-			String st = "select * from details order by last_updated_at";
+			String st = "select * from details order by last_updated_at desc";
 			ResultSet rs = stm.executeQuery(st);
 		
 		while (rs.next()){
@@ -1364,7 +1366,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					if(cand_amt_p1.getText().length() != 0)
 						amount =  Double.parseDouble(cand_amt_p1.getText());
 					
-					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"', '"+cand_email_p1.getText()+"', "+amount+", '"+cand_other_ns_num_p1.getText()+"', 'Selected', 'Selected', last_updated_at = '"+GetCurrentDateTime()+"')";
+					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"', '"+cand_email_p1.getText()+"', "+amount+", '"+cand_other_ns_num_p1.getText()+"', 'Selected', 'Selected', '"+GetCurrentDateTime()+"')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "Saved successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -2286,7 +2288,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			doc.setMarginMirroring(true);
 			doc.open();
 			com.itextpdf.text.Font fi = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 16);
-			com.itextpdf.text.Font n = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 10);
+			com.itextpdf.text.Font n = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 10);			
 			com.itextpdf.text.Font nb = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD);
 			com.itextpdf.text.Font si = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 8);
 			com.itextpdf.text.Font ni = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 6);
@@ -2295,16 +2297,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			//tab.setWidths(new int[] {80, 60, 60});
 			tab.setWidthPercentage(100);
 			
-			NumberFormat formatter = new RuleBasedNumberFormat(RuleBasedNumberFormat.SPELLOUT);
+			NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
+			
 			String result = formatter.format(Integer.parseInt(cand_amt_p2.getText()));
-
+			
 
 			Phrase vrnt = new Phrase(" ", fi);
-
-			
-			
-
-
 
 			c = new PdfPCell(vrnt);
 
@@ -2312,11 +2310,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 
 			Phrase rece = new Phrase("Receipt Number: "+receipt_no.getText(), si);
 			
+			
 			Phrase donat = new Phrase(don_type.getSelectedItem().toString(), si);
 			g = new PdfPCell(donat);
 			g.setHorizontalAlignment(Element.ALIGN_CENTER);
 			
-			Phrase dat = new Phrase("Date: "+date.getText(), si);
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			String receivedDate = dateFormat.format(Date.valueOf(date.getText()));
+			
+			Phrase dat = new Phrase("Date: "+receivedDate, si);
 			
 			Phrase rs = new Phrase("AMOUNT Rs. "+cand_amt_p2.getText(), si);
 			Phrase nsno = new Phrase("N.S No: "+num_p2.getText(), si);
@@ -2341,18 +2343,26 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			for(int i=0; i<emptyAddressCount; i++)
 				address += "\n";
 			
-			Phrase addr = new Phrase(address, ni);
+			Phrase addr = new Phrase(address, si);
 			
 			String paymentDetails = ""; 
 			paymentDetails += "Mode Of Receipt: "+payment_mode.getSelectedItem();
-			paymentDetails += "\n" + "CHQ No: "+((payment_num.getText().length() != 0) ? payment_num.getText() : " N/A ") + " " +"Date: "+((issue_dat.getText().length() != 0) ? issue_dat.getText() : " N/A ");
-			paymentDetails += "\n" + "Bank Drawn: "+((bank_name.getText().length() != 0) ? bank_name.getText() : " N/A ");
-			paymentDetails += "\n" + "Branch: "+((branch_nam.getText().length() != 0) ? branch_nam.getText() : " N/A ");
+			switch(payment_mode.getSelectedItem().toString()){
+				case "CHQ":
+					paymentDetails += "\n" + "CHEQUE NO : " + payment_num.getText()  + "\n" +"Date: " + issue_dat.getText();
+					paymentDetails += "\n" + "Bank Drawn: " + bank_name.getText();
+					paymentDetails += "\n" + "Branch: " + branch_nam.getText();
+					break;
+				case "A/C TRANSFER":
+					paymentDetails += "\n" + "TRNF NO : " + payment_num.getText()  + "\n" +"Date: " + issue_dat.getText();
+					break;
+			}
+			
 			Phrase mod = new Phrase(paymentDetails, si);
 
 			
-			Phrase don_for = new Phrase("This Donation is for Corpus of the Trust", ni);
-			Phrase sign_don = new Phrase("Signature of Donor", si);
+			Phrase don_for = new Phrase("THIS DONATION IS FOR CORPUS OF THE TRUST", ni);
+			Phrase sign_don = new Phrase("SIGNATURE OF DONOR", si);
 			Phrase sign_rec = new Phrase("Signature of Receiver", si);
 			Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
 			
@@ -2379,7 +2389,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			PdfPCell address_c = new PdfPCell(addr);
 			address_c.setFixedHeight(80);
 			
-
+			PdfPCell dummy = new PdfPCell(emp);
 			PdfPCell rece_c = new PdfPCell(rece);
 			
 			PdfPCell dat_c = new PdfPCell(dat);
@@ -2405,11 +2415,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 
 			empty.setFixedHeight(6);
 
-			pay_c.setColspan(2);
+//			pay_c.setColspan(2);
 
-			rs_c.setColspan(2);
-			rup_c.setColspan(2);
-			mod_c.setColspan(2);
+//			rs_c.setColspan(2);
+			rup_c.setColspan(3);
+//			mod_c.setColspan(2);
+			
+			nsno_c.setColspan(2);
+			nam_c.setColspan(2);
+			address_c.setColspan(2);
 
 			empty.setColspan(3);
 			don_for_c.setColspan(3);
@@ -2419,7 +2433,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			c.setBorder(0);
 			g.setBorder(0);
 			empty.setBorder(0);
-
+			dummy.setBorder(0);
 			nam_c.setBorder(0);
 			rece_c.setBorder(0);
 			address_c.setBorder(0);
@@ -2444,7 +2458,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 //			cb.roundRectangle(20, doc.getPageSize().getHeight()/2+5, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
 //			cb.roundRectangle(20, 40, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
 			
-			//cb.closePath();
+//			cb.closePath();
 //			cb.stroke();
 //			com.itextpdf.text.Image donor_img = null;
 //			com.itextpdf.text.Image off_img = null;
@@ -2458,7 +2472,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				signature = new PdfPCell(sign);
 //				donor_img.scaleAbsolute(150, 150);
 
-				sign.scaleAbsolute(120, 20);
+				sign.scaleAbsolute(80, 15);
 //				off_img.scaleAbsolute(150, 150);
 //				donor_img.setAbsolutePosition(120, doc.getPageSize().getHeight()/2+50);
 //				off_img.setAbsolutePosition(120, 90);
@@ -2476,6 +2490,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			signature.setBorder(0);
 			signature.setColspan(3);
 			signature.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			signature.setPaddingRight(30);
 			for (int i = 0; i < 2; i++){
 
 			tab.addCell(c);
@@ -2492,7 +2507,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(rs_c);
 			tab.addCell(nsno_c);
 			
-			tab.addCell(rup_c);
+			tab.addCell(dummy);
 			
 			tab.addCell(nam_c);
 			tab.addCell(mod_c);
@@ -2500,7 +2515,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(address_c);
 			
 			
-
+			tab.addCell(rup_c);
 			tab.addCell(don_for_c);
 
 			tab.addCell(empty);
@@ -2676,7 +2691,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        Connection conn = DriverManager.
 			            getConnection("jdbc:h2:~/vrnt", "sa", "");
 			        Statement stmt = conn.createStatement();
-			        String st = "select receipt,dat,no,name,amt,pay_mode,chqno from bill where dat between '"+strtdate+"' and '"+enddate+"' and status = 'cleared'";
+			        String st = "select receipt,dat,no,initial,name,amt,pay_mode,chqno from bill where dat between '"+strtdate+"' and '"+enddate+"' and status = 'cleared'";
 			        ResultSet rs = stmt.executeQuery(st);
 			       if(rs.isBeforeFirst()){
 			    	   int ret = gen_pdf.showSaveDialog(this);
@@ -2719,11 +2734,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        	 table.addCell(new Phrase(rs.getString(1), n));
 			        	 table.addCell(new Phrase(String.valueOf(rs.getDate(2)), n));
 			        	 table.addCell(new Phrase(rs.getString(3), n));
-			        	 table.addCell(new Phrase(rs.getString(5) + rs.getString(4), n));
-			        	 table.addCell(new Phrase(String.valueOf(rs.getString(16)), n));
-			        	 amt = rs.getDouble(14);
+			        	 table.addCell(new Phrase(rs.getString(5) + " " + rs.getString(4), n));			        	 			        	 
+			        	 table.addCell(new Phrase(rs.getString(8), n));
+			        	 amt = rs.getDouble(6);
 			        	 table.addCell(new Phrase(String.valueOf(amt), n));
-			        	 String sss = rs.getString(6);
+			        	 String sss = rs.getString(7);
 			        	 if (sss.equals("CASH")){
 			        		 cashtot += amt;
 			        	 } else if(sss.equals("CHQ")){
@@ -2759,7 +2774,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						p4.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p4.setBorder(0);
 						tab.addCell(p4);
-						PdfPCell p6 = new PdfPCell(new Phrase("Total Amount By D.D "));
+						PdfPCell p6 = new PdfPCell(new Phrase("Total Amount By A/C Transfer "));
 						p6.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p6.setBorder(0);
 						tab.addCell(p6);
@@ -2880,7 +2895,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        	 table.addCell(new Phrase(rs.getString(1), n));
 			        	 table.addCell(new Phrase(String.valueOf(rs.getDate(2)), n));
 			        	 table.addCell(new Phrase(rs.getString(3), n));
-			        	 table.addCell(new Phrase(rs.getString(5) + rs.getString(4), n));
+			        	 table.addCell(new Phrase(rs.getString(5) + " " + rs.getString(4), n));
 			        	// table.addCell(new Phrase(rs.getString(5), n));
 			        	// table.addCell(new Phrase(rs.getString(6), n));
 			        	// table.addCell(new Phrase(rs.getString(7), n));
@@ -2899,11 +2914,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			        	// table.addCell(new Phrase(rs.getString(14), n));
 			        	table.addCell(new Phrase(String.valueOf(rs.getString(16))+"\n"+rs.getString(17)+"\n"+rs.getString(18)+"\n"+rs.getString(19), n));
 			        	
-			        	 if (sss.equals("Cash")){
+			        	 if (sss.equals("CASH")){
 			        		 cashtot += amt;
-			        	 } else if(sss.equals("Cheque")){
+			        	 } else if(sss.equals("CHQ")){
 			        		 chqtot += amt;
-			        	 } else if(sss.equals("D.D")){
+			        	 } else if(sss.equals("A/C TRANSFER")){
 			        		 ddtot += amt;
 			        	 }
 			        	 
@@ -2933,7 +2948,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 							p4.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p4.setBorder(0);
 							tab.addCell(p4);
-							PdfPCell p6 = new PdfPCell(new Phrase("Total Amount By D.D "));
+							PdfPCell p6 = new PdfPCell(new Phrase("Total Amount By A/C Transfer "));
 							p6.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p6.setBorder(0);
 							tab.addCell(p6);
