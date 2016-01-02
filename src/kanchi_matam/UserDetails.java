@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -188,7 +189,7 @@ public class UserDetails extends JFrame implements ActionListener {
 			
 			ResultSet rs1 = stm1.executeQuery(receipt);
 			
-			if(!rs1.first()){
+			if(!rs1.isBeforeFirst()){
 				
 				listModel.addColumn("Donation Details");
 				listModel.addRow(new Object[] {"No entries found"});
