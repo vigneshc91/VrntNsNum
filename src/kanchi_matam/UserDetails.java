@@ -81,28 +81,28 @@ public class UserDetails extends JFrame implements ActionListener {
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
-		Font ff = new Font("Arial", Font.PLAIN, 18);
+		Font ff = new Font("Arial", Font.PLAIN, 12);
 		
 		user_table.setFont(ff);
-		user_table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 22));
+		user_table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
 		user_table.setRowHeight(150);
 		
 		totalAmountDonated.setFont(new Font("Arial", Font.BOLD, 28));
 		
 		listTable.setFont(ff);
-		listTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 22));
+		listTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
 		listTable.setRowHeight(50);
 		
-		model.addColumn("Ns Number");
-		model.addColumn("Name");
-		model.addColumn("Address");
-		model.addColumn("Phone Number");
-		model.addColumn("Email");
+		model.addColumn("NS. NO.");
+		model.addColumn("NAME");
+		model.addColumn("ADDRESS");
+		model.addColumn("PH. NO.");
+		model.addColumn("EMAIL");
 		
 		
-		model.addColumn("Other Relatives Ns No");
-		model.addColumn("Annual Report");
-		model.addColumn("Prasadam");
+		model.addColumn("RELATIVES");
+		model.addColumn("AR");
+		model.addColumn("PR");
 		
 		
 		
@@ -126,6 +126,8 @@ public class UserDetails extends JFrame implements ActionListener {
 	public void AddData(){
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	    centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+	    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+	    rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
 	    
 		try {
 			Connection conn = DriverManager.
@@ -158,8 +160,8 @@ public class UserDetails extends JFrame implements ActionListener {
 			
 			totalAmountSpend = rs.getDouble(11);
 			String otherNsNum = rs.getString(12);
-			String annualReport = rs.getString(13).equals("Selected") ? "Yes" : "No" ;
-			String prasadam = rs.getString(14).equals("Selected") ? "Yes" : "No";
+			String annualReport = rs.getString(13);
+			String prasadam = rs.getString(14);
 			
 			
 			setTitle(no + " "+ nam);
@@ -169,9 +171,9 @@ public class UserDetails extends JFrame implements ActionListener {
 			
 			
 		    user_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		    user_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
-		    user_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-		    user_table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+		    //user_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+		    //user_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+		    //user_table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 		    user_table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
 		    user_table.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
 			
@@ -191,17 +193,17 @@ public class UserDetails extends JFrame implements ActionListener {
 			
 			if(!rs1.isBeforeFirst()){
 				
-				listModel.addColumn("Donation Details");
+				listModel.addColumn("DONATION DETAILS");
 				listModel.addRow(new Object[] {"No entries found"});
 				
 				listTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 			} else {
 				
-				listModel.addColumn("Receipt Date");
-				listModel.addColumn("Receipt Number");
-				listModel.addColumn("Amount");
-				listModel.addColumn("Mode Of Payment");
-				listModel.addColumn("Bank Received");
+				listModel.addColumn("RT. DT.");
+				listModel.addColumn("RT. NO.");
+				listModel.addColumn("AMOUNT");
+				listModel.addColumn("MODE OF PAYMENT");
+				listModel.addColumn("BANK REC");
 				
 			while(rs1.next()){
 				
@@ -211,14 +213,26 @@ public class UserDetails extends JFrame implements ActionListener {
 				String mode = rs1.getString(15);
 				
 				String num = rs1.getString(16);
+				String bankDrawn = rs1.getString(18);
 				String bankReceived = rs1.getString(20);
-				String modeAndNum = mode.equals("CASH") ? mode : mode + " - " + num;
+				String modeAndNum;
+				if(mode.equals("CASH"))
+					modeAndNum = mode;
+				else if(mode.equals("CHQ"))
+					modeAndNum = mode + " - " + num + " - " + bankDrawn;
+				else
+					modeAndNum = mode + " - " + num;
+				
 				String bankRec = (mode.equals("CASH") && bankReceived.length() == 0) ? "CASH" : bankReceived;
 				
 				
 				
 				listModel.addRow(new Object[] {receiptDate, receiptNumber, amount, modeAndNum, bankRec});
 				
+				listTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				listTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+				listTable.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+				listTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 				}
 			}
 			

@@ -61,6 +61,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Dictionary;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -202,9 +203,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		DonationInterior();
 		
 		tab_pane.addTab("New Entry", new JScrollPane(new_panel));
-		tab_pane.addTab("View", view_panel);
+		tab_pane.addTab("NS Register", view_panel);
 		tab_pane.addTab("Update", new JScrollPane(edit_panel));
-		tab_pane.addTab("Billing", new JScrollPane(bill_panel));		
+		tab_pane.addTab("Receipt", new JScrollPane(bill_panel));		
 		tab_pane.addTab("Donation Register", new JScrollPane(donationRegisterPanel));
 		panel.add(tab_pane, BorderLayout.CENTER);
 		//interior();
@@ -470,11 +471,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		sorter = new TableRowSorter<DefaultTableModel>(model);
 		edit_table.setRowSorter(sorter);
 		edit_table.addMouseListener(this);
-		edit_table.setRowHeight(30);
+		edit_table.setRowHeight(60);
 		Font ff = new Font("Arial", Font.PLAIN, 16);
+		Font tableFont = new Font("Calibiri", Font.PLAIN, 12);
 		viewTabStatusBar.setFont(ff);
-		edit_table.setFont(ff);
-		edit_table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
+		edit_table.setFont(tableFont);
+		edit_table.getTableHeader().setFont(new Font("Calibiri", Font.BOLD, 12));
 		
 		InputMap im = edit_table.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		ActionMap am = edit_table.getActionMap();
@@ -492,15 +494,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		});
 		
 		model.addColumn("NS NO");			
-		model.addColumn("Name");			
-		model.addColumn("Address Line 1");
-		model.addColumn("Address Line 2");
-		model.addColumn("Area");
-		model.addColumn("City");
-		model.addColumn("Pin Code");
-		model.addColumn("Amount");
-		model.addColumn("Annual Report");
-		model.addColumn("Prasadam");
+		model.addColumn("NAME");			
+		model.addColumn("ADDRESS");
+		model.addColumn("AREA");
+		model.addColumn("CITY");
+		model.addColumn("PINCODE");
+		model.addColumn("AMOUNT");
+		model.addColumn("RELATIVES");
+		model.addColumn("AR");
+		model.addColumn("PR");
 		
 		view_tab_data();
 		
@@ -532,22 +534,22 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		while (rs.next()){
 			String no = rs.getString(1);
 			String nam = rs.getString(3) + " " + rs.getString(2);
-			String addr1 = rs.getString(4);
-			String addr2 = rs.getString(5);
+			String addr1 = rs.getString(4) + " " +rs.getString(5);
 			String area1 = rs.getString(6);
 			String city1 = rs.getString(7);
 			String pinCode1 = rs.getString(8);
-//			String num1 = rs.getString(6);
+			
 			Float amount = rs.getFloat(11);
+			String relatives = rs.getString(12);
 			String annualReport = rs.getString(13);
 			String prasadam = rs.getString(14);
 			
 			count++;
-			if(annualReport.equals("Selected"))annualCount++;
-			if(prasadam.equals("Selected"))prasadamCount++;
+			if(annualReport.equals("S"))annualCount++;
+			if(prasadam.equals("S"))prasadamCount++;
 			
 //			edit_table.getColumnModel().getColumn(7).setCellRenderer(new checkBoxRenderer("unselect"));
-			model.addRow(new Object[] {no, nam, addr1, addr2, area1, city1, pinCode1, amount, annualReport, prasadam});
+			model.addRow(new Object[] {no, nam, addr1, area1, city1, pinCode1, amount, relatives, annualReport, prasadam});
 			
 		}
 		
@@ -555,7 +557,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 				
 		edit_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		edit_table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+		edit_table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+		edit_table.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
 		edit_table.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
 		edit_table.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
 		edit_table.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
@@ -1366,7 +1369,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					if(cand_amt_p1.getText().length() != 0)
 						amount =  Double.parseDouble(cand_amt_p1.getText());
 					
-					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"', '"+cand_email_p1.getText()+"', "+amount+", '"+cand_other_ns_num_p1.getText()+"', 'Selected', 'Selected', '"+GetCurrentDateTime()+"')";
+					String st = "insert into details values("+"'"+num_p1.getText()+"'"+","+" '"+cand_initial_p1.getText()+"', '"+cand_nam_p1.getText()+"'"+","+"'"+addr_11.getText()+"'"+", '"+addr_21.getText()+"', '"+area_1.getText()+"', '"+city_town1.getText()+"' ,"+" '"+pin_code_1.getText()+"', '"+cand_ph_p1.getText()+"', '"+cand_email_p1.getText()+"', "+amount+", '"+cand_other_ns_num_p1.getText()+"', 'S', 'S', '"+GetCurrentDateTime()+"')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "Saved successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -1449,7 +1452,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					conn = DriverManager.
 						    getConnection("jdbc:h2:~/vrnt", "sa", "");
 					Statement stm = conn.createStatement();
-					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where annual_report = ''Selected'' ')";
+					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where annual_report = ''S'' ')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "CSV Generated Successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue que = new TelegraphQueue();
@@ -1499,7 +1502,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        Connection conn = DriverManager.
 		            getConnection("jdbc:h2:~/vrnt", "sa", "");
 		        Statement stm = conn.createStatement();
-		        String st = "select * from details where annual_report = 'Selected'";
+		        String st = "select * from details where annual_report = 'S'";
 		        ResultSet rs = stm.executeQuery(st);
 		        PdfContentByte canvas = writer.getDirectContentUnder();
 		        while(rs.next()){
@@ -1588,7 +1591,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					conn = DriverManager.
 						    getConnection("jdbc:h2:~/vrnt", "sa", "");
 					Statement stm = conn.createStatement();
-					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where prasadam = ''Selected'' ')";
+					String st = "call csvwrite('"+s+"', 'select no,initial,name,addr_1,addr_2,area,city,pincode,phone_num,email from details where prasadam = ''S'' ')";
 					stm.executeUpdate(st);
 					Telegraph tele = new Telegraph("Success", "CSV Generated Successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue que = new TelegraphQueue();
@@ -1638,7 +1641,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        Connection conn = DriverManager.
 		            getConnection("jdbc:h2:~/vrnt", "sa", "");
 		        Statement stm = conn.createStatement();
-		        String st = "select * from details where prasadam = 'Selected'";
+		        String st = "select * from details where prasadam = 'S'";
 		        ResultSet rs = stm.executeQuery(st);
 		        PdfContentByte canvas = writer.getDirectContentUnder();
 		        while(rs.next()){
@@ -3335,14 +3338,14 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
 			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 8).toString();
 			
-			if(select.equals("Selected")){
+			if(select.equals("S")){
 				
-				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 8);
-				select = "Deselect";
+				edit_table.getModel().setValueAt("DS", edit_table.convertRowIndexToModel(row), 8);
+				select = "DS";
 			}
 			else{
-				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 8);
-				select = "Selected";
+				edit_table.getModel().setValueAt("S", edit_table.convertRowIndexToModel(row), 8);
+				select = "S";
 			}
 			
 			annualReportStatus.put(nsNum, select);
@@ -3351,14 +3354,14 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
 			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 9).toString();
 			
-			if(select.equals("Selected")){
+			if(select.equals("S")){
 				
-				edit_table.getModel().setValueAt("Deselect", edit_table.convertRowIndexToModel(row), 9);
-				select = "Deselect";
+				edit_table.getModel().setValueAt("DS", edit_table.convertRowIndexToModel(row), 9);
+				select = "DS";
 			}
 			else{
-				edit_table.getModel().setValueAt("Selected", edit_table.convertRowIndexToModel(row), 9);
-				select = "Selected";
+				edit_table.getModel().setValueAt("S", edit_table.convertRowIndexToModel(row), 9);
+				select = "S";
 			}
 			
 			prasadamStatus.put(nsNum, select);
