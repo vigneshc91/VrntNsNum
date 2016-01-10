@@ -36,6 +36,7 @@ import net.sf.jtelegraph.TelegraphQueue;
 import net.sf.jtelegraph.TelegraphType;
 
 import org.freixas.jcalendar.JCalendar;
+import org.h2.util.StringUtils;
 
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.RuleBasedNumberFormat;
@@ -85,8 +86,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JLabel addr_line_11, addr_line_21, area1, city1, pin_code1, addr_line_12, addr_line_22, area2, city2, pin_code2, addr_line_13, addr_line_23, area3, city3, pin_code3;
 	JLabel viewTabStatusBar;
 	
-	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no, bank_received;
-	JComboBox don_type, payment_mode;	
+	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no;
+	JComboBox don_type, payment_mode, bank_received;	
 	JLabel no_p1, initial_p1, name_p1, add_p1, ph_p1, email_p1, amt_p1, other_ns_num_p1, no_p2, initial_p2, name_p2, add_p2, ph_p2, email_p2, amt_p2, other_ns_num_p2, no_p3, initial_p3, name_p3, add_p3, ph_p3, email_p3, amt_p3, other_ns_num_p3;
 	JTextField num_p1, cand_initial_p1, cand_nam_p1, cand_ph_p1, cand_email_p1, cand_amt_p1, cand_other_ns_num_p1, num_p2, cand_initial_p2, cand_nam_p2, cand_ph_p2, cand_email_p2, cand_amt_p2, cand_other_ns_num_p2, num_p3, cand_initial_p3, cand_nam_p3, cand_ph_p3, cand_email_p3, cand_amt_p3, cand_other_ns_num_p3;
 	JTextField addr_11, addr_21, area_1, city_town1, pin_code_1, addr_12, addr_22, area_2, city_town2, pin_code_2, addr_13, addr_23, area_3, city_town3, pin_code_3;
@@ -169,6 +170,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	Font f;
 	
 	DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	DateFormat simpleFormat = new SimpleDateFormat("dd-MMM-yyyy");
 	
 	Validator validator = new Validator();
 	
@@ -205,7 +207,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		tab_pane.addTab("New Entry", new JScrollPane(new_panel));
 		tab_pane.addTab("NS Register", view_panel);
 		tab_pane.addTab("Update", new JScrollPane(edit_panel));
-		tab_pane.addTab("Receipt", new JScrollPane(bill_panel));		
+		tab_pane.addTab("Donation Receipt", new JScrollPane(bill_panel));		
 		tab_pane.addTab("Donation Register", new JScrollPane(donationRegisterPanel));
 		panel.add(tab_pane, BorderLayout.CENTER);
 		//interior();
@@ -493,7 +495,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		    }
 		});
 		
-		model.addColumn("NS NO");			
+		model.addColumn("NS NO");
+		model.addColumn("INITIAL");
 		model.addColumn("NAME");			
 		model.addColumn("ADDRESS");
 		model.addColumn("AREA");
@@ -518,6 +521,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	
 	void view_tab_data(){
 		int count = 0, annualCount = 0, prasadamCount = 0;
+		NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
 		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	    centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -532,14 +536,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			ResultSet rs = stm.executeQuery(st);
 		
 		while (rs.next()){
-			String no = rs.getString(1);
-			String nam = rs.getString(3) + " " + rs.getString(2);
-			String addr1 = rs.getString(4) + " " +rs.getString(5);
-			String area1 = rs.getString(6);
-			String city1 = rs.getString(7);
-			String pinCode1 = rs.getString(8);
+			String no = rs.getString(1).toUpperCase();
+			String initial = rs.getString(2).toUpperCase();
+			String nam = rs.getString(3).toUpperCase(); 
+			String addr1 = rs.getString(4).toUpperCase() + " ";
+			String addr2 = (StringUtils.isNullOrEmpty(rs.getString(5))) ? rs.getString(5) : rs.getString(5).toUpperCase();
+			addr1 += addr2;
+			String area1 = rs.getString(6).toUpperCase();
+			String city1 = rs.getString(7).toUpperCase();
+			String pinCode1 = rs.getString(8).toUpperCase();
 			
-			Float amount = rs.getFloat(11);
+			String amount = "Rs. "+formatter.format(rs.getFloat(11));
 			String relatives = rs.getString(12);
 			String annualReport = rs.getString(13);
 			String prasadam = rs.getString(14);
@@ -549,7 +556,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			if(prasadam.equals("S"))prasadamCount++;
 			
 //			edit_table.getColumnModel().getColumn(7).setCellRenderer(new checkBoxRenderer("unselect"));
-			model.addRow(new Object[] {no, nam, addr1, area1, city1, pinCode1, amount, relatives, annualReport, prasadam});
+			model.addRow(new Object[] {no, initial, nam, addr1, area1, city1, pinCode1, amount, relatives, annualReport, prasadam});
 			
 		}
 		
@@ -614,6 +621,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	void DonationRegisterTableData(){
+		NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
+		
 		try{
 			Connection conn = DriverManager.
 				    getConnection("jdbc:h2:~/vrnt", "sa", "");
@@ -623,7 +632,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 			while (rs.next()){
 				int receiptNo = rs.getInt(1);
-				Date receiptDate = rs.getDate(2);
+				String receiptDate = simpleFormat.format( rs.getDate(2));
 				String nsNum = rs.getString(3);
 				String nam = rs.getString(5) + " " + rs.getString(4);
 				String addr1 = rs.getString(6);
@@ -646,7 +655,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 				
 	
-				double amount = rs.getDouble(14);
+				String amount = "Rs. "+formatter.format(rs.getDouble(14));
 				String mode = rs.getString(15);
 				String chqNum = rs.getString(16);
 				String issueDate = rs.getString(17);
@@ -873,8 +882,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	public void bill_interior(){
-		String[] pay = {"CORPUS DONATION", "GENERAL DONATION", "FOREIGN CORPUS", "FOREIGN DONATION", "RENT"};
+		String[] pay = {"CORPUS DONATION", "GENERAL DONATION", "FOREIGN CORPUS", "FOREIGN DONATION"};
 		String[] acc = {"CASH","CHQ","A/C TRANSFER"};
+		String[] bankReceivedDropDown = {"", "ICICI", "BOB", "IB - WM", "CB - 732", "IB - K", "CB - 645"};
 		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date d = new java.util.Date();
@@ -935,7 +945,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		dated = new JLabel("Cheque/Transfer Date");
 		bank_nam = new JLabel("Bank Drawn");
 		branch = new JLabel("Branch");
-		bank_recvd = new JLabel("Bank Received");
+		bank_recvd = new JLabel("Bank Received By VRNT");
 		
 		receipt_no = new JTextField(15);
 		num_p2 = new JTextField(15);
@@ -954,7 +964,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_name = new JTextField(15);
 		branch_nam = new JTextField(15);
 		issue_dat = new JTextField(15);
-		bank_received = new JTextField(15);
+		bank_received = new JComboBox(bankReceivedDropDown);
 		don_type = new JComboBox(pay);
 		payment_mode = new JComboBox(acc);
 		
@@ -1132,7 +1142,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			bank_name.setEditable(false);
 			branch_nam.setEditable(false);
 			issue_dat.setEditable(false);
-			bank_received.setEditable(false);
+			bank_received.setEnabled(false);;
 		}
 		
 		try{
@@ -1221,8 +1231,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		try {
 			stm = conn.createStatement();
 			
-			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10), last_updated_at timestamp)";
-			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(10), name varchar(40), addr_1 varchar(60), addr_2 varchar(60), area varchar(30), city varchar(30), pincode varchar(6), phone_num varchar(30), email varchar(100), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), bank_received varchar(100),  status varchar(10))";
+			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50) area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10), last_updated_at timestamp)";
+			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), bank_received varchar(100),  status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
 		} catch (SQLException e1) {
@@ -2148,19 +2158,40 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		}
 		if (e.getSource().equals(payment_mode)){
 			if (payment_mode.getSelectedItem().equals("CASH")){
+				payment_num.setText("");
+				bank_name.setText("");
+				branch_nam.setText("");
+				issue_dat.setText("");
+				bank_received.setSelectedIndex(0);
 				payment_num.setEditable(false);
 				bank_name.setEditable(false);
 				branch_nam.setEditable(false);
 				issue_dat.setEditable(false);
-				bank_received.setEditable(false);
-			}
-			else {
+				bank_received.setEnabled(false);
+			} else if (payment_mode.getSelectedItem().equals("CHQ")){
+				payment_num.setText("");
+				bank_name.setText("");
+				branch_nam.setText("");
+				issue_dat.setText("");
+				bank_received.setSelectedIndex(0);
 				payment_num.setEditable(true);
 				bank_name.setEditable(true);
 				branch_nam.setEditable(true);
 				issue_dat.setEditable(true);
-				bank_received.setEditable(true);
+				bank_received.setEnabled(true);
+			} else if (payment_mode.getSelectedItem().equals("A/C TRANSFER")){
+				payment_num.setText("");
+				bank_name.setText("");
+				branch_nam.setText("");
+				issue_dat.setText("");
+				bank_received.setSelectedIndex(0);
+				payment_num.setEditable(true);
+				bank_name.setEditable(false);
+				branch_nam.setEditable(false);
+				issue_dat.setEditable(true);
+				bank_received.setEnabled(true);
 			}
+			
 		}
 		
 		if (e.getSource() == reset1){
@@ -2182,7 +2213,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			issue_dat.setText("");
 			bank_name.setText("");
 			branch_nam.setText("");
-			bank_received.setText("");
+			bank_received.setSelectedIndex(0);
 			
 			
 		}
@@ -2205,6 +2236,14 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					Telegraph tele = new Telegraph("Enter Cheque/D.D No.", "Cheque/D.D number can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 					que.add(tele);
 													
+			} else if((payment_mode.getSelectedIndex() != 0) && (issue_dat.getText().length() == 0)) {
+				Telegraph tele = new Telegraph("Enter Cheque/Transfer Date", "Cheque/Transfer Date can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+												
+			}else if((payment_mode.getSelectedIndex() != 0) && (bank_received.getSelectedIndex() == 0)) {
+				Telegraph tele = new Telegraph("Select Bank Received", "Bank Received By VRNT can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+												
 			} else {				
 				
 				try {
@@ -2225,7 +2264,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 		        try {
 					Statement stm = conn.createStatement();
-					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getText()+"', 'cleared'"+")";
+					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getSelectedItem()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					if(num_p2.getText().length() != 0){
 						String st1 = "select amount from details where no = '"+num_p2.getText()+"'";
@@ -2567,7 +2606,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			issue_dat.setText("");
 			bank_name.setText("");
 			branch_nam.setText("");
-			bank_received.setText("");
+			bank_received.setSelectedIndex(0);
 			try{
 				Class.forName("org.h2.Driver");
 	   			Connection conn1=DriverManager.getConnection("jdbc:h2:~/vrnt","sa","");

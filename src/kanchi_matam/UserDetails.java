@@ -33,6 +33,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import com.ibm.icu.text.NumberFormat;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.TabStop.Alignment;
 
@@ -40,8 +41,8 @@ public class UserDetails extends JFrame implements ActionListener {
 	
 	private String nsNum;
 	Dimension dim;
-	double totalAmountSpend;
-	
+	String totalAmountSpend;
+	NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
 	
 	JPanel panel = new JPanel();
 	DefaultTableModel model = new DefaultTableModel(){
@@ -142,7 +143,7 @@ public class UserDetails extends JFrame implements ActionListener {
 			rs.first();
 			
 			String no = rs.getString(1);
-			String nam = rs.getString(3) + " " + rs.getString(2);
+			String nam = rs.getString(2) + " " + rs.getString(3);
 			String addr1 = rs.getString(4);
 			String addr2 = rs.getString(5);
 			String area1 = rs.getString(6);
@@ -158,7 +159,7 @@ public class UserDetails extends JFrame implements ActionListener {
 			address += (pinCode1 != null && pinCode1.length() != 0) ? " - "+pinCode1 : "";
 			
 			
-			totalAmountSpend = rs.getDouble(11);
+			totalAmountSpend = "Rs. "+formatter.format(rs.getDouble(11));
 			String otherNsNum = rs.getString(12);
 			String annualReport = rs.getString(13);
 			String prasadam = rs.getString(14);
@@ -168,7 +169,6 @@ public class UserDetails extends JFrame implements ActionListener {
 			model.addRow(new Object[] {no, nam, address, ph, email, otherNsNum, annualReport, prasadam});
 			
 			conn.close();
-			
 			
 		    user_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		    //user_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
@@ -209,7 +209,7 @@ public class UserDetails extends JFrame implements ActionListener {
 				
 				int receiptNumber = rs1.getInt(1);
 				Date receiptDate = rs1.getDate(2);
-				double amount = rs1.getDouble(14);
+				String amount = "Rs. "+formatter.format(rs1.getDouble(14));
 				String mode = rs1.getString(15);
 				
 				String num = rs1.getString(16);
