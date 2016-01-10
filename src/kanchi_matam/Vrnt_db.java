@@ -1232,7 +1232,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			stm = conn.createStatement();
 			
 			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50) area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10), last_updated_at timestamp)";
-			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), bank_received varchar(100),  status varchar(10))";
+			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), relization_date varchar(10), bank_received varchar(100),  status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
 		} catch (SQLException e1) {
