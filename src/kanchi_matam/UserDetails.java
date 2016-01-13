@@ -146,23 +146,25 @@ public class UserDetails extends JFrame implements ActionListener {
 			String nam = rs.getString(2) + " " + rs.getString(3);
 			String addr1 = rs.getString(4);
 			String addr2 = rs.getString(5);
-			String area1 = rs.getString(6);
-			String city1 = rs.getString(7);
-			String pinCode1 = rs.getString(8);
-			String ph = rs.getString(9);
-			String email = rs.getString(10);
+			String addr3 = rs.getString(6);
+			String area1 = rs.getString(7);
+			String city1 = rs.getString(8);
+			String pinCode1 = rs.getString(9);
+			String ph = rs.getString(10);
+			String email = rs.getString(11);
 			
 			String address = "<html>"+addr1;
 			address += (addr2 != null && addr2.length() != 0) ? "<br>"+addr2 : "";
+			address += (addr3 != null && addr3.length() != 0) ? "<br>"+addr3 : "";
 			address += (area1 != null && area1.length() != 0) ? "<br>"+area1 : "";
 			address += (city1 != null && city1.length() != 0) ? "<br>"+city1 : "";
 			address += (pinCode1 != null && pinCode1.length() != 0) ? " - "+pinCode1 : "";
 			
 			
-			totalAmountSpend = "Rs. "+formatter.format(rs.getDouble(11));
-			String otherNsNum = rs.getString(12);
-			String annualReport = rs.getString(13);
-			String prasadam = rs.getString(14);
+			totalAmountSpend = "Rs. "+formatter.format(rs.getDouble(13));
+			String otherNsNum = rs.getString(14);
+			String annualReport = rs.getString(15);
+			String prasadam = rs.getString(16);
 			
 			
 			setTitle(no + " "+ nam);
