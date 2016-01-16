@@ -85,9 +85,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JLabel donation_type, pay_mode, pay_num, dated, bank_nam, branch, date, receipt, bank_recvd;
 	JLabel addr_line_11, addr_line_21,addr_line_31, area1, city1, pin_code1, addr_line_12, addr_line_22, addr_line_32, area2, city2, pin_code2, addr_line_13, addr_line_23, addr_line_33, area3, city3, pin_code3;
 	JLabel viewTabStatusBar;
+	JLabel donationTypeLabel, corpusLetterLabel;
 	
 	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no;
-	JComboBox don_type, payment_mode, bank_received;	
+	JComboBox don_type, payment_mode, bank_received, donationTypeCombo, corpusCombo;	
 	JLabel no_p1, initial_p1, name_p1, add_p1, ph_p1, email_p1, pan_p1, amt_p1, other_ns_num_p1, no_p2, initial_p2, name_p2, add_p2, ph_p2, email_p2, pan_p2, amt_p2, other_ns_num_p2, no_p3, initial_p3, name_p3, add_p3, ph_p3, email_p3, pan_p3, amt_p3, other_ns_num_p3;
 	JTextField num_p1, cand_initial_p1, cand_nam_p1, cand_ph_p1, cand_email_p1, cand_pan_p1, cand_amt_p1, cand_other_ns_num_p1, num_p2, cand_initial_p2, cand_nam_p2, cand_ph_p2, cand_email_p2, cand_pan_p2, cand_amt_p2, cand_other_ns_num_p2, num_p3, cand_initial_p3, cand_nam_p3, cand_ph_p3, cand_email_p3, cand_pan_p3, cand_amt_p3, cand_other_ns_num_p3;
 	JTextField addr_11, addr_21, addr_31, area_1, city_town1, pin_code_1, addr_12, addr_22, addr_32, area_2, city_town2, pin_code_2, addr_13, addr_23, addr_33, area_3, city_town3, pin_code_3;
@@ -523,6 +524,19 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		model.addColumn("AR");
 		model.addColumn("PR");
 		
+		Dimension tableSize = edit_table.getPreferredSize();
+		edit_table.getColumn("NS NO").setPreferredWidth(Math.round(tableSize.width * 0.04f));
+		edit_table.getColumn("INITIAL").setPreferredWidth(Math.round(tableSize.width * 0.04f));
+		edit_table.getColumn("NAME").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		edit_table.getColumn("ADDRESS").setPreferredWidth(Math.round(tableSize.width * 0.28f));
+		edit_table.getColumn("AREA").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		edit_table.getColumn("CITY").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		edit_table.getColumn("PINCODE").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		edit_table.getColumn("AMOUNT").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		edit_table.getColumn("RELATIVES").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		edit_table.getColumn("AR").setPreferredWidth(Math.round(tableSize.width * 0.02f));
+		edit_table.getColumn("PR").setPreferredWidth(Math.round(tableSize.width * 0.02f));
+		
 		view_tab_data();
 		
 //		edit_table.setEnabled(false);
@@ -559,15 +573,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String addr2 = (StringUtils.isNullOrEmpty(rs.getString(5))) ? rs.getString(5) : rs.getString(5).toUpperCase();
 			addr1 += addr2;
 			String addr3 = (StringUtils.isNullOrEmpty(rs.getString(6))) ? rs.getString(6) : rs.getString(6).toUpperCase();
-			addr1 += addr3;
+			addr1 += addr3;			
 			String area1 = rs.getString(7).toUpperCase();
 			String city1 = rs.getString(8).toUpperCase();
 			String pinCode1 = rs.getString(9).toUpperCase();
 			
-			String amount = "Rs. "+formatter.format(rs.getFloat(12));
-			String relatives = rs.getString(13);
-			String annualReport = rs.getString(14);
-			String prasadam = rs.getString(15);
+			
+			String amount = "Rs. "+formatter.format(rs.getFloat(13));
+			String relatives = rs.getString(14);
+			String annualReport = rs.getString(15);
+			String prasadam = rs.getString(16);
 			
 			count++;
 			if(annualReport.equals("S"))annualCount++;
@@ -582,11 +597,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 				
 		edit_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		edit_table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-		edit_table.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+		edit_table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
 		edit_table.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
-		edit_table.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
+		edit_table.getColumnModel().getColumn(8).setCellRenderer(rightRenderer);
 		edit_table.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+		edit_table.getColumnModel().getColumn(10).setCellRenderer(centerRenderer);
 
 		
 		
@@ -920,8 +935,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	public void bill_interior(){
+		String[] donorType = {"NS NO.", "GENERAL DONOR", "UNKNOWN DONOR"};
 		String[] pay = {"CORPUS DONATION", "GENERAL DONATION", "FOREIGN CORPUS", "FOREIGN DONATION"};
 		String[] acc = {"CASH","CHQ","A/C TRANSFER"};
+		String[] corpusDonation = {"YES", "NO"};
 		String[] bankReceivedDropDown = {"", "ICICI", "BOB", "IB - WM", "CB - 732", "IB - K", "CB - 645"};
 		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
@@ -964,6 +981,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			}
 		});
 		receipt = new JLabel("Receipt No");
+		donationTypeLabel = new JLabel("Type Of Donation");
 		no_p2 = new JLabel("Enter NS no");
 		initial_p2 = new JLabel("Initial");
 		name_p2 = new JLabel("Name");
@@ -980,6 +998,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		amt_p2 = new JLabel("Amount");
 		
 		donation_type = new JLabel("Type of Donation");
+		corpusLetterLabel = new JLabel("Corpus Letter");
 		pay_mode = new JLabel("Mode of Payment");
 		pay_num = new JLabel("cheque/Transfer No");
 		dated = new JLabel("Cheque/Transfer Date");
@@ -988,6 +1007,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_recvd = new JLabel("Bank Received By VRNT");
 		
 		receipt_no = new JTextField(15);
+		donationTypeCombo = new JComboBox(donorType);
 		num_p2 = new JTextField(15);
 		cand_initial_p2 = new JTextField(15);
 		cand_nam_p2 = new JTextField(15);
@@ -1009,6 +1029,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_received = new JComboBox(bankReceivedDropDown);
 		don_type = new JComboBox(pay);
 		payment_mode = new JComboBox(acc);
+		corpusCombo = new JComboBox(corpusDonation);
 		
 		don_type.addActionListener(this);
 		payment_mode.addActionListener(this);
@@ -1052,6 +1073,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		GridBagConstraints c = new GridBagConstraints();
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		receipt_no.setBorder(border);
+		donationTypeCombo.setBorder(border);
 		num_p2.setBorder(border);
 		cand_initial_p2.setBorder(border);
 		cand_nam_p2.setBorder(border);
@@ -1071,6 +1093,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		issue_dat.setBorder(border);
 		branch_nam.setBorder(border);
 		bank_received.setBorder(border);
+		corpusCombo.setBorder(border);
 		//don_type.setBorder(border);
 		//payment_mode.setBorder(border);
 		c.insets = new Insets(10, 10, 10, 10);
@@ -1083,112 +1106,122 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bill_panel.add(receipt_no, c);
 		
 		c.gridx = 0; c.gridy = 2;
-		bill_panel.add(no_p2, c);
+		bill_panel.add(donationTypeLabel, c);
 		c.gridx = 1; c.gridy = 2;
-		bill_panel.add(num_p2, c);
-		c.gridx = 2; c.gridy = 2;
-		bill_panel.add(retrive, c);
+		bill_panel.add(donationTypeCombo, c);
 		
 		c.gridx = 0; c.gridy = 3;
-		bill_panel.add(initial_p2, c);
+		bill_panel.add(no_p2, c);
 		c.gridx = 1; c.gridy = 3;
+		bill_panel.add(num_p2, c);
+		c.gridx = 2; c.gridy = 3;
+		bill_panel.add(retrive, c);
+		
+		c.gridx = 0; c.gridy = 4;
+		bill_panel.add(initial_p2, c);
+		c.gridx = 1; c.gridy = 4;
 		bill_panel.add(cand_initial_p2, c);
 		
 		
-		c.gridx = 0; c.gridy = 4;
+		c.gridx = 0; c.gridy = 5;
 		bill_panel.add(name_p2, c);
-		c.gridx = 1; c.gridy = 4;
+		c.gridx = 1; c.gridy = 5;
 		bill_panel.add(cand_nam_p2, c);
 		
-		c.gridx = 0; c.gridy = 5;
+		c.gridx = 0; c.gridy = 6;
 		bill_panel.add(addr_line_12, c);
-		c.gridx = 1; c.gridy = 5;
+		c.gridx = 1; c.gridy = 6;
 		bill_panel.add(addr_12, c);
 		
-		c.gridx = 0; c.gridy = 6;
+		c.gridx = 0; c.gridy = 7;
 		bill_panel.add(addr_line_22, c);
-		c.gridx = 1; c.gridy = 6;
+		c.gridx = 1; c.gridy = 7;
 		bill_panel.add(addr_22, c);
 		
-		c.gridx = 0; c.gridy = 7;
+		c.gridx = 0; c.gridy = 8;
 		bill_panel.add(addr_line_32, c);
-		c.gridx = 1; c.gridy = 7;
+		c.gridx = 1; c.gridy = 8;
 		bill_panel.add(addr_32, c);
 		
-		c.gridx = 0; c.gridy = 8;
+		c.gridx = 0; c.gridy = 9;
 		bill_panel.add(area2, c);
-		c.gridx = 1; c.gridy = 8;
+		c.gridx = 1; c.gridy = 9;
 		bill_panel.add(area_2, c);
 		
-		c.gridx = 0; c.gridy = 9;
+		c.gridx = 0; c.gridy = 10;
 		bill_panel.add(city2, c);
-		c.gridx = 1; c.gridy = 9;
+		c.gridx = 1; c.gridy = 10;
 		bill_panel.add(city_town2, c);
 		
-		c.gridx = 0; c.gridy = 10;
+		c.gridx = 0; c.gridy = 11;
 		bill_panel.add(pin_code2, c);
-		c.gridx = 1; c.gridy = 10;
+		c.gridx = 1; c.gridy = 11;
 		bill_panel.add(pin_code_2, c);
 		
-		c.gridx = 0; c.gridy = 11;
+		c.gridx = 0; c.gridy = 12;
 		bill_panel.add(ph_p2, c);
-		c.gridx = 1; c.gridy = 11;
+		c.gridx = 1; c.gridy = 12;
 		bill_panel.add(cand_ph_p2, c);
 		
-		c.gridx = 0; c.gridy = 12;
+		c.gridx = 0; c.gridy = 13;
 		bill_panel.add(email_p2, c);
-		c.gridx = 1; c.gridy = 12;
+		c.gridx = 1; c.gridy = 13;
 		bill_panel.add(cand_email_p2, c);
 		
-		c.gridx = 0; c.gridy = 13;
+		c.gridx = 0; c.gridy = 14;
 		bill_panel.add(pan_p2, c);
-		c.gridx = 1; c.gridy = 13;
+		c.gridx = 1; c.gridy = 14;
 		bill_panel.add(cand_pan_p2, c);
 		
 		//panel.add(new JScrollPane(cand_add, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-		c.gridx = 0; c.gridy = 14;
+		c.gridx = 0; c.gridy = 15;
 		bill_panel.add(donation_type, c);
-		c.gridx = 1; c.gridy = 14;
+		c.gridx = 1; c.gridy = 15;
 		bill_panel.add(don_type, c);
 		
-		c.gridx = 0; c.gridy = 15;
-		bill_panel.add(amt_p2, c);
-		c.gridx = 1; c.gridy = 15;
-		bill_panel.add(cand_amt_p2, c);
-		
 		c.gridx = 0; c.gridy = 16;
-		bill_panel.add(pay_mode, c);
+		bill_panel.add(corpusLetterLabel, c);
 		c.gridx = 1; c.gridy = 16;
-		bill_panel.add(payment_mode, c);
+		bill_panel.add(corpusCombo, c);
 		
 		c.gridx = 0; c.gridy = 17;
-		bill_panel.add(pay_num, c);
+		bill_panel.add(amt_p2, c);
 		c.gridx = 1; c.gridy = 17;
-		bill_panel.add(payment_num, c);
+		bill_panel.add(cand_amt_p2, c);
 		
 		c.gridx = 0; c.gridy = 18;
-		bill_panel.add(dated, c);
+		bill_panel.add(pay_mode, c);
 		c.gridx = 1; c.gridy = 18;
-		bill_panel.add(issue_dat, c);
+		bill_panel.add(payment_mode, c);
 		
 		c.gridx = 0; c.gridy = 19;
-		bill_panel.add(bank_nam, c);
+		bill_panel.add(pay_num, c);
 		c.gridx = 1; c.gridy = 19;
-		bill_panel.add(bank_name, c);
+		bill_panel.add(payment_num, c);
 		
 		c.gridx = 0; c.gridy = 20;
-		bill_panel.add(branch, c);
+		bill_panel.add(dated, c);
 		c.gridx = 1; c.gridy = 20;
-		bill_panel.add(branch_nam, c);
+		bill_panel.add(issue_dat, c);
 		
 		c.gridx = 0; c.gridy = 21;
-		bill_panel.add(bank_recvd, c);
+		bill_panel.add(bank_nam, c);
 		c.gridx = 1; c.gridy = 21;
+		bill_panel.add(bank_name, c);
+		
+		c.gridx = 0; c.gridy = 22;
+		bill_panel.add(branch, c);
+		c.gridx = 1; c.gridy = 22;
+		bill_panel.add(branch_nam, c);
+		
+		c.gridx = 0; c.gridy = 23;
+		bill_panel.add(bank_recvd, c);
+		c.gridx = 1; c.gridy = 23;
 		bill_panel.add(bank_received, c);
 		
-		c.gridx = 1; c.gridy = 22;
+		c.gridx = 1; c.gridy = 24;
 		bill_panel.add(proceed, c);
-		c.gridx = 2; c.gridy = 22;
+		c.gridx = 2; c.gridy = 24;
 		bill_panel.add(reset1, c);
 		
 		if (payment_mode.getSelectedItem().equals("CASH")){
