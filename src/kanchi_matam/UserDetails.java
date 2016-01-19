@@ -41,8 +41,9 @@ public class UserDetails extends JFrame implements ActionListener {
 	
 	private String nsNum;
 	Dimension dim;
-	String totalAmountSpend;
+	String openingBalance;
 	NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
+	double totalAmount;
 	
 	JPanel panel = new JPanel();
 	DefaultTableModel model = new DefaultTableModel(){
@@ -114,7 +115,7 @@ public class UserDetails extends JFrame implements ActionListener {
 		
 		
 		
-		totalAmountDonated.setText("Total Amount Donated "+totalAmountSpend);
+		totalAmountDonated.setText("Total Amount Donated Rs. "+formatter.format(totalAmount)+"    Opening Balance "+openingBalance);
 		panel.add(totalAmountDonated);
 		
 		
@@ -160,8 +161,8 @@ public class UserDetails extends JFrame implements ActionListener {
 			address += (city1 != null && city1.length() != 0) ? "<br>"+city1 : "";
 			address += (pinCode1 != null && pinCode1.length() != 0) ? " - "+pinCode1 : "";
 			
-			
-			totalAmountSpend = "Rs. "+formatter.format(rs.getDouble(13));
+			totalAmount = rs.getDouble(13);
+			openingBalance = "Rs. "+formatter.format(totalAmount);
 			String otherNsNum = rs.getString(14);
 			String annualReport = rs.getString(15);
 			String prasadam = rs.getString(16);
@@ -209,15 +210,18 @@ public class UserDetails extends JFrame implements ActionListener {
 				
 			while(rs1.next()){
 				
-				int receiptNumber = rs1.getInt(1);
-				Date receiptDate = rs1.getDate(2);
-				String amount = "Rs. "+formatter.format(rs1.getDouble(14));
-				String mode = rs1.getString(15);
+				int receiptNumber = rs1.getInt("RECEIPT");
+				Date receiptDate = rs1.getDate("DAT");
+				String amount = "Rs. "+formatter.format(rs1.getDouble("AMT"));
+				String mode = rs1.getString("PAY_MODE");
 				
-				String num = rs1.getString(16);
-				String bankDrawn = rs1.getString(18);
-				String bankReceived = rs1.getString(20);
+				String num = rs1.getString("CHQNO");
+				String bankDrawn = rs1.getString("BANK");
+				String bankReceived = rs1.getString("BANK_RECEIVED");
 				String modeAndNum;
+				
+				totalAmount += rs1.getDouble("AMT");
+				
 				if(mode.equals("CASH"))
 					modeAndNum = mode;
 				else if(mode.equals("CHQ"))

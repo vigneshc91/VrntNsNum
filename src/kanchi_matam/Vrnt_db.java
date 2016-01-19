@@ -2363,12 +2363,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						String st1 = "select amount from details where no = '"+num_p2.getText()+"'";
 						ResultSet rs2 = stm.executeQuery(st1);
 						rs2.next();
-						double amt = rs2.getDouble(1);
+						//double amt = rs2.getDouble(1);
 						
-						
-						amt += Integer.parseInt(cand_amt_p2.getText());
+						//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
+						/*amt += Integer.parseInt(cand_amt_p2.getText());
 						String st2 = "update details set amount = "+amt+"where no = '"+num_p2.getText()+"'";
-						stm.executeUpdate(st2);
+						stm.executeUpdate(st2);*/
 					}
 					Telegraph tele = new Telegraph("Success", "Receipt generated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
@@ -3508,7 +3508,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		if(e.getClickCount() == 2){
 			
-			if(col == 0 || col == 1){
+			if(col == 0 || col == 1 || col == 2){
 				int row = edit_table.rowAtPoint(e.getPoint());			
 				String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
 				new UserDetails().ViewDetails(nsNum);
