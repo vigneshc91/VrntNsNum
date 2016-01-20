@@ -664,18 +664,18 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			ResultSet rs = stm.executeQuery(st);
 		
 			while (rs.next()){
-				int receiptNo = rs.getInt(1);
-				String receiptDate = simpleFormat.format( rs.getDate(2));
-				String nsNum = rs.getString(3);
-				String nam = rs.getString(5) + " " + rs.getString(4);
-				String addr1 = rs.getString(6);
-				String addr2 = rs.getString(7);
-				String addr3 = rs.getString(8);
-				String area1 = rs.getString(9);
-				String city1 = rs.getString(10);
-				String pinCode1 = rs.getString(11);
-				String ph = rs.getString(12);
-				String email = rs.getString(13);
+				int receiptNo = rs.getInt("RECEIPT");
+				String receiptDate = simpleFormat.format( rs.getDate("DAT"));
+				String nsNum = rs.getString("NO");
+				String nam = rs.getString("NAME") + " " + rs.getString("INITIAL");
+				String addr1 = rs.getString("ADDR_1");
+				String addr2 = rs.getString("ADDR_2");
+				String addr3 = rs.getString("ADDR_3");
+				String area1 = rs.getString("AREA");
+				String city1 = rs.getString("CITY");
+				String pinCode1 = rs.getString("PINCODE");
+				String ph = rs.getString("PHONE_NUM");
+				String email = rs.getString("EMAIL");
 				
 				String address = "<html>"+addr1;
 				address += (addr2.length() != 0) ? "<br>"+addr2 : "";
@@ -686,17 +686,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				address += (ph.length() != 0) ? "<br>"+ph : "";
 				address += (email.length() != 0) ? "<br>"+email : "";
 				address += "</html>";
-				String donType = rs.getString(15);
+				String donType = rs.getString("TYPE_DONATN");
 				
 				
 	
-				String amount = "Rs. "+formatter.format(rs.getDouble(16));
-				String mode = rs.getString(17);
-				String chqNum = rs.getString(18);
-				String issueDate = rs.getString(19);
-				String bank = rs.getString(20);
-				String branch = rs.getString(21);
-				String bankRecvd = rs.getString(22);
+				String amount = "Rs. "+formatter.format(rs.getDouble("AMT"));
+				String mode = rs.getString("PAY_MODE");
+				String chqNum = rs.getString("CHQNO");
+				String issueDate = rs.getString("ISSUE_DATE");
+				String bank = rs.getString("BANK");
+				String branch = rs.getString("BRANCH");
+				String bankRecvd = rs.getString("BANK_RECEIVED");
 				
 				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
 				
@@ -1032,6 +1032,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		corpusCombo = new JComboBox(corpusDonation);
 		
 		don_type.addActionListener(this);
+		donationTypeCombo.addActionListener(this);
 		payment_mode.addActionListener(this);
 		retrive = new JButton("Retrive");
 		proceed = new JButton("Proceed");
@@ -1319,7 +1320,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			stm = conn.createStatement();
 			
 			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10), last_updated_at timestamp)";
-			String s = "create table if not exists bill(receipt number(10), dat date, no varchar(10), initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), relization_date varchar(10), bank_received varchar(100),  status varchar(10))";
+			String s = "create table if not exists bill(receipt number(10), dat date, donor_type varchar(20), no varchar(10), initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), relization_date varchar(10), bank_received varchar(100),  status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
 		} catch (SQLException e1) {
@@ -2291,7 +2292,28 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 		}
 		
+		if(e.getSource().equals(donationTypeCombo)){
+			if(donationTypeCombo.getSelectedItem().equals("NS NO.")){
+				num_p2.setText("");
+				num_p2.setEditable(true);
+				retrive.setEnabled(true);
+				cand_nam_p2.setText("");
+			} else if(donationTypeCombo.getSelectedItem().equals("GENERAL DONOR")){
+				num_p2.setText("");
+				num_p2.setEditable(false);
+				retrive.setEnabled(false);
+				cand_nam_p2.setText("");
+			} else {
+				num_p2.setText("");
+				num_p2.setEditable(false);
+				retrive.setEnabled(false);
+				cand_nam_p2.setText("UNKNOWN");
+			}
+		}
+		
 		if (e.getSource() == reset1){
+			donationTypeCombo.setSelectedIndex(0);
+			retrive.setEnabled(true);
 			num_p2.setEditable(true);
 			num_p2.setText("");
 			cand_initial_p2.setText("");
@@ -2356,20 +2378,30 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        // add application code here
 				
 		        try {
+		        	String realizationDate = "";
+		        	if(payment_mode.getSelectedItem().equals("CASH"))
+		        		realizationDate = date.getText();
+		        	else if(payment_mode.getSelectedItem().equals("CHQ"))
+		        		realizationDate = "";
+		        	else
+		        		realizationDate = issue_dat.getText();
 					Statement stm = conn.createStatement();
-					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+addr_32.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+cand_pan_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+bank_received.getSelectedItem()+"', 'cleared'"+")";
+					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+donationTypeCombo.getSelectedItem()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+addr_32.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+cand_pan_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+realizationDate+"', '"+bank_received.getSelectedItem()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
-					if(num_p2.getText().length() != 0){
+					
+					//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
+					/*if(num_p2.getText().length() != 0){
 						String st1 = "select amount from details where no = '"+num_p2.getText()+"'";
 						ResultSet rs2 = stm.executeQuery(st1);
 						rs2.next();
-						//double amt = rs2.getDouble(1);
+						double amt = rs2.getDouble(1);
 						
-						//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
-						/*amt += Integer.parseInt(cand_amt_p2.getText());
+						
+						amt += Integer.parseInt(cand_amt_p2.getText());
 						String st2 = "update details set amount = "+amt+"where no = '"+num_p2.getText()+"'";
-						stm.executeUpdate(st2);*/
-					}
+						stm.executeUpdate(st2);
+					}*/
+					
 					Telegraph tele = new Telegraph("Success", "Receipt generated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 					TelegraphQueue quee = new TelegraphQueue();
 					quee.add(tele);
@@ -2685,6 +2717,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				e2.printStackTrace();
 			}
 			
+			donationTypeCombo.setSelectedIndex(0);
+			retrive.setEnabled(true);
 			num_p2.setEditable(true);
 			num_p2.setText("");
 			cand_initial_p2.setText("");
