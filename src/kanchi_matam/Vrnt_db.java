@@ -631,21 +631,23 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		Font ff = new Font("Arial", Font.PLAIN, 16);
 		donationRegisterTable.setFont(ff);
 		donationRegisterTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
-		donationRegisterTable.getTableHeader().setPreferredSize(new Dimension(100, 100));
+		donationRegisterTable.getTableHeader().setPreferredSize(new Dimension(500, 50));
+		donationRegisterTable.setRowHeight(60);
 		
-		donationRegisterTableModel.addColumn("Receipt Date");
-		donationRegisterTableModel.addColumn("Receipt No.");
-		donationRegisterTableModel.addColumn("Ns No.");
+		donationRegisterTableModel.addColumn("RT. DT.");
+		donationRegisterTableModel.addColumn("RT. No.");
+		donationRegisterTableModel.addColumn("Donor Type");
 		donationRegisterTableModel.addColumn("Name");
-		donationRegisterTableModel.addColumn("Contact");
-		donationRegisterTableModel.addColumn("Type of Donation");
+		donationRegisterTableModel.addColumn("Address");
+		donationRegisterTableModel.addColumn("Type");
 		donationRegisterTableModel.addColumn("Amount");
 		donationRegisterTableModel.addColumn("Mode of Receipt");
-		donationRegisterTableModel.addColumn("<html><center>Cheque / <br>Transfer <br>No.</center></html>");
-		donationRegisterTableModel.addColumn("<html><center>Cheque / <br>Transfer <br>Date</center></html>");
+		donationRegisterTableModel.addColumn("<html><center>CHQ/TRF. <br>No.</center></html>");
+		donationRegisterTableModel.addColumn("<html><center>CHQ/TRF. <br>DT</center></html>");
 		donationRegisterTableModel.addColumn("<html><center>Bank <br>Drawn</center></html>");
 		donationRegisterTableModel.addColumn("Branch");
 		donationRegisterTableModel.addColumn("<html><center>Bank <br>Received</center></html>");
+		donationRegisterTableModel.addColumn("Realz. DT.");
 		
 		DonationRegisterTableData();				    
 		    
@@ -666,6 +668,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			while (rs.next()){
 				int receiptNo = rs.getInt("RECEIPT");
 				String receiptDate = simpleFormat.format( rs.getDate("DAT"));
+				String donorType = rs.getString("DONOR_TYPE");
 				String nsNum = rs.getString("NO");
 				String nam = rs.getString("NAME") + " " + rs.getString("INITIAL");
 				String addr1 = rs.getString("ADDR_1");
@@ -677,14 +680,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				String ph = rs.getString("PHONE_NUM");
 				String email = rs.getString("EMAIL");
 				
+				if(donorType.equals("NS NO."))
+					donorType = "NS NO. "+nsNum;
+				
 				String address = "<html>"+addr1;
-				address += (addr2.length() != 0) ? "<br>"+addr2 : "";
-				address += (addr3.length() != 0) ? "<br>"+addr3 : "";
-				address += (area1.length() != 0) ? "<br>"+area1 : "";
-				address += (city1.length() != 0) ? "<br>"+city1 : "";
-				address += (pinCode1.length() != 0) ? "  "+pinCode1 : "";
-				address += (ph.length() != 0) ? "<br>"+ph : "";
-				address += (email.length() != 0) ? "<br>"+email : "";
+				address += (addr2.length() != 0) ? "<br/>"+addr2 : "";
+				address += (addr3.length() != 0) ? "<br/>"+addr3 : "";
+				address += (area1.length() != 0) ? "<br/>"+area1 : "";
+				address += (city1.length() != 0) ? "<br/>"+city1 : "";
+				address += (pinCode1.length() != 0) ? " "+pinCode1 : "";
+				address += (ph.length() != 0) ? "<br/>("+ph+")" : "";
+				address += (email.length() != 0) ? "<br/>("+email+")" : "";
 				address += "</html>";
 				String donType = rs.getString("TYPE_DONATN");
 				
@@ -697,10 +703,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				String bank = rs.getString("BANK");
 				String branch = rs.getString("BRANCH");
 				String bankRecvd = rs.getString("BANK_RECEIVED");
-				
+				String relizationDate = rs.getString("RELIZATION_DATE");
 				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
 				
-				donationRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nsNum, nam, address, donType, amount, mode, chqNum, issueDate, bank, branch, bankRec});
+				donationRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, donorType, nam, address, donType, amount, mode, chqNum, issueDate, bank, branch, bankRec, relizationDate});
 			}
 	
 		} catch (Exception e){
@@ -729,12 +735,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		    donationRegisterTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		    donationRegisterTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 		    donationRegisterTable.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
-		    donationRegisterTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
-		    donationRegisterTable.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
+		    //donationRegisterTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+		    //donationRegisterTable.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
 		    donationRegisterTable.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
-		    donationRegisterTable.getColumnModel().getColumn(10).setCellRenderer(centerRenderer);
-		    donationRegisterTable.getColumnModel().getColumn(11).setCellRenderer(centerRenderer);
+		    //donationRegisterTable.getColumnModel().getColumn(10).setCellRenderer(centerRenderer);
+		    //donationRegisterTable.getColumnModel().getColumn(11).setCellRenderer(centerRenderer);
 		    donationRegisterTable.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
+		    donationRegisterTable.getColumnModel().getColumn(13).setCellRenderer(centerRenderer);
 
 
 	}
