@@ -3513,23 +3513,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		int col = edit_table.columnAtPoint(e.getPoint());
 		
-		if(col == 8){
-			int row = edit_table.rowAtPoint(e.getPoint());			
-			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
-			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 8).toString();
-			
-			if(select.equals("S")){
-				
-				edit_table.getModel().setValueAt("DS", edit_table.convertRowIndexToModel(row), 8);
-				select = "DS";
-			}
-			else{
-				edit_table.getModel().setValueAt("S", edit_table.convertRowIndexToModel(row), 8);
-				select = "S";
-			}
-			
-			annualReportStatus.put(nsNum, select);
-		}else if(col == 9){
+		if((tab_pane.getSelectedIndex() == 1) && (col == 9)){
 			int row = edit_table.rowAtPoint(e.getPoint());			
 			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
 			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 9).toString();
@@ -3544,15 +3528,137 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				select = "S";
 			}
 			
+			annualReportStatus.put(nsNum, select);
+		}else if((tab_pane.getSelectedIndex() == 1) && (col == 10)){
+			int row = edit_table.rowAtPoint(e.getPoint());			
+			String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
+			String select = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 10).toString();
+			
+			if(select.equals("S")){
+				
+				edit_table.getModel().setValueAt("DS", edit_table.convertRowIndexToModel(row), 10);
+				select = "DS";
+			}
+			else{
+				edit_table.getModel().setValueAt("S", edit_table.convertRowIndexToModel(row), 10);
+				select = "S";
+			}
+			
 			prasadamStatus.put(nsNum, select);
 		}
 		
 		if(e.getClickCount() == 2){
 			
-			if(col == 0 || col == 1 || col == 2){
+			if((tab_pane.getSelectedIndex() == 1) && (col == 0 || col == 1 || col == 2)){
 				int row = edit_table.rowAtPoint(e.getPoint());			
 				String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
 				new UserDetails().ViewDetails(nsNum);
+			}
+			
+			int donationCol = donationRegisterTable.columnAtPoint(e.getPoint());
+			int row = donationRegisterTable.rowAtPoint(e.getPoint());
+			
+			String donorType = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 2).toString();
+			String reliDat = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 13).toString();
+			
+			if((tab_pane.getSelectedIndex() == 4) && (donationCol == 2 && !donorType.contains("NS NO."))){
+				String nsNum = JOptionPane.showInputDialog(null, "Enter Ns Number.");
+				
+				if(nsNum != null){
+					String rtNum = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 1).toString();
+					
+										
+					try{
+						Class.forName("org.h2.Driver");
+						Connection conn = DriverManager.
+					            getConnection("jdbc:h2:~/vrnt", "sa", "");
+					    Statement stm = conn.createStatement();
+						
+						String st = "select * from details where no = "+"'"+nsNum+"'";
+				        ResultSet rs = stm.executeQuery(st);
+				        
+				        
+				        
+				        if(rs.first()){	        	
+				        	
+				        	String initial = rs.getString(2);
+				        	String name = rs.getString(3);
+				        	String addr_1 = rs.getString(4);
+				        	String addr_2 = rs.getString(5);
+				        	String addr_3 = rs.getString(6);
+				        	String area = rs.getString(7);
+				        	String city = rs.getString(8);
+				        	String pin = rs.getString(9);
+				        	String ph = rs.getString(10);
+				        	String email = rs.getString(11);
+				        	String pan = rs.getString(12);
+				        	
+				        	try{
+								Class.forName("org.h2.Driver");
+						        Connection conn1 = DriverManager.
+						            getConnection("jdbc:h2:~/vrnt", "sa", "");
+						        Statement stm1 = conn1.createStatement();
+						        String st1 = "update bill set donor_type = 'NS NO.', no = '"+nsNum+"', initial = '"+initial+"', name = '"+name+"', addr_1 = '"+addr_1+"', addr_2 = '"+addr_2+"', addr_3 = '"+addr_3+"', area = '"+area+"', city = '"+city+"', pincode = '"+pin+"', phone_num = '"+ph+"', email = '"+email+"', pan_no = '"+pan+"' where receipt = '"+rtNum+"'";
+						        stm1.executeUpdate(st1);
+						        Telegraph tele = new Telegraph("Success", "Donor Type Changed to Ns No. successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+								TelegraphQueue quee = new TelegraphQueue();
+								quee.add(tele);				        
+								
+								donationRegisterTableModel.setRowCount(0);
+								DonationRegisterTableData();
+						        
+							}
+							catch(Exception e2){
+								System.err.println(e2);
+							}
+				        		
+				        	} 
+				        	else{
+				        		//System.out.println("not found");
+				        		Telegraph tele = new Telegraph("Error", "Entrie not found...", TelegraphType.NOTIFICATION_ERROR, WindowPosition.BOTTOMRIGHT, 4000);				
+								TelegraphQueue quee = new TelegraphQueue();
+								quee.add(tele);
+				        		//JOptionPane.showMessageDialog(null, "Entrie not found...", "Error", JOptionPane.ERROR_MESSAGE);
+				        	}
+				       // }
+				        // add application code here
+				        conn.close();
+					} catch(Exception e6){
+						System.err.println(e6);
+						
+					}
+					
+					
+				}
+			}			
+			else if((tab_pane.getSelectedIndex() == 4) && (donationCol == 13 && reliDat.length() == 0)){
+				String realizationDate = JOptionPane.showInputDialog(null, "Enter Relization Date");
+				 
+				
+				if(realizationDate != null){
+					String rtNum = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 1).toString();
+					
+					try{
+						Class.forName("org.h2.Driver");
+				        Connection conn = DriverManager.
+				            getConnection("jdbc:h2:~/vrnt", "sa", "");
+				        Statement stm = conn.createStatement();
+				        String st = "update bill set relization_date = '"+realizationDate+"' where receipt = '"+rtNum+"'";
+				        stm.executeUpdate(st);
+				        Telegraph tele = new Telegraph("Success", "Relization Date Updated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+						TelegraphQueue quee = new TelegraphQueue();
+						quee.add(tele);				        
+						
+						donationRegisterTableModel.setRowCount(0);
+						DonationRegisterTableData();
+				        
+					}
+					catch(Exception e2){
+						System.err.println(e2);
+					}
+				}
+				
+				
 			}
 		}
 		
