@@ -82,10 +82,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JPanel edit_panel = new JPanel();
 	JPanel bill_panel = new JPanel();
 	JPanel donationRegisterPanel = new JPanel();
+	JPanel rentPanel = new JPanel();
+	JPanel rentRegisterPanel = new JPanel();
 	
 	JTabbedPane tab_pane = new JTabbedPane();
 	JLabel donation_type, pay_mode, pay_num, dated, bank_nam, branch, date, receipt, bank_recvd;
-	JLabel addr_line_11, addr_line_21,addr_line_31, area1, city1, pin_code1, addr_line_12, addr_line_22, addr_line_32, area2, city2, pin_code2, addr_line_13, addr_line_23, addr_line_33, area3, city3, pin_code3;
+	JLabel addr_line_11, addr_line_21,addr_line_31, area1, city1, pin_code1, addr_line_12, addr_line_22, addr_line_32, area2, city2, pin_code2, addr_line_13, addr_line_23, addr_line_33, area3, city3, pin_code3, addr_line_14, addr_line_24, addr_line_34, area4, city4, pin_code4;
 	JLabel viewTabStatusBar;
 	JLabel donationTypeLabel, corpusLetterLabel;
 	
@@ -97,13 +99,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	
 	//JTextArea cand_add_p1, cand_add_p2, cand_add_p3;
 	JButton save;
-	JButton reset, reset1;
-	JButton retrive;
+	JButton reset, reset1, reset2;
+	JButton retrive, retrive1;
 	JButton find;
 	JButton edit;
 	JCalendar calendar1;
 	JButton delete;
-	JButton proceed;
+	JButton proceed, proceed1;
 	JFileChooser chose = new JFileChooser();
 	JFileChooser gen_pdf = new JFileChooser();
 	FileNameExtensionFilter csv_files = new FileNameExtensionFilter("csv files", "csv");
@@ -147,12 +149,18 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			return false;
 		}
 	};
+	DefaultTableModel rentRegisterTableModel = new DefaultTableModel(){
+		public boolean isCellEditable(int row, int column){
+			return false;
+		}
+	};
 	DefaultTableModel print_mod = new DefaultTableModel();
 	JTable edit_table = new JTable(model);
 	JTable donationRegisterTable = new JTable(donationRegisterTableModel);
+	JTable rentRegisterTable = new JTable(rentRegisterTableModel);
 	
 	TableRowSorter sorter;
-	JScrollPane jsp, jspDonationRegister;
+	JScrollPane jsp, jspDonationRegister, jspRentRegister;
 	Dimension dim;
 	HashMap annualReportStatus = new HashMap();
 	HashMap prasadamStatus = new HashMap();
@@ -171,6 +179,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	ImageIcon rece_img = new ImageIcon(this.getClass().getResource("pay.png"));
 	//ImageIcon header = new ImageIcon(this.getClass().getResource("header.png"));
 	Font f;
+	
+	JLabel date_2, receipt_2, tenant_name, ph_p4, rentMonthLabel, rentYearLabel, corpusLetterLabel_2, amt_p4, serviceTaxRateLabel, ServiceTaxAmountLabel, totalAmountLabel, pay_mode_2, pay_num_2, dated_2, bank_nam_2, branch_2, bank_recvd_2;
+	JTextField receipt_no_2, addr_14, addr_24, addr_34, area_4, city_town4, pin_code_4, cand_ph_p4, totalAmount, serviceTaxRate, serviceTaxAmount, cand_amt_p4, payment_num_2, bank_name_2, branch_nam_2, issue_dat_2; 
+	JComboBox tenantName, payment_mode_2, bank_received_2, corpusCombo_2, monthCombo, yearCombo;
 	
 	DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	DateFormat simpleFormat = new SimpleDateFormat("dd-MMM-yyyy");
@@ -206,12 +218,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		edit_interior();
 		bill_interior();
 		DonationInterior();
+		rentInterior();
 		
 		tab_pane.addTab("New Entry", new JScrollPane(new_panel));
 		tab_pane.addTab("NS Register", view_panel);
 		tab_pane.addTab("Update", new JScrollPane(edit_panel));
 		tab_pane.addTab("Donation Receipt", new JScrollPane(bill_panel));		
 		tab_pane.addTab("Donation Register", new JScrollPane(donationRegisterPanel));
+		tab_pane.addTab("Rent", new JScrollPane(rentPanel));
+		tab_pane.addTab("Rent Register", new JScrollPane(rentRegisterPanel));
+		
 		panel.add(tab_pane, BorderLayout.CENTER);
 		//interior();
 		//add(panel);
@@ -1297,6 +1313,341 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		print_mod.addRow(new Object[] {"PAN No.: AAATV3147P", "VEDA RAKSHNA NIDHI TRUST (Regd.)", "No.64/31, SUBRAMANIYAN STREET, WEST MAMBALAM, CHENNAI - 600 033.", "e-mail: vrnt@vsnl.net", "Tel: 044-24740549"});
 		
 		print_frame.setVisible(true);
+	}
+	
+	public void rentInterior(){
+		
+		String[] tenant = {"", "LAKSHMI VILAS BANK", "WEALTH ADVISORS (INDIA)PVT LTD", "SRI SADGURU SABHA VEDA PATASALA C/O SRI. BALASUBRAMANIA GANAPATIGAL"};
+		String[] acc = {"CASH","CHQ","A/C TRANSFER"};
+		String[] corpusDonation = {"YES", "NO"};
+		String[] bankReceivedDropDown = {"", "ICICI", "BOB", "IB - WM", "CB - 732", "IB - K", "CB - 645"};
+		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
+		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date d = new java.util.Date();
+		final String dat = f.format(d);
+		 
+		date_2 = new JLabel(dat);
+		date_2.setToolTipText("Not right click to change date");
+		date_2.addMouseListener(new MouseListener(){
+			
+			public void mouseClicked(MouseEvent e){
+				String newdat = JOptionPane.showInputDialog(null, "Enter date", dat);
+				if (newdat != null){
+					date_2.setText(newdat);
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				date.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		receipt_2 = new JLabel("Receipt No");
+		
+		
+		
+		tenant_name = new JLabel("Tenant Name");
+		//add_p2 = new JLabel("Address");
+		addr_line_14 = new JLabel("Address Line 1");
+		addr_line_24 = new JLabel("Address Line 2");
+		addr_line_34 = new JLabel("Address Line 3");
+		area4 = new JLabel("Area");
+		city4 = new JLabel("City");
+		pin_code4 = new JLabel("Pin Code");
+		ph_p4 = new JLabel("Phone Num");
+		rentMonthLabel = new JLabel("Rent For The Month");
+		rentYearLabel = new JLabel("Rent For The Year");
+		corpusLetterLabel_2 = new JLabel("Corpus Letter");
+		
+		amt_p4 = new JLabel("Rent Amount");
+		serviceTaxRateLabel = new JLabel("Service Tax Rate");
+		ServiceTaxAmountLabel = new JLabel("Service Tax Amount");
+		totalAmountLabel = new JLabel("Total Amount Received");
+		
+		
+		
+		pay_mode_2 = new JLabel("Mode of Payment");
+		pay_num_2 = new JLabel("cheque/Transfer No");
+		dated_2 = new JLabel("Cheque/Transfer Date");
+		bank_nam_2 = new JLabel("Bank Drawn");
+		branch_2 = new JLabel("Branch");
+		bank_recvd_2 = new JLabel("Bank Received By VRNT");
+		
+		
+		receipt_no_2 = new JTextField(15);		
+		tenantName = new JComboBox(tenant);
+		//cand_add_p2 = new JTextArea(4, 15);
+		addr_14 = new JTextField(15);
+		addr_24 = new JTextField(15);
+		addr_34 = new JTextField(15);
+		area_4 = new JTextField(15);
+		city_town4 = new JTextField(15);
+		pin_code_4 = new JTextField(15);
+		cand_ph_p4 = new JTextField(15);
+		
+		cand_amt_p4 = new JTextField(15);		
+		serviceTaxRate = new JTextField(15);
+		serviceTaxAmount = new JTextField(15);
+		totalAmount = new JTextField(15);
+		
+		payment_num_2 = new JTextField(15);
+		bank_name_2 = new JTextField(15);
+		branch_nam_2 = new JTextField(15);
+		issue_dat_2 = new JTextField(15);
+		monthCombo = new JComboBox();
+		yearCombo = new JComboBox();
+		payment_mode_2 = new JComboBox(acc);
+		bank_received_2 = new JComboBox(bankReceivedDropDown);
+		
+		
+		corpusCombo_2 = new JComboBox(corpusDonation);
+		
+		
+		tenantName.addActionListener(this);
+		payment_mode_2.addActionListener(this);
+		retrive1 = new JButton("Retrive");
+		proceed1 = new JButton("Proceed");
+		reset2 = new JButton("Reset");
+		retrive1.addActionListener(this);
+		proceed1.addActionListener(this);
+		reset2.addActionListener(this);
+		
+		
+		
+		cand_amt_p4.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if((payment_mode_2.getSelectedIndex() == 0) && (ke.getKeyCode() == KeyEvent.VK_ENTER)){
+					proceed1.doClick();
+					cand_amt_p4.transferFocus();
+				}
+			}
+		});
+		
+		bank_received_2.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent ke){
+				if((payment_mode_2.getSelectedIndex() != 0) && (ke.getKeyCode() == KeyEvent.VK_ENTER)){
+					proceed1.doClick();
+					bank_received_2.transferFocus();
+				}
+			}
+		});
+		
+		//cand_add_p2.setLineWrap(true);
+		//cand_add_p2.setWrapStyleWord(true);
+		rentPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		Border border = BorderFactory.createLineBorder(Color.BLACK);
+		receipt_no_2.setBorder(border);
+		
+		
+		
+		tenantName.setBorder(border);
+		//cand_add_p2.setBorder(border);
+		addr_14.setBorder(border);
+		addr_24.setBorder(border);
+		addr_34.setBorder(border);
+		area_4.setBorder(border);
+		city_town4.setBorder(border);
+		pin_code_4.setBorder(border);
+		cand_ph_p4.setBorder(border);
+		totalAmount.setBorder(border);
+		serviceTaxRate.setBorder(border);
+		serviceTaxAmount.setBorder(border);
+		cand_amt_p4.setBorder(border);
+		payment_num_2.setBorder(border);
+		bank_name_2.setBorder(border);
+		issue_dat_2.setBorder(border);
+		branch_nam_2.setBorder(border);
+		bank_received_2.setBorder(border);
+		corpusCombo_2.setBorder(border);
+		monthCombo.setBorder(border);
+		yearCombo.setBorder(border);
+		//don_type.setBorder(border);
+		//payment_mode.setBorder(border);
+		c.insets = new Insets(10, 10, 10, 10);
+		c.gridx = 15; c.gridy = 0;
+		rentPanel.add(date_2, c);
+		
+		c.gridx = 0; c.gridy = 1;
+		rentPanel.add(receipt_2, c);
+		c.gridx = 1; c.gridy = 1;
+		rentPanel.add(receipt_no_2, c);
+		
+		
+		
+		
+		
+		c.gridx = 0; c.gridy = 2;
+		rentPanel.add(tenant_name, c);
+		c.gridx = 1; c.gridy = 2;
+		rentPanel.add(tenantName, c);
+		
+		c.gridx = 0; c.gridy = 3;
+		rentPanel.add(addr_line_14, c);
+		c.gridx = 1; c.gridy = 3;
+		rentPanel.add(addr_14, c);
+		
+		c.gridx = 0; c.gridy = 4;
+		rentPanel.add(addr_line_24, c);
+		c.gridx = 1; c.gridy = 4;
+		rentPanel.add(addr_24, c);
+		
+		c.gridx = 0; c.gridy = 5;
+		rentPanel.add(addr_line_34, c);
+		c.gridx = 1; c.gridy = 5;
+		rentPanel.add(addr_34, c);
+		
+		c.gridx = 0; c.gridy = 6;
+		rentPanel.add(area4, c);
+		c.gridx = 1; c.gridy = 6;
+		rentPanel.add(area_4, c);
+		
+		c.gridx = 0; c.gridy = 7;
+		rentPanel.add(city4, c);
+		c.gridx = 1; c.gridy = 7;
+		rentPanel.add(city_town4, c);
+		
+		c.gridx = 0; c.gridy = 8;
+		rentPanel.add(pin_code4, c);
+		c.gridx = 1; c.gridy = 8;
+		rentPanel.add(pin_code_4, c);
+		
+		c.gridx = 0; c.gridy = 9;
+		rentPanel.add(ph_p4, c);
+		c.gridx = 1; c.gridy = 9;
+		rentPanel.add(cand_ph_p4, c);
+		
+		c.gridx = 0; c.gridy = 10;
+		rentPanel.add(rentMonthLabel, c);
+		c.gridx = 1; c.gridy = 10;
+		rentPanel.add(monthCombo, c);
+		
+		c.gridx = 0; c.gridy = 11;
+		rentPanel.add(rentYearLabel, c);
+		c.gridx = 1; c.gridy = 11;
+		rentPanel.add(yearCombo, c);
+		
+		
+		c.gridx = 0; c.gridy = 12;
+		rentPanel.add(corpusLetterLabel_2, c);
+		c.gridx = 1; c.gridy = 12;
+		rentPanel.add(corpusCombo_2, c);
+		
+		c.gridx = 0; c.gridy = 13;
+		rentPanel.add(amt_p4, c);
+		c.gridx = 1; c.gridy = 13;
+		rentPanel.add(cand_amt_p4, c);
+		
+		c.gridx = 0; c.gridy = 14;
+		rentPanel.add(serviceTaxRateLabel, c);
+		c.gridx = 1; c.gridy = 14;
+		rentPanel.add(serviceTaxRate, c);
+		
+		c.gridx = 0; c.gridy = 15;
+		rentPanel.add(ServiceTaxAmountLabel, c);
+		c.gridx = 1; c.gridy = 15;
+		rentPanel.add(serviceTaxAmount, c);
+		
+		c.gridx = 0; c.gridy = 16;
+		rentPanel.add(totalAmountLabel, c);
+		c.gridx = 1; c.gridy = 16;
+		rentPanel.add(totalAmount, c);
+		
+		c.gridx = 0; c.gridy = 17;
+		rentPanel.add(pay_mode_2, c);
+		c.gridx = 1; c.gridy = 17;
+		rentPanel.add(payment_mode_2, c);
+		
+		c.gridx = 0; c.gridy = 18;
+		rentPanel.add(pay_num_2, c);
+		c.gridx = 1; c.gridy = 18;
+		rentPanel.add(payment_num_2, c);
+		
+		c.gridx = 0; c.gridy = 19;
+		rentPanel.add(dated_2, c);
+		c.gridx = 1; c.gridy = 19;
+		rentPanel.add(issue_dat_2, c);
+		
+		c.gridx = 0; c.gridy = 20;
+		rentPanel.add(bank_nam_2, c);
+		c.gridx = 1; c.gridy = 20;
+		rentPanel.add(bank_name_2, c);
+		
+		c.gridx = 0; c.gridy = 21;
+		rentPanel.add(branch_2, c);
+		c.gridx = 1; c.gridy = 21;
+		rentPanel.add(branch_nam_2, c);
+		
+		c.gridx = 0; c.gridy = 22;
+		rentPanel.add(bank_recvd_2, c);
+		c.gridx = 1; c.gridy = 22;
+		rentPanel.add(bank_received_2, c);
+		
+		c.gridx = 1; c.gridy = 23;
+		rentPanel.add(proceed1, c);
+		c.gridx = 2; c.gridy = 23;
+		rentPanel.add(reset2, c);
+		
+		if (payment_mode_2.getSelectedItem().equals("CASH")){
+			payment_num_2.setEditable(false);
+			bank_name_2.setEditable(false);
+			branch_nam_2.setEditable(false);
+			issue_dat_2.setEditable(false);
+			bank_received_2.setEnabled(false);;
+		}
+		
+		try{
+			Class.forName("org.h2.Driver");
+   			Connection conn=DriverManager.getConnection("jdbc:h2:~/vrnt","sa","");
+			Statement stm=conn.createStatement();
+			String st = "select max(receipt) from bill";
+			ResultSet rs = stm.executeQuery(st);
+			rs.next();
+			int s = rs.getInt(1);		
+			if (s == 0){
+				receipt_no_2.setEditable(true);
+			} else {
+				receipt_no_2.setText(String.valueOf(s+1));
+				receipt_no_2.setEditable(false);
+			}
+			conn.close();
+		}
+		catch (ClassNotFoundException e)
+		{
+			Telegraph tele = new Telegraph("Warning!", "Please Check Your Database Driver", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+			TelegraphQueue que = new TelegraphQueue();
+			que.add(tele);
+			//JOptionPane.showMessageDialog(null,"Please Check Your Database Driver", "Warning!",JOptionPane.WARNING_MESSAGE);
+		}
+		catch(SQLException ee)
+		{
+			System.err.println(ee);
+			
+			Telegraph tele = new Telegraph("Warning!", "Some problem might be occured in Database", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+			TelegraphQueue que = new TelegraphQueue();
+			que.add(tele);
+			//JOptionPane.showMessageDialog(null,"Some problem might be occured in Database","Warning!",JOptionPane.WARNING_MESSAGE);
+		}
+
 	}
 	
 	public String GetCurrentDateTime(){
