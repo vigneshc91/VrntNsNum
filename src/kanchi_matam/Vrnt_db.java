@@ -42,6 +42,7 @@ import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.RuleBasedNumberFormat;
 import com.ibm.icu.util.Currency;
 import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -56,6 +57,7 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -694,9 +696,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				address += "</html>";
 				String donType = rs.getString("TYPE_DONATN");
 				
-				
+				String currency = (!donType.equals("FOREIGN CORPUS")) ? "Rs. " : "";
 	
-				String amount = "Rs. "+formatter.format(rs.getDouble("AMT"));
+				String amount = currency+formatter.format(rs.getDouble("AMT"));
 				String mode = rs.getString("PAY_MODE");
 				String chqNum = rs.getString("CHQNO");
 				String issueDate = rs.getString("ISSUE_DATE");
@@ -2335,6 +2337,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			cand_email_p2.setText("");
 			cand_pan_p2.setText("");
 			don_type.setSelectedIndex(0);
+			corpusCombo.setSelectedIndex(0);
 			cand_amt_p2.setText("");
 			payment_mode.setSelectedIndex(0);
 			payment_num.setText("");
@@ -2438,11 +2441,33 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				}
 			}
 			
+			File vrntCorpusLetter = new File("Vrnt Corpus Letter");
+			if(!vrntCorpusLetter.exists()){
+				try{
+					vrntCorpusLetter.mkdir();
+				} catch(Exception e1){
+					System.err.println(e1);
+				}
+			}
+			
 			File s = null;
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
+			
+			String receivedDate = dateFormat.format(Date.valueOf(date.getText()));
+			
+			String resultNameFile = "";
+			if(don_type.getSelectedIndex() == 0)
+				resultNameFile = cand_nam_p2.getText() + "( NS NO. "+num_p2.getText() + " )";
+			else if(don_type.getSelectedIndex() == 1)
+				resultNameFile = cand_nam_p2.getText() + "( GENERAL )";
+			else
+				resultNameFile = cand_nam_p2.getText();
+			
 			try {
 //				s = File.createTempFile("vrnt_bill", ".pdf");
 				
-				s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receipt_no.getText()+".pdf");
+				s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receipt_no.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs."+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText()))+".pdf");
 			} catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -2462,7 +2487,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			doc.setMarginMirroring(true);
 			doc.open();
 			com.itextpdf.text.Font fi = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 16);
-			com.itextpdf.text.Font n = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 10);			
+			com.itextpdf.text.Font n = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 8, Font.BOLD);			
 			com.itextpdf.text.Font nb = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD);
 			com.itextpdf.text.Font si = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 8);
 			com.itextpdf.text.Font ni = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 6);
@@ -2489,37 +2514,40 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			g = new PdfPCell(donat);
 			g.setHorizontalAlignment(Element.ALIGN_CENTER);
 			
-			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-			String receivedDate = dateFormat.format(Date.valueOf(date.getText()));
+			
 			
 			Phrase dat = new Phrase("Date: "+receivedDate, si);
 			
-			Phrase rs = new Phrase("AMOUNT Rs. "+cand_amt_p2.getText(), si);
-			Phrase nsno = new Phrase("N.S No: "+num_p2.getText(), si);
+			Phrase donationFrom = new Phrase(don_type.getSelectedItem().toString()+" RECEIVED FROM:", n);
 			
-			Phrase rup = new Phrase("RUPEES "+result.toUpperCase()+" ONLY", ni);
-			String address = ""; int emptyAddressCount = 0;
+			String currency = (don_type.getSelectedIndex() != 2) ? "Rs. " : "";
+			String currencyFull = (don_type.getSelectedIndex() != 2) ? "RUPEES " : "";
 			
-			address += (addr_12.getText().length() != 0) ?  addr_12.getText() : emptyAddressCount++;
+			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText())), si);
+			Phrase nsno = new Phrase("N.S No. ( Donor Reference Number ): "+num_p2.getText(), n);
+			
+			Phrase rup = new Phrase(currencyFull+result.toUpperCase()+" ONLY", ni);
+			String address = "";
+			
+			address += (addr_12.getText().length() != 0) ?  addr_12.getText() : "";
 				
-			address += (addr_22.getText().length() != 0) ? "\n"+addr_22.getText() : emptyAddressCount++;
+			address += (addr_22.getText().length() != 0) ? "\n"+addr_22.getText() : "";
 			
-			address += (addr_32.getText().length() != 0) ? "\n"+addr_32.getText() : emptyAddressCount++;
+			address += (addr_32.getText().length() != 0) ? "\n"+addr_32.getText() : "";
 			
-			address += (area_2.getText().length() != 0) ? "\n"+area_2.getText() : emptyAddressCount++;
+			address += (area_2.getText().length() != 0) ? "\n"+area_2.getText() : "";
 			
-			address += (city_town2.getText().length() != 0) ? "\n"+city_town2.getText() : emptyAddressCount++;
+			address += (city_town2.getText().length() != 0) ? "\n"+city_town2.getText() : "";
 			
 			address += (pin_code_2.getText().length() != 0) ? " "+pin_code_2.getText() : " ";
 			
-			address += (cand_ph_p2.getText().length() != 0) ? "\nPh No: "+cand_ph_p2.getText() : emptyAddressCount++;
+			address += (cand_ph_p2.getText().length() != 0) ? "\nPh No: "+cand_ph_p2.getText() : "";
 			
-			address += (cand_email_p2.getText().length() != 0) ? "\nEmail: "+cand_email_p2.getText() : emptyAddressCount++;
+			address += (cand_email_p2.getText().length() != 0) ? "\nEmail: "+cand_email_p2.getText() : "";
 			
-			address += (cand_pan_p2.getText().length() != 0) ? "\nPAN No: "+cand_pan_p2.getText() : emptyAddressCount++;
+			address += (cand_pan_p2.getText().length() != 0) ? "\nPAN No: "+cand_pan_p2.getText() : "";
 			
-			for(int i=0; i<emptyAddressCount; i++)
-				address += "\n";
+			
 			
 			Phrase addr = new Phrase(address, si);
 			
@@ -2547,7 +2575,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 
 			String name = cand_nam_p2.getText()+" "+cand_initial_p2.getText();
 
-			Phrase nam = new Phrase(name, si);
+			Phrase nam = new Phrase(name, n);
 
 			
 
@@ -2560,6 +2588,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			
 			Phrase ins1 = new Phrase(" ", ni);
+			
+			PdfPCell donationFromCell = new PdfPCell(donationFrom);
 			
 			PdfPCell nam_c = new PdfPCell(nam);
 			nam_c.setFixedHeight(20);
@@ -2599,6 +2629,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			rup_c.setColspan(3);
 //			mod_c.setColspan(2);
 			
+			donationFromCell.setColspan(2);
+			
 			nsno_c.setColspan(2);
 			nam_c.setColspan(2);
 			address_c.setColspan(2);
@@ -2612,6 +2644,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			g.setBorder(0);
 			empty.setBorder(0);
 			dummy.setBorder(0);
+			donationFromCell.setBorder(0);
 			nam_c.setBorder(0);
 			rece_c.setBorder(0);
 			address_c.setBorder(0);
@@ -2682,21 +2715,26 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(dat_c);
 			tab.addCell(empty);
 			
-			tab.addCell(rs_c);
-			tab.addCell(nsno_c);
-			
+			tab.addCell(donationFromCell);
 			tab.addCell(dummy);
 			
+			tab.addCell(nsno_c);
+			tab.addCell(rs_c);
+			
+			
+			
 			tab.addCell(nam_c);
-			tab.addCell(mod_c);
+			tab.addCell(dummy);
+			
+			
 			
 			tab.addCell(address_c);
-			
+			tab.addCell(mod_c);
 			
 			tab.addCell(rup_c);
 			tab.addCell(don_for_c);
 
-			tab.addCell(empty);
+			//tab.addCell(empty);
 			
 			
 			
@@ -2704,7 +2742,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(sign_don_c);
 			tab.addCell(sign_rec_c);
 			tab.addCell(trust_c);
-			tab.addCell(empty);
+			//tab.addCell(empty);
 			tab.addCell(ins1_c);
 
 			
@@ -2724,6 +2762,192 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				e2.printStackTrace();
 			}
 			
+			if((donationTypeCombo.getSelectedIndex() == 0) && (corpusCombo.getSelectedIndex() == 0)){
+				File corpusLetter = null;
+				try {					
+					corpusLetter = new File(vrntCorpusLetter.getAbsolutePath()+"/RT. NO. "+receipt_no.getText()+".pdf");
+					Document document = new Document();
+					writer = PdfWriter.getInstance(document, new FileOutputStream(corpusLetter));
+					document.setPageSize(PageSize.A4);
+					
+					Paragraph receipt = new Paragraph("RECEIPT NO. "+receipt_no.getText());
+					receipt.setAlignment(Element.ALIGN_RIGHT);
+					
+					Paragraph date = new Paragraph("DATE: "+receivedDate);
+					date.setAlignment(Element.ALIGN_RIGHT);
+					
+					Paragraph from = new Paragraph("THE EXECUTIVE TRUSTEE\nVEDA RAKSHANA NIDHI TRUST,\nNO. 64/31 SUBRAMANIAN STREET\nWEST MAMBALAM\nCHENNAI 600033\nPHONE:  044-24740549\nEMAIL:  vrnt@vsnl.net / office@vrnt.org");
+					
+					Paragraph to = new Paragraph("Dear Sir,");
+					
+					Paragraph sub = new Paragraph("Sub: Donation towards Corpus Fund of the trust");
+					Paragraph content = new Paragraph("I am happy to know the efforts of VRNT, constituted under the directions of Pujyasri Mahaswamigal of kanchi kamakoti Peetam for preservation of Vedic Vibrations through traditional Vedic education. I am furnishing below details about me and I would request you to kindly accept  Donation of Rs. "+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText()))+" ( "+payment_mode.getSelectedItem()+" ) for corpus fund of the trust and utilise the amount, for the activities of the Trust.");
+					content.setAlignment(Element.ALIGN_JUSTIFIED);
+					
+					Paragraph enrollment = new Paragraph("ENROLMENT FOR LIFE DONOR CORPUS");
+					enrollment.setAlignment(Element.ALIGN_CENTER);
+					
+					Phrase nsNum = new Phrase(num_p2.getText()+" "+cand_initial_p2.getText()+" "+cand_nam_p2.getText());
+					
+					String addressString = "";
+					addressString += (addr_12.getText().length() != 0) ?  addr_12.getText() : "";
+					
+					addressString += (addr_22.getText().length() != 0) ? "\n"+addr_22.getText() : "";
+					
+					addressString += (addr_32.getText().length() != 0) ? "\n"+addr_32.getText() : "";
+					
+					addressString += (area_2.getText().length() != 0) ? "\n"+area_2.getText() : "";
+					
+					addressString += (city_town2.getText().length() != 0) ? "\n"+city_town2.getText() : "";
+					
+					addressString += (pin_code_2.getText().length() != 0) ? " "+pin_code_2.getText() : "";
+					
+					Phrase addrPhrase = new Phrase(addressString);
+					Phrase phNum = new Phrase(cand_ph_p2.getText());
+					Phrase email = new Phrase(cand_email_p2.getText());
+					Phrase star = new Phrase("");
+					Phrase pan = new Phrase(cand_pan_p2.getText());
+					Paragraph signPara = new Paragraph("SIGNATURE OF THE DONOR");
+					signPara.setAlignment(Element.ALIGN_RIGHT);
+					Paragraph datePara = new Paragraph("DATE:                                      ");
+					datePara.setAlignment(Element.ALIGN_RIGHT);
+					
+					PdfPTable table1 = new PdfPTable(new float[]{1,5,1,5});
+					
+					PdfPCell oneCell = new PdfPCell(new Phrase("1"));
+					PdfPCell twoCell = new PdfPCell(new Phrase("2"));
+					PdfPCell threeCell = new PdfPCell(new Phrase("3"));
+					PdfPCell fourCell = new PdfPCell(new Phrase("4"));
+					PdfPCell fiveCell = new PdfPCell(new Phrase("5"));
+					PdfPCell sixCell = new PdfPCell(new Phrase("6"));
+					
+					oneCell.setBorder(0);
+					twoCell.setBorder(0);
+					threeCell.setBorder(0);
+					fourCell.setBorder(0);
+					fiveCell.setBorder(0);
+					sixCell.setBorder(0);
+					
+					PdfPCell nsNumCell = new PdfPCell(new Phrase("NS NO. & NAME"));
+					PdfPCell addrCell = new PdfPCell(new Phrase("ADDRESS WITH PINCODE"));
+					PdfPCell phCell = new PdfPCell(new Phrase("PHONE NO."));
+					PdfPCell mailCell = new PdfPCell(new Phrase("EMAIL ID"));
+					PdfPCell starCell = new PdfPCell(new Phrase("BIRTH STAR"));
+					PdfPCell panCell = new PdfPCell(new Phrase("PAN"));
+					
+					nsNumCell.setBorder(0);
+					addrCell.setBorder(0);
+					phCell.setBorder(0);
+					mailCell.setBorder(0);
+					starCell.setBorder(0);
+					panCell.setBorder(0);
+					
+					PdfPCell colon = new PdfPCell(new Phrase(":"));
+					colon.setBorder(0);
+					
+					PdfPCell numCell = new PdfPCell(nsNum);
+					PdfPCell addrsCell = new PdfPCell(addrPhrase);
+					PdfPCell phNumCell = new PdfPCell(phNum);
+					PdfPCell emailCell = new PdfPCell(email);
+					PdfPCell birthStarCell = new PdfPCell(star);
+					PdfPCell panNumCell = new PdfPCell(pan);
+					
+					numCell.setBorder(0);
+					addrsCell.setBorder(0);
+					phNumCell.setBorder(0);
+					emailCell.setBorder(0);
+					birthStarCell.setBorder(0);
+					panNumCell.setBorder(0);
+					
+					
+					
+					table1.addCell(oneCell);
+					table1.addCell(nsNumCell);
+					table1.addCell(colon);
+					table1.addCell(numCell);
+					
+					table1.addCell(twoCell);
+					table1.addCell(addrCell);
+					table1.addCell(colon);
+					table1.addCell(addrsCell);
+					
+					table1.addCell(threeCell);
+					table1.addCell(phCell);
+					table1.addCell(colon);
+					table1.addCell(phNumCell);
+					
+					table1.addCell(fourCell);
+					table1.addCell(mailCell);
+					table1.addCell(colon);
+					table1.addCell(emailCell);
+					
+					table1.addCell(fiveCell);
+					table1.addCell(starCell);
+					table1.addCell(colon);
+					table1.addCell(birthStarCell);
+					
+					table1.addCell(sixCell);
+					table1.addCell(panCell);
+					table1.addCell(colon);
+					table1.addCell(panNumCell);
+					
+					DottedLineSeparator line = new DottedLineSeparator();
+					line.setOffset(-2);
+					line.setGap(2f);
+					
+					Paragraph cond1 = new Paragraph("( PLEASE SIGN & SEND THIS  LETTER TO  VRNT CHENNAI OFFICE BY POST )", nb);
+					cond1.setAlignment(Element.ALIGN_CENTER);
+					
+					
+					Paragraph cond2 = new Paragraph("( KINDLY TAKE XEROX COPIES OF THIS LETTER AND IN FUTURE, FILL AND SEND TO US FOR  DONATIONS ABOVE RS.2000 , SO THAT THE DONATION AMOUNT CAN BE TAKEN TO THE CORPUS OF THE TRUST)", n);
+					cond2.setAlignment(Element.ALIGN_CENTER);
+					
+					
+					Paragraph cond3 = new Paragraph("We request the donors to mention their Complete Address with Phone Number or E-Mail ID for communication regarding the donation receipt.", n);
+					cond3.setAlignment(Element.ALIGN_CENTER);
+					
+					
+					
+					document.open();
+					document.add(receipt);
+					document.add(date);
+					document.add(Chunk.NEWLINE);
+					document.add(from);
+					document.add(Chunk.NEWLINE);
+					document.add(to);
+					document.add(Chunk.NEWLINE);
+					document.add(sub);
+					document.add(Chunk.NEWLINE);
+					document.add(content);
+					document.add(enrollment);
+					document.add(Chunk.NEWLINE);
+					document.add(table1);
+					
+					document.add(Chunk.NEWLINE);
+					document.add(signPara);
+					document.add(datePara);
+					document.add(Chunk.NEWLINE);
+					document.add(line);
+					document.add(cond1);
+					document.add(Chunk.NEWLINE);
+					document.add(cond2);
+					document.add(Chunk.NEWLINE);
+					document.add(cond3);
+					
+					//Desktop.getDesktop().open(corpusLetter);
+					document.close();
+					
+					
+					
+				} catch (Exception e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}				
+				
+			}
+			
+			
+			
 			donationTypeCombo.setSelectedIndex(0);
 			retrive.setEnabled(true);
 			num_p2.setEditable(true);
@@ -2740,12 +2964,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			cand_email_p2.setText("");
 			cand_pan_p2.setText("");
 			don_type.setSelectedIndex(0);
+			corpusCombo.setSelectedIndex(0);
 			cand_amt_p2.setText("");
 			payment_mode.setSelectedIndex(0);
 			payment_num.setText("");
 			issue_dat.setText("");
 			bank_name.setText("");
-			branch_nam.setText("");
+			branch_nam.setText("");			
 			bank_received.setSelectedIndex(0);
 			try{
 				Class.forName("org.h2.Driver");
@@ -3279,6 +3504,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				tab.setWidthPercentage(100);
 				
 				NumberFormat formatter = new RuleBasedNumberFormat(RuleBasedNumberFormat.SPELLOUT);
+				
 				String result = formatter.format(amts);
 				Phrase h = new Phrase("SRI GURUBHYO NAMAHA", ni);
 				

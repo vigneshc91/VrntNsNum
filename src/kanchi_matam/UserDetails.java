@@ -212,7 +212,11 @@ public class UserDetails extends JFrame implements ActionListener {
 				
 				int receiptNumber = rs1.getInt("RECEIPT");
 				Date receiptDate = rs1.getDate("DAT");
-				String amount = "Rs. "+formatter.format(rs1.getDouble("AMT"));
+				String donType = rs1.getString("TYPE_DONATN");
+				
+				String currency = (!donType.equals("FOREIGN CORPUS")) ? "Rs. " : "";
+				
+				String amount = currency+formatter.format(rs1.getDouble("AMT"));
 				String mode = rs1.getString("PAY_MODE");
 				
 				String num = rs1.getString("CHQNO");
