@@ -99,7 +99,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	
 	//JTextArea cand_add_p1, cand_add_p2, cand_add_p3;
 	JButton save;
-	JButton reset, reset1, reset2;
+	JButton reset, reset1, reset2, reset3;
 	JButton retrive, retrive1;
 	JButton find;
 	JButton edit;
@@ -180,9 +180,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	//ImageIcon header = new ImageIcon(this.getClass().getResource("header.png"));
 	Font f;
 	
-	JLabel date_2, receipt_2, tenant_name, ph_p4, rentMonthLabel, rentYearLabel, corpusLetterLabel_2, amt_p4, serviceTaxRateLabel, ServiceTaxAmountLabel, totalAmountLabel, pay_mode_2, pay_num_2, dated_2, bank_nam_2, branch_2, bank_recvd_2;
-	JTextField receipt_no_2, addr_14, addr_24, addr_34, area_4, city_town4, pin_code_4, cand_ph_p4, totalAmount, serviceTaxRate, serviceTaxAmount, cand_amt_p4, payment_num_2, bank_name_2, branch_nam_2, issue_dat_2; 
-	JComboBox tenantName, payment_mode_2, bank_received_2, corpusCombo_2, monthCombo, yearCombo;
+	JLabel tenantLabel, date_2, receipt_2, tenant_name, ph_p4, rentMonthLabel, rentYearLabel, corpusLetterLabel_2, amt_p4, serviceTaxRateLabel, ServiceTaxAmountLabel, totalAmountLabel, pay_mode_2, pay_num_2, dated_2, bank_nam_2, branch_2, bank_recvd_2;
+	JTextField tenantName, receipt_no_2, addr_14, addr_24, addr_34, area_4, city_town4, pin_code_4, cand_ph_p4, totalAmount, serviceTaxRate, serviceTaxAmount, cand_amt_p4, payment_num_2, bank_name_2, branch_nam_2, issue_dat_2; 
+	JComboBox tenantCombo, payment_mode_2, bank_received_2, corpusCombo_2, monthCombo, yearCombo;
 	
 	DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	DateFormat simpleFormat = new SimpleDateFormat("dd-MMM-yyyy");
@@ -803,7 +803,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		find = new JButton("Find");
 		edit = new JButton("Update");
 		delete = new JButton("Delete");
-		reset = new JButton("Reset");
+		reset1 = new JButton("Reset");
 		
 		num_p3.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent ke){
@@ -863,7 +863,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		find.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
-		reset.addActionListener(this);
+		reset1.addActionListener(this);
 		
 		c.gridx = 0; c.gridy = 0; c.insets = new Insets(15, 15, 10, 10);
 		edit_panel.add(no_p3, c);
@@ -943,7 +943,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		c.gridx = 2; c.gridy = 14;
 		edit_panel.add(delete, c);
 		c.gridx = 3; c.gridy = 14;
-		edit_panel.add(reset, c);
+		edit_panel.add(reset1, c);
 	/*	cand_add_p3.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
 				if (e.getKeyCode() == KeyEvent.VK_TAB){
@@ -1061,10 +1061,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		payment_mode.addActionListener(this);
 		retrive = new JButton("Retrive");
 		proceed = new JButton("Proceed");
-		reset1 = new JButton("Reset");
+		reset2 = new JButton("Reset");
 		retrive.addActionListener(this);
 		proceed.addActionListener(this);
-		reset1.addActionListener(this);
+		reset2.addActionListener(this);
 		
 		num_p2.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent ke){
@@ -1248,7 +1248,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		c.gridx = 1; c.gridy = 24;
 		bill_panel.add(proceed, c);
 		c.gridx = 2; c.gridy = 24;
-		bill_panel.add(reset1, c);
+		bill_panel.add(reset2, c);
 		
 		if (payment_mode.getSelectedItem().equals("CASH")){
 			payment_num.setEditable(false);
@@ -1316,10 +1316,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	}
 	
 	public void rentInterior(){
-		
-		String[] tenant = {"", "LAKSHMI VILAS BANK", "WEALTH ADVISORS (INDIA)PVT LTD", "SRI SADGURU SABHA VEDA PATASALA C/O SRI. BALASUBRAMANIA GANAPATIGAL"};
+	
+		String[] tenant = {"", "LV BANK", "WEALTH ADVISOR", "SSSV PATASALA"};
 		String[] acc = {"CASH","CHQ","A/C TRANSFER"};
 		String[] corpusDonation = {"YES", "NO"};
+		String[] month = {"", "Jan", "Feb", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+		String[] year = {"", "2015", "2016", "2017", "2018", "2019", "2020"};
 		String[] bankReceivedDropDown = {"", "ICICI", "BOB", "IB - WM", "CB - 732", "IB - K", "CB - 645"};
 		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
@@ -1340,7 +1342,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				date.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				date_2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 
 			@Override
@@ -1364,7 +1366,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		receipt_2 = new JLabel("Receipt No");
 		
 		
-		
+		tenantLabel = new JLabel("Tenant");
 		tenant_name = new JLabel("Tenant Name");
 		//add_p2 = new JLabel("Address");
 		addr_line_14 = new JLabel("Address Line 1");
@@ -1393,8 +1395,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_recvd_2 = new JLabel("Bank Received By VRNT");
 		
 		
-		receipt_no_2 = new JTextField(15);		
-		tenantName = new JComboBox(tenant);
+		receipt_no_2 = new JTextField(15);
+		tenantCombo = new JComboBox(tenant);
+		tenantName = new JTextField(15);
 		//cand_add_p2 = new JTextArea(4, 15);
 		addr_14 = new JTextField(15);
 		addr_24 = new JTextField(15);
@@ -1413,8 +1416,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_name_2 = new JTextField(15);
 		branch_nam_2 = new JTextField(15);
 		issue_dat_2 = new JTextField(15);
-		monthCombo = new JComboBox();
-		yearCombo = new JComboBox();
+		monthCombo = new JComboBox(month);
+		yearCombo = new JComboBox(year);
 		payment_mode_2 = new JComboBox(acc);
 		bank_received_2 = new JComboBox(bankReceivedDropDown);
 		
@@ -1422,22 +1425,22 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		corpusCombo_2 = new JComboBox(corpusDonation);
 		
 		
-		tenantName.addActionListener(this);
+		tenantCombo.addActionListener(this);
 		payment_mode_2.addActionListener(this);
 		retrive1 = new JButton("Retrive");
 		proceed1 = new JButton("Proceed");
-		reset2 = new JButton("Reset");
+		reset3 = new JButton("Reset");
 		retrive1.addActionListener(this);
 		proceed1.addActionListener(this);
-		reset2.addActionListener(this);
+		reset3.addActionListener(this);
 		
 		
 		
-		cand_amt_p4.addKeyListener(new KeyAdapter(){
+		serviceTaxRate.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent ke){
 				if((payment_mode_2.getSelectedIndex() == 0) && (ke.getKeyCode() == KeyEvent.VK_ENTER)){
 					proceed1.doClick();
-					cand_amt_p4.transferFocus();
+					serviceTaxRate.transferFocus();
 				}
 			}
 		});
@@ -1459,7 +1462,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		receipt_no_2.setBorder(border);
 		
 		
-		
+		tenantCombo.setBorder(border);
 		tenantName.setBorder(border);
 		//cand_add_p2.setBorder(border);
 		addr_14.setBorder(border);
@@ -1494,57 +1497,59 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		
 		
-		
-		
 		c.gridx = 0; c.gridy = 2;
-		rentPanel.add(tenant_name, c);
+		rentPanel.add(tenantLabel, c);
 		c.gridx = 1; c.gridy = 2;
-		rentPanel.add(tenantName, c);
+		rentPanel.add(tenantCombo, c);
 		
 		c.gridx = 0; c.gridy = 3;
-		rentPanel.add(addr_line_14, c);
+		rentPanel.add(tenant_name, c);
 		c.gridx = 1; c.gridy = 3;
-		rentPanel.add(addr_14, c);
+		rentPanel.add(tenantName, c);
 		
 		c.gridx = 0; c.gridy = 4;
-		rentPanel.add(addr_line_24, c);
+		rentPanel.add(addr_line_14, c);
 		c.gridx = 1; c.gridy = 4;
-		rentPanel.add(addr_24, c);
+		rentPanel.add(addr_14, c);
 		
 		c.gridx = 0; c.gridy = 5;
-		rentPanel.add(addr_line_34, c);
+		rentPanel.add(addr_line_24, c);
 		c.gridx = 1; c.gridy = 5;
-		rentPanel.add(addr_34, c);
+		rentPanel.add(addr_24, c);
 		
 		c.gridx = 0; c.gridy = 6;
-		rentPanel.add(area4, c);
+		rentPanel.add(addr_line_34, c);
 		c.gridx = 1; c.gridy = 6;
-		rentPanel.add(area_4, c);
+		rentPanel.add(addr_34, c);
 		
 		c.gridx = 0; c.gridy = 7;
-		rentPanel.add(city4, c);
+		rentPanel.add(area4, c);
 		c.gridx = 1; c.gridy = 7;
-		rentPanel.add(city_town4, c);
+		rentPanel.add(area_4, c);
 		
 		c.gridx = 0; c.gridy = 8;
-		rentPanel.add(pin_code4, c);
+		rentPanel.add(city4, c);
 		c.gridx = 1; c.gridy = 8;
-		rentPanel.add(pin_code_4, c);
+		rentPanel.add(city_town4, c);
 		
 		c.gridx = 0; c.gridy = 9;
-		rentPanel.add(ph_p4, c);
+		rentPanel.add(pin_code4, c);
 		c.gridx = 1; c.gridy = 9;
-		rentPanel.add(cand_ph_p4, c);
+		rentPanel.add(pin_code_4, c);
 		
 		c.gridx = 0; c.gridy = 10;
-		rentPanel.add(rentMonthLabel, c);
+		rentPanel.add(ph_p4, c);
 		c.gridx = 1; c.gridy = 10;
-		rentPanel.add(monthCombo, c);
+		rentPanel.add(cand_ph_p4, c);
 		
 		c.gridx = 0; c.gridy = 11;
-		rentPanel.add(rentYearLabel, c);
+		rentPanel.add(rentMonthLabel, c);
 		c.gridx = 1; c.gridy = 11;
+		rentPanel.add(monthCombo, c);
+		c.gridx = 2; c.gridy = 11;
 		rentPanel.add(yearCombo, c);
+		
+		
 		
 		
 		c.gridx = 0; c.gridy = 12;
@@ -1605,7 +1610,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		c.gridx = 1; c.gridy = 23;
 		rentPanel.add(proceed1, c);
 		c.gridx = 2; c.gridy = 23;
-		rentPanel.add(reset2, c);
+		rentPanel.add(reset3, c);
 		
 		if (payment_mode_2.getSelectedItem().equals("CASH")){
 			payment_num_2.setEditable(false);
@@ -1619,7 +1624,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			Class.forName("org.h2.Driver");
    			Connection conn=DriverManager.getConnection("jdbc:h2:~/vrnt","sa","");
 			Statement stm=conn.createStatement();
-			String st = "select max(receipt) from bill";
+			String st = "select max(receipt) from rent";
 			ResultSet rs = stm.executeQuery(st);
 			rs.next();
 			int s = rs.getInt(1);		
@@ -1681,8 +1686,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			String st = "create table if not exists details(no varchar(10) primary key, initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), amount double, other_ns_num varchar(60), annual_report varchar(10), prasadam varchar(10), last_updated_at timestamp)";
 			String s = "create table if not exists bill(receipt number(10), dat date, donor_type varchar(20), no varchar(10), initial varchar(7), name varchar(50), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), email varchar(60), pan_no varchar(20), type_donatn varchar(20), amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), relization_date varchar(10), bank_received varchar(100),  status varchar(10))";
+			String rent = "create table if not exists rent(receipt number(10), dat date, name varchar(70), addr_1 varchar(50), addr_2 varchar(50), addr_3 varchar(50), area varchar(30), city varchar(30), pincode varchar(8), phone_num varchar(40), month varchar(10), year varchar(5), rent_amt double, service_tax float,  total_amt double, pay_mode varchar(20), chqno varchar(30), issue_date varchar(10), bank varchar(100), branch varchar(100), relization_date varchar(10), bank_received varchar(100),  status varchar(10))";
 			stm.executeUpdate(st);
 			stm.executeUpdate(s);
+			stm.executeUpdate(rent);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -1862,7 +1869,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 		} 
 		
-		else if (e.getActionCommand().equals("Reset")){
+		else if (e.getSource() == reset){
 			num_p1.setText("");
 			cand_initial_p1.setText("");
 			cand_nam_p1.setText("");
@@ -1878,6 +1885,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			cand_amt_p1.setText("");
 			cand_other_ns_num_p1.setText("");
 		} 
+		
+		
 		
 		else if (e.getActionCommand().equals("Refresh")){
 			model.setRowCount(0);
@@ -2513,7 +2522,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		  }
 		} 
 		
-		else if (e.getActionCommand().equals("Reset")){
+		else if (e.getSource() == reset1){
 			num_p3.setText("");
 			cand_initial_p3.setText("");
 			cand_nam_p3.setText("");
@@ -2547,6 +2556,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		     cand_amt_p3.setEditable(false);
 		     cand_other_ns_num_p3.setEditable(false);
 		}
+		
+		
 		
 		if (e.getActionCommand().equals("Retrive")){
 			Statement stm = null;
@@ -2652,6 +2663,45 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 		}
 		
+		if (e.getSource().equals(payment_mode_2)){
+			if (payment_mode_2.getSelectedItem().equals("CASH")){
+				payment_num_2.setText("");
+				bank_name_2.setText("");
+				branch_nam_2.setText("");
+				issue_dat_2.setText("");
+				bank_received_2.setSelectedIndex(0);
+				payment_num_2.setEditable(false);
+				bank_name_2.setEditable(false);
+				branch_nam_2.setEditable(false);
+				issue_dat_2.setEditable(false);
+				bank_received_2.setEnabled(false);
+			} else if (payment_mode_2.getSelectedItem().equals("CHQ")){
+				payment_num_2.setText("");
+				bank_name_2.setText("");
+				branch_nam_2.setText("");
+				issue_dat_2.setText("");
+				bank_received_2.setSelectedIndex(0);
+				payment_num_2.setEditable(true);
+				bank_name_2.setEditable(true);
+				branch_nam_2.setEditable(true);
+				issue_dat_2.setEditable(true);
+				bank_received_2.setEnabled(true);
+			} else if (payment_mode_2.getSelectedItem().equals("A/C TRANSFER")){
+				payment_num_2.setText("");
+				bank_name_2.setText("");
+				branch_nam_2.setText("");
+				issue_dat_2.setText("");
+				bank_received_2.setSelectedIndex(0);
+				payment_num_2.setEditable(true);
+				bank_name_2.setEditable(false);
+				branch_nam_2.setEditable(false);
+				issue_dat_2.setEditable(true);
+				bank_received_2.setEnabled(true);
+			}
+			
+		}
+		
+		
 		if(e.getSource().equals(donationTypeCombo)){
 			if(donationTypeCombo.getSelectedItem().equals("NS NO.")){
 				num_p2.setText("");
@@ -2671,7 +2721,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			}
 		}
 		
-		if (e.getSource() == reset1){
+		if (e.getSource() == reset2){
 			donationTypeCombo.setSelectedIndex(0);
 			retrive.setEnabled(true);
 			num_p2.setEditable(true);
@@ -2699,8 +2749,68 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			
 		}
+		if (e.getSource() == reset3){
+			tenantCombo.setSelectedIndex(0);
+			monthCombo.setSelectedIndex(0);
+			yearCombo.setSelectedIndex(0);
+			
+			corpusCombo_2.setSelectedIndex(0);
+			cand_amt_p4.setText("");
+			serviceTaxRate.setText("");
+			serviceTaxAmount.setText("");
+			totalAmount.setText("");
+			
+			payment_mode_2.setSelectedIndex(0);
+			payment_num_2.setText("");
+			issue_dat_2.setText("");
+			bank_name_2.setText("");
+			branch_nam_2.setText("");
+			bank_received_2.setSelectedIndex(0);
+			
+			
+		}
+		if(e.getSource() == tenantCombo){
+			if(tenantCombo.getSelectedIndex() == 0){
+				tenantName.setText("");
+				addr_14.setText("");
+				addr_24.setText("");
+				addr_34.setText("");
+				area_4.setText("");
+				city_town4.setText("");
+				pin_code_4.setText("");
+				cand_ph_p4.setText("");
+			} else if(tenantCombo.getSelectedIndex() == 1){
+				tenantName.setText("LAKSHMI VILAS BANK");
+				addr_14.setText("NO. 29 GOVINDU STREET");
+				addr_24.setText("( GROUND FLOOR )");
+				addr_34.setText("");
+				area_4.setText("T NAGAR");
+				city_town4.setText("CHENNAI");
+				pin_code_4.setText("600017");
+				cand_ph_p4.setText("044-28155499");
+				
+			} else if(tenantCombo.getSelectedIndex() == 2){
+				tenantName.setText("WEALTH ADVISORS (INDIA)PVT LTD");
+				addr_14.setText("NO. 29 GOVINDU STREET");
+				addr_24.setText("( FIRST FLOOR )");
+				addr_34.setText("");
+				area_4.setText("T NAGAR");
+				city_town4.setText("CHENNAI");
+				pin_code_4.setText("600017");
+				cand_ph_p4.setText("044-42922366");
+			} else {
+				tenantName.setText("SRI SADGURU SABHA VEDA PATASALA C/O SRI. BALASUBRAMANIA GANAPATIGAL");
+				addr_14.setText("NO. 64/31");
+				addr_24.setText("SUBRAMANIAN STREET");
+				addr_34.setText("");
+				area_4.setText("WEST MAMBALAM");
+				city_town4.setText("CHENNAI");
+				pin_code_4.setText("600033");
+				cand_ph_p4.setText("044-23710602 / 9444054943");
+			}
+		}
 		
-		if (e.getActionCommand().equals("Proceed")){
+		if (e.getSource() == proceed){
 			TelegraphQueue que = new TelegraphQueue();
 			if (cand_nam_p2.getText().length() == 0){
 				Telegraph tele = new Telegraph("Enter Name", "Name can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
@@ -3369,7 +3479,658 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			}
 			//print_interior();
 		  }
+		}
+		
+		if (e.getSource() == proceed1){
+			TelegraphQueue que = new TelegraphQueue();
+			if (tenantCombo.getSelectedIndex() == 0){
+				Telegraph tele = new Telegraph("Select Tenant", "Tenant Name can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+			} else if(cand_amt_p4.getText().length() == 0){
+				Telegraph tele = new Telegraph("Enter Rent Amount", "Rent Amount can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+			} else if(serviceTaxRate.getText().length() == 0){
+				Telegraph tele = new Telegraph("Enter Service Tax", "Service Tax can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+			} else if((payment_mode_2.getSelectedIndex() != 0) && (payment_num_2.getText().length() == 0)) {
+					Telegraph tele = new Telegraph("Enter Cheque/D.D No.", "Cheque/D.D number can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+					que.add(tele);
+													
+			} else if((payment_mode_2.getSelectedIndex() != 0) && (issue_dat_2.getText().length() == 0)) {
+				Telegraph tele = new Telegraph("Enter Cheque/Transfer Date", "Cheque/Transfer Date can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+												
+			}else if((payment_mode_2.getSelectedIndex() != 0) && (bank_received_2.getSelectedIndex() == 0)) {
+				Telegraph tele = new Telegraph("Select Bank Received", "Bank Received By VRNT can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				que.add(tele);
+												
+			} else {				
+				
+				try {
+					Class.forName("org.h2.Driver");
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		        Connection conn = null;
+				try {
+					conn = DriverManager.
+					    getConnection("jdbc:h2:~/vrnt", "sa", "");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		        // add application code here
+				
+		        try {
+		        	String realizationDate = "";
+		        	if(payment_mode_2.getSelectedItem().equals("CASH"))
+		        		realizationDate = date.getText();
+		        	else if(payment_mode_2.getSelectedItem().equals("CHQ"))
+		        		realizationDate = "";
+		        	else
+		        		realizationDate = issue_dat_2.getText();
+					Statement stm = conn.createStatement();
+					String st = "insert into rent values("+receipt_no_2.getText()+", '"+date_2.getText()+"', '"+tenantName.getText()+"'"+","+"'"+addr_14.getText()+"'"+", '"+addr_24.getText()+"', '"+addr_34.getText()+"', '"+area_4.getText()+"', '"+city_town4.getText()+"', '"+pin_code_4.getText()+"', '"+cand_ph_p4.getText()+"', '"+monthCombo.getSelectedItem()+"', '"+yearCombo.getSelectedItem()+"', "+cand_amt_p4.getText()+","+serviceTaxRate.getText()+", "+totalAmount.getText()+", '"+payment_mode_2.getSelectedItem()+"', '"+payment_num_2.getText()+"', '"+issue_dat_2.getText()+"', '"+bank_name_2.getText()+"', '"+branch_nam_2.getText()+"', '"+realizationDate+"', '"+bank_received_2.getSelectedItem()+"', 'cleared'"+")";
+					stm.executeUpdate(st);
+					
+					//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
+					/*if(num_p2.getText().length() != 0){
+						String st1 = "select amount from details where no = '"+num_p2.getText()+"'";
+						ResultSet rs2 = stm.executeQuery(st1);
+						rs2.next();
+						double amt = rs2.getDouble(1);
+						
+						
+						amt += Integer.parseInt(cand_amt_p2.getText());
+						String st2 = "update details set amount = "+amt+"where no = '"+num_p2.getText()+"'";
+						stm.executeUpdate(st2);
+					}*/
+					
+					Telegraph tele = new Telegraph("Success", "Rent Receipt generated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+					TelegraphQueue quee = new TelegraphQueue();
+					quee.add(tele);
+					//JOptionPane.showMessageDialog(null, "Saved Successfully...", "Success", JOptionPane.INFORMATION_MESSAGE);
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+					
+				}
+		        
+				try {
+					conn.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					
+				}
+				
+			PdfWriter writer = null;
+			
+			File vrntRentBill = new File("Vrnt Rent Bill");
+			if(!vrntRentBill.exists()){
+				try{
+					vrntRentBill.mkdir();
+				} catch(Exception e1){
+					System.err.println(e1);
+				}
+			}
+			
+			File vrntRentCorpusLetter = new File("Vrnt Rent Corpus Letter");
+			if(!vrntRentCorpusLetter.exists()){
+				try{
+					vrntRentCorpusLetter.mkdir();
+				} catch(Exception e1){
+					System.err.println(e1);
+				}
+			}
+			
+			File s = null;
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
+			
+			String receivedDate = dateFormat.format(Date.valueOf(date.getText()));
+			
+			String resultNameFile = tenantName.getText();
+			
+			
+			try {
+//				s = File.createTempFile("vrnt_bill", ".pdf");
+				
+				s = new File(vrntRentBill.getAbsolutePath()+"/RT. NO. "+receipt_no_2.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs."+numberFormatter.format(Integer.parseInt(totalAmount.getText()))+".pdf");
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			Document doc = new Document();
+			try {
+				writer = PdfWriter.getInstance(doc, new FileOutputStream(s));
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (DocumentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			doc.setPageSize(PageSize.A5);
+			//doc.setMargins(36, 72, 108, 180);
+			doc.setMarginMirroring(true);
+			doc.open();
+			com.itextpdf.text.Font fi = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 16);
+			com.itextpdf.text.Font n = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 8, Font.BOLD);			
+			com.itextpdf.text.Font nb = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD);
+			com.itextpdf.text.Font si = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 8);
+			com.itextpdf.text.Font ni = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 6);
+			PdfPTable tab = new PdfPTable(3);
+			PdfPCell a, b, c, d, f, g;
+			//tab.setWidths(new int[] {80, 60, 60});
+			tab.setWidthPercentage(100);
+			
+			NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
+			
+			String result = formatter.format(Integer.parseInt(totalAmount.getText()));
+			
+
+			Phrase vrnt = new Phrase(" ", fi);
+
+			c = new PdfPCell(vrnt);
+
+			c.setFixedHeight(40);
+
+			Phrase rece = new Phrase("Receipt Number: "+receipt_no_2.getText(), si);
+			
+			
+			Phrase donat = new Phrase("Rent", si);
+			g = new PdfPCell(donat);
+			g.setHorizontalAlignment(Element.ALIGN_CENTER);
+			
+			
+			
+			Phrase dat = new Phrase("Date: "+receivedDate, si);
+			
+			Phrase donationFrom = new Phrase("RENT RECEIVED FROM:", n);
+			
+			String currency = "Rs. ";
+			String currencyFull = "RUPEES ";
+			
+			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Integer.parseInt(totalAmount.getText())), si);
+			
+			
+			Phrase rup = new Phrase(currencyFull+result.toUpperCase()+" ONLY", ni);
+			String address = "";
+			
+			address += (addr_14.getText().length() != 0) ?  addr_14.getText() : "";
+				
+			address += (addr_24.getText().length() != 0) ? "\n"+addr_24.getText() : "";
+			
+			address += (addr_34.getText().length() != 0) ? "\n"+addr_34.getText() : "";
+			
+			address += (area_4.getText().length() != 0) ? "\n"+area_4.getText() : "";
+			
+			address += (city_town4.getText().length() != 0) ? "\n"+city_town4.getText() : "";
+			
+			address += (pin_code_4.getText().length() != 0) ? " "+pin_code_4.getText() : " ";
+			
+			address += (cand_ph_p4.getText().length() != 0) ? "\nPh No: "+cand_ph_p4.getText() : "";
+			
+			
+			
+			
+			Phrase addr = new Phrase(address, si);
+			
+			String paymentDetails = ""; 
+			paymentDetails += "Mode Of Receipt: "+payment_mode_2.getSelectedItem();
+			switch(payment_mode_2.getSelectedItem().toString()){
+				case "CHQ":
+					paymentDetails += "\n" + "CHEQUE NO : " + payment_num_2.getText()  + "\n" +"Date: " + issue_dat_2.getText();
+					paymentDetails += "\n" + "Bank Drawn: " + bank_name_2.getText();
+					paymentDetails += "\n" + "Branch: " + branch_nam_2.getText();
+					break;
+				case "A/C TRANSFER":
+					paymentDetails += "\n" + "TRNF NO : " + payment_num_2.getText()  + "\n" +"Date: " + issue_dat_2.getText();
+					break;
+			}
+			
+			Phrase mod = new Phrase(paymentDetails, si);
+
+			
+			Phrase don_for = new Phrase("THIS DONATION IS FOR CORPUS OF THE TRUST", ni);
+			Phrase sign_don = new Phrase("SIGNATURE OF DONOR", si);
+			Phrase sign_rec = new Phrase("Signature of Receiver", si);
+			Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
+			
+
+			String name = tenantName.getText();
+
+			Phrase nam = new Phrase(name, n);
+
+			
+
+			Phrase amt = new Phrase("Rent For "+monthCombo.getSelectedItem()+" "+yearCombo.getSelectedItem(), si);
+			
+			Phrase pay = new Phrase("Payment Details", si);
+			
+			
+			Phrase emp = new Phrase("\0");
+			
+			
+			Phrase ins1 = new Phrase(" ", ni);
+			
+			PdfPCell donationFromCell = new PdfPCell(donationFrom);
+			
+			PdfPCell nam_c = new PdfPCell(nam);
+			nam_c.setFixedHeight(20);
+			
+			PdfPCell address_c = new PdfPCell(addr);
+			address_c.setFixedHeight(80);
+			
+			PdfPCell dummy = new PdfPCell(emp);
+			PdfPCell rece_c = new PdfPCell(rece);
+			
+			PdfPCell dat_c = new PdfPCell(dat);
+			dat_c.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+			
+			PdfPCell amt_c = new PdfPCell(amt);
+			PdfPCell rs_c = new PdfPCell(rs);
+			
+			PdfPCell rup_c = new PdfPCell(rup);
+			PdfPCell pay_c = new PdfPCell(pay);
+			PdfPCell mod_c = new PdfPCell(mod);
+			mod_c.setFixedHeight(80);
+
+			PdfPCell don_for_c = new PdfPCell(don_for);
+			PdfPCell empty = new PdfPCell(emp);
+			
+			PdfPCell sign_don_c = new PdfPCell(sign_don);
+			PdfPCell sign_rec_c = new PdfPCell(sign_rec);
+			PdfPCell trust_c = new PdfPCell(trust);
+			PdfPCell ins1_c = new PdfPCell(ins1);
+			ins1_c.setFixedHeight(20);
+
+			empty.setFixedHeight(6);
+
+//			pay_c.setColspan(2);
+
+//			rs_c.setColspan(2);
+			rup_c.setColspan(3);
+//			mod_c.setColspan(2);
+			
+			donationFromCell.setColspan(2);
+			
+			
+			nam_c.setColspan(2);
+			address_c.setColspan(2);
+
+			empty.setColspan(3);
+			don_for_c.setColspan(3);
+			ins1_c.setColspan(3);
+
+
+			c.setBorder(0);
+			g.setBorder(0);
+			empty.setBorder(0);
+			dummy.setBorder(0);
+			donationFromCell.setBorder(0);
+			nam_c.setBorder(0);
+			rece_c.setBorder(0);
+			address_c.setBorder(0);
+
+			dat_c.setBorder(0);
+
+			
+
+			amt_c.setBorder(0);
+			rs_c.setBorder(0);
+			rup_c.setBorder(0);
+			pay_c.setBorder(0);
+			mod_c.setBorder(0);
+
+			don_for_c.setBorder(0);
+			sign_don_c.setBorder(0);
+			sign_rec_c.setBorder(0);
+			trust_c.setBorder(0);
+			ins1_c.setBorder(0);
+
+//			PdfContentByte cb = writer.getDirectContent();
+//			cb.roundRectangle(20, doc.getPageSize().getHeight()/2+5, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
+//			cb.roundRectangle(20, 40, doc.getPageSize().getWidth()-40, doc.getPageSize().getHeight()/2-40, 20);
+			
+//			cb.closePath();
+//			cb.stroke();
+//			com.itextpdf.text.Image donor_img = null;
+//			com.itextpdf.text.Image off_img = null;
+			com.itextpdf.text.Image  sign = null;
+			PdfPCell signature = null;
+			
+			try {
+//				donor_img = Image.getInstance(this.getClass().getResource("donr.png"));
+//				off_img = Image.getInstance(this.getClass().getResource("off.png"));
+				sign = Image.getInstance(this.getClass().getResource("ET-SIGN.png"));
+				signature = new PdfPCell(sign);
+//				donor_img.scaleAbsolute(150, 150);
+
+				sign.scaleAbsolute(80, 15);
+//				off_img.scaleAbsolute(150, 150);
+//				donor_img.setAbsolutePosition(120, doc.getPageSize().getHeight()/2+50);
+//				off_img.setAbsolutePosition(120, 90);
+				
+			} catch (BadElementException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			} catch (MalformedURLException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			} catch (IOException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+			signature.setBorder(0);
+			signature.setColspan(3);
+			signature.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			signature.setPaddingRight(30);
+			for (int i = 0; i < 2; i++){
+
+			tab.addCell(c);
+
+			
+			tab.addCell(empty);
+			
+			
+			tab.addCell(rece_c);
+			tab.addCell(g);
+			tab.addCell(dat_c);
+			tab.addCell(empty);
+			
+			tab.addCell(donationFromCell);
+			tab.addCell(dummy);
+			
+			tab.addCell(nam_c);
+			tab.addCell(rs_c);
+			
+			tab.addCell(address_c);
+			tab.addCell(mod_c);
+			
+			tab.addCell(rup_c);
+			tab.addCell(don_for_c);
+
+			//tab.addCell(empty);
+			
+			
+			
+			tab.addCell(signature);
+			tab.addCell(sign_don_c);
+			tab.addCell(sign_rec_c);
+			tab.addCell(trust_c);
+			//tab.addCell(empty);
+			tab.addCell(ins1_c);
+
+			
+			if (i == 0){
+				tab.addCell(empty);
+				tab.addCell(empty);
+			}
+			}
+
+			try {
+				doc.add(tab);
+				
+//				doc.add(donor_img);
+//				doc.add(off_img);
+			} catch (DocumentException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			if(corpusCombo_2.getSelectedIndex() == 0){
+				File corpusLetter = null;
+				try {					
+					corpusLetter = new File(vrntRentCorpusLetter.getAbsolutePath()+"/RT. NO. "+receipt_no_2.getText()+".pdf");
+					Document document = new Document();
+					writer = PdfWriter.getInstance(document, new FileOutputStream(corpusLetter));
+					document.setPageSize(PageSize.A4);
+					
+					Paragraph receipt = new Paragraph("RECEIPT NO. "+receipt_no_2.getText());
+					receipt.setAlignment(Element.ALIGN_RIGHT);
+					
+					Paragraph date = new Paragraph("DATE: "+receivedDate);
+					date.setAlignment(Element.ALIGN_RIGHT);
+					
+					Paragraph from = new Paragraph("THE EXECUTIVE TRUSTEE\nVEDA RAKSHANA NIDHI TRUST,\nNO. 64/31 SUBRAMANIAN STREET\nWEST MAMBALAM\nCHENNAI 600033\nPHONE:  044-24740549\nEMAIL:  vrnt@vsnl.net / office@vrnt.org");
+					
+					Paragraph to = new Paragraph("Dear Sir,");
+					
+					Paragraph sub = new Paragraph("Sub: Donation towards Corpus Fund of the trust");
+					Paragraph content = new Paragraph("I am happy to know the efforts of VRNT, constituted under the directions of Pujyasri Mahaswamigal of kanchi kamakoti Peetam for preservation of Vedic Vibrations through traditional Vedic education. I am furnishing below details about me and I would request you to kindly accept  Donation of Rs. "+numberFormatter.format(Integer.parseInt(totalAmount.getText()))+" ( "+payment_mode_2.getSelectedItem()+" ) for corpus fund of the trust and utilise the amount, for the activities of the Trust.");
+					content.setAlignment(Element.ALIGN_JUSTIFIED);
+					
+					Paragraph enrollment = new Paragraph("ENROLMENT FOR LIFE DONOR CORPUS");
+					enrollment.setAlignment(Element.ALIGN_CENTER);
+					
+					Phrase tenantNamePhrase = new Phrase(tenantName.getText());
+					
+					String addressString = "";
+					addressString += (addr_14.getText().length() != 0) ?  addr_14.getText() : "";
+					
+					addressString += (addr_24.getText().length() != 0) ? "\n"+addr_24.getText() : "";
+					
+					addressString += (addr_34.getText().length() != 0) ? "\n"+addr_34.getText() : "";
+					
+					addressString += (area_4.getText().length() != 0) ? "\n"+area_4.getText() : "";
+					
+					addressString += (city_town4.getText().length() != 0) ? "\n"+city_town4.getText() : "";
+					
+					addressString += (pin_code_4.getText().length() != 0) ? " "+pin_code_4.getText() : "";
+					
+					Phrase addrPhrase = new Phrase(addressString);
+					Phrase phNum = new Phrase(cand_ph_p4.getText());
+					Phrase email = new Phrase("");
+					Phrase star = new Phrase("");
+					Phrase pan = new Phrase("");
+					Paragraph signPara = new Paragraph("SIGNATURE OF THE DONOR");
+					signPara.setAlignment(Element.ALIGN_RIGHT);
+					Paragraph datePara = new Paragraph("DATE:                                      ");
+					datePara.setAlignment(Element.ALIGN_RIGHT);
+					
+					PdfPTable table1 = new PdfPTable(new float[]{1,5,1,5});
+					
+					PdfPCell oneCell = new PdfPCell(new Phrase("1"));
+					PdfPCell twoCell = new PdfPCell(new Phrase("2"));
+					PdfPCell threeCell = new PdfPCell(new Phrase("3"));
+					PdfPCell fourCell = new PdfPCell(new Phrase("4"));
+					PdfPCell fiveCell = new PdfPCell(new Phrase("5"));
+					PdfPCell sixCell = new PdfPCell(new Phrase("6"));
+					
+					oneCell.setBorder(0);
+					twoCell.setBorder(0);
+					threeCell.setBorder(0);
+					fourCell.setBorder(0);
+					fiveCell.setBorder(0);
+					sixCell.setBorder(0);
+					
+					PdfPCell nsNumCell = new PdfPCell(new Phrase("NS NO. & NAME"));
+					PdfPCell addrCell = new PdfPCell(new Phrase("ADDRESS WITH PINCODE"));
+					PdfPCell phCell = new PdfPCell(new Phrase("PHONE NO."));
+					PdfPCell mailCell = new PdfPCell(new Phrase("EMAIL ID"));
+					PdfPCell starCell = new PdfPCell(new Phrase("BIRTH STAR"));
+					PdfPCell panCell = new PdfPCell(new Phrase("PAN"));
+					
+					nsNumCell.setBorder(0);
+					addrCell.setBorder(0);
+					phCell.setBorder(0);
+					mailCell.setBorder(0);
+					starCell.setBorder(0);
+					panCell.setBorder(0);
+					
+					PdfPCell colon = new PdfPCell(new Phrase(":"));
+					colon.setBorder(0);
+					
+					PdfPCell numCell = new PdfPCell(tenantNamePhrase);
+					PdfPCell addrsCell = new PdfPCell(addrPhrase);
+					PdfPCell phNumCell = new PdfPCell(phNum);
+					PdfPCell emailCell = new PdfPCell(email);
+					PdfPCell birthStarCell = new PdfPCell(star);
+					PdfPCell panNumCell = new PdfPCell(pan);
+					
+					numCell.setBorder(0);
+					addrsCell.setBorder(0);
+					phNumCell.setBorder(0);
+					emailCell.setBorder(0);
+					birthStarCell.setBorder(0);
+					panNumCell.setBorder(0);
+					
+					
+					
+					table1.addCell(oneCell);
+					table1.addCell(nsNumCell);
+					table1.addCell(colon);
+					table1.addCell(numCell);
+					
+					table1.addCell(twoCell);
+					table1.addCell(addrCell);
+					table1.addCell(colon);
+					table1.addCell(addrsCell);
+					
+					table1.addCell(threeCell);
+					table1.addCell(phCell);
+					table1.addCell(colon);
+					table1.addCell(phNumCell);
+					
+					table1.addCell(fourCell);
+					table1.addCell(mailCell);
+					table1.addCell(colon);
+					table1.addCell(emailCell);
+					
+					table1.addCell(fiveCell);
+					table1.addCell(starCell);
+					table1.addCell(colon);
+					table1.addCell(birthStarCell);
+					
+					table1.addCell(sixCell);
+					table1.addCell(panCell);
+					table1.addCell(colon);
+					table1.addCell(panNumCell);
+					
+					DottedLineSeparator line = new DottedLineSeparator();
+					line.setOffset(-2);
+					line.setGap(2f);
+					
+					Paragraph cond1 = new Paragraph("( PLEASE SIGN & SEND THIS  LETTER TO  VRNT CHENNAI OFFICE BY POST )", nb);
+					cond1.setAlignment(Element.ALIGN_CENTER);
+					
+					
+					Paragraph cond2 = new Paragraph("( KINDLY TAKE XEROX COPIES OF THIS LETTER AND IN FUTURE, FILL AND SEND TO US FOR  DONATIONS ABOVE RS.2000 , SO THAT THE DONATION AMOUNT CAN BE TAKEN TO THE CORPUS OF THE TRUST)", n);
+					cond2.setAlignment(Element.ALIGN_CENTER);
+					
+					
+					Paragraph cond3 = new Paragraph("We request the donors to mention their Complete Address with Phone Number or E-Mail ID for communication regarding the donation receipt.", n);
+					cond3.setAlignment(Element.ALIGN_CENTER);
+					
+					
+					
+					document.open();
+					document.add(receipt);
+					document.add(date);
+					document.add(Chunk.NEWLINE);
+					document.add(from);
+					document.add(Chunk.NEWLINE);
+					document.add(to);
+					document.add(Chunk.NEWLINE);
+					document.add(sub);
+					document.add(Chunk.NEWLINE);
+					document.add(content);
+					document.add(enrollment);
+					document.add(Chunk.NEWLINE);
+					document.add(table1);
+					
+					document.add(Chunk.NEWLINE);
+					document.add(signPara);
+					document.add(datePara);
+					document.add(Chunk.NEWLINE);
+					document.add(line);
+					document.add(cond1);
+					document.add(Chunk.NEWLINE);
+					document.add(cond2);
+					document.add(Chunk.NEWLINE);
+					document.add(cond3);
+					
+					//Desktop.getDesktop().open(corpusLetter);
+					document.close();
+					
+					
+					
+				} catch (Exception e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}				
+				
+			}
+			
+			
+			
+			tenantCombo.setSelectedIndex(0);
+			monthCombo.setSelectedIndex(0);
+			yearCombo.setSelectedIndex(0);			
+			corpusCombo_2.setSelectedIndex(0);
+			cand_amt_p4.setText("");
+			serviceTaxRate.setText("");
+			serviceTaxAmount.setText("");
+			totalAmount.setText("");			
+			payment_mode_2.setSelectedIndex(0);
+			payment_num_2.setText("");
+			issue_dat_2.setText("");
+			bank_name_2.setText("");
+			branch_nam_2.setText("");
+			bank_received_2.setSelectedIndex(0);
+			
+			try{
+				Class.forName("org.h2.Driver");
+	   			Connection conn1=DriverManager.getConnection("jdbc:h2:~/vrnt","sa","");
+				Statement stm1=conn1.createStatement();
+				String st = "select max(receipt) from rent";
+				
+				ResultSet rs1 = stm1.executeQuery(st);
+				rs1.next();
+				int s1 = rs1.getInt(1);		
+				if (s1 == 0){
+					receipt_no_2.setEditable(true);
+				} else {
+					receipt_no_2.setText(String.valueOf(s1+1));
+					receipt_no_2.setEditable(false);
+				}
+				
+				
+				conn1.close();
+			}
+			catch (ClassNotFoundException e1)
+			{
+				Telegraph tele = new Telegraph("Warning!", "Please Check Your Database Driver", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				TelegraphQueue quee = new TelegraphQueue();
+				quee.add(tele);
+				//JOptionPane.showMessageDialog(null,"Please Check Your Database Driver", "Warning!",JOptionPane.WARNING_MESSAGE);
+			}
+			catch(SQLException ee)
+			{
+				System.err.println(ee);
+				
+				Telegraph tele = new Telegraph("Warning!", "Some problem might be occured in Database", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
+				TelegraphQueue quee = new TelegraphQueue();
+				quee.add(tele);
+				//JOptionPane.showMessageDialog(null,"Some problem might be occured in Database","Warning!",JOptionPane.WARNING_MESSAGE);
+			}
+			
+//			s.deleteOnExit();
+			doc.close();
+			try {
+				Desktop.getDesktop().open(s);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//print_interior();
+		  }
 		} 
+
 		
 		if (e.getSource() == cancel){
 			String rece = JOptionPane.showInputDialog(null, "Enter Receipt No.");
