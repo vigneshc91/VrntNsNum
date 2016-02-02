@@ -18,6 +18,8 @@ import java.net.MalformedURLException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -126,9 +128,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JMenuItem pdf = new JMenuItem("Generate Pdf");
 	JMenuItem refresh = new JMenuItem("Refresh");
 	JMenuItem refreshDonationRegister = new JMenuItem("Refresh Donation");
+	JMenuItem refreshRentRegister = new JMenuItem("Refresh Rent");
 	JMenuItem search = new JMenuItem("Find");
+	JMenuItem searchDonation = new JMenuItem("Find Donation");
+	JMenuItem searchRent = new JMenuItem("Find Rent");
 	JMenuItem saveStatus = new JMenuItem("Save Status");
 	JMenuItem donationRegisterCsv = new JMenuItem("Export Donation");
+	JMenuItem rentRegisterCsv = new JMenuItem("Export Rent");
 	
 	JMenu bill = new JMenu("Bill");
 	JMenuItem cancel = new JMenuItem("Cancel Payment");
@@ -159,7 +165,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JTable donationRegisterTable = new JTable(donationRegisterTableModel);
 	JTable rentRegisterTable = new JTable(rentRegisterTableModel);
 	
-	TableRowSorter sorter;
+	TableRowSorter sorter, donationSorter, rentSorter;
 	JScrollPane jsp, jspDonationRegister, jspRentRegister;
 	Dimension dim;
 	HashMap annualReportStatus = new HashMap();
@@ -186,6 +192,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	
 	DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	DateFormat simpleFormat = new SimpleDateFormat("dd-MMM-yyyy");
+	DateFormat standardFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	Validator validator = new Validator();
 	
@@ -219,6 +226,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bill_interior();
 		DonationInterior();
 		rentInterior();
+		rentRegisterInterior();
 		
 		tab_pane.addTab("New Entry", new JScrollPane(new_panel));
 		tab_pane.addTab("NS Register", view_panel);
@@ -227,6 +235,40 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		tab_pane.addTab("Donation Register", new JScrollPane(donationRegisterPanel));
 		tab_pane.addTab("Rent", new JScrollPane(rentPanel));
 		tab_pane.addTab("Rent Register", new JScrollPane(rentRegisterPanel));
+		
+		tab_pane.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent changeEvent) {
+				// TODO Auto-generated method stub
+				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+			     int index = sourceTabbedPane.getSelectedIndex();
+			     
+			     if(index == 1){
+			    	 RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)");						
+			    	 sorter.setRowFilter(rowFilter);
+						
+			    	 model.setRowCount(0);
+			    	 view_tab_data();
+											
+				 } else if(index == 4){
+					 RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)");						
+			    	 donationSorter.setRowFilter(rowFilter);
+						
+			    	 donationRegisterTableModel.setRowCount(0);
+			    	 DonationRegisterTableData();
+						
+				 } else if(index == 6){
+					 RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)");						
+			    	 rentSorter.setRowFilter(rowFilter);
+						
+			    	 rentRegisterTableModel.setRowCount(0);
+			    	 rentRegisterTableData();
+						
+				 }
+			}
+			
+		});
 		
 		panel.add(tab_pane, BorderLayout.CENTER);
 		//interior();
@@ -276,6 +318,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		refreshDonationRegister.addActionListener(this);
 		file.add(refreshDonationRegister);
 		
+		refreshRentRegister.setIcon(refresh_img);
+		refreshRentRegister.addActionListener(this);
+		file.add(refreshRentRegister);
+		
 //		file.add(pdf);
 //		pdf.setIcon(pdf_img);
 //		pdf.addActionListener(this);
@@ -303,6 +349,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		search.setIcon(find_img);
 		search.setAccelerator(KeyStroke.getKeyStroke('F', ActionEvent.CTRL_MASK));
 		file.add(search);
+		
+		searchDonation.addActionListener(this);
+		searchDonation.setIcon(find_img);
+		searchDonation.setAccelerator(KeyStroke.getKeyStroke('D', ActionEvent.ALT_MASK));
+		file.add(searchDonation);
+		
+		searchRent.addActionListener(this);
+		searchRent.setIcon(find_img);
+		searchRent.setAccelerator(KeyStroke.getKeyStroke('R', ActionEvent.ALT_MASK));
+		file.add(searchRent);
+		
 		saveStatus.addActionListener(this);
 		saveStatus.setIcon(save_img);
 		saveStatus.setAccelerator(KeyStroke.getKeyStroke('S', ActionEvent.CTRL_MASK));
@@ -312,6 +369,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		donationRegisterCsv.setIcon(rece_img);
 		donationRegisterCsv.setAccelerator(KeyStroke.getKeyStroke('D', ActionEvent.CTRL_MASK));
 		file.add(donationRegisterCsv);
+		
+		rentRegisterCsv.addActionListener(this);
+		rentRegisterCsv.setIcon(rece_img);
+		rentRegisterCsv.setAccelerator(KeyStroke.getKeyStroke('R', ActionEvent.CTRL_MASK));
+		file.add(rentRegisterCsv);
 		
 		file.add(exit);
 		exit.setIcon(exit_img);
@@ -646,11 +708,29 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		donationRegisterTable.addMouseListener(this);
 //		donationRegisterTable.setRowHeight(150);
 		
-		Font ff = new Font("Arial", Font.PLAIN, 16);
+		donationSorter = new TableRowSorter<DefaultTableModel>(donationRegisterTableModel);
+		donationRegisterTable.setRowSorter(donationSorter);
+		
+		Font ff = new Font("Arial", Font.PLAIN, 12);
 		donationRegisterTable.setFont(ff);
-		donationRegisterTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
+		donationRegisterTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
 		donationRegisterTable.getTableHeader().setPreferredSize(new Dimension(500, 50));
 		donationRegisterTable.setRowHeight(60);
+		
+		InputMap im = donationRegisterTable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap am = donationRegisterTable.getActionMap();
+
+		KeyStroke escapeKey = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+
+		im.put(escapeKey, "Action.escape");
+		am.put("Action.escape", new AbstractAction() {
+		    public void actionPerformed(ActionEvent evt) {
+		    	
+		    	RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)");
+				
+		    	donationSorter.setRowFilter(rowFilter);  
+		    }
+		});
 		
 		donationRegisterTableModel.addColumn("RT. DT.");
 		donationRegisterTableModel.addColumn("RT. No.");
@@ -1419,8 +1499,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		monthCombo = new JComboBox(month);
 		yearCombo = new JComboBox(year);
 		payment_mode_2 = new JComboBox(acc);
-		bank_received_2 = new JComboBox(bankReceivedDropDown);
-		
+		bank_received_2 = new JComboBox(bankReceivedDropDown);		
 		
 		corpusCombo_2 = new JComboBox(corpusDonation);
 		
@@ -1652,6 +1731,148 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			que.add(tele);
 			//JOptionPane.showMessageDialog(null,"Some problem might be occured in Database","Warning!",JOptionPane.WARNING_MESSAGE);
 		}
+
+	}
+	
+	public void rentRegisterInterior(){
+		rentRegisterPanel.setLayout(new BorderLayout());
+		rentRegisterTable.addMouseListener(this);
+//		donationRegisterTable.setRowHeight(150);
+		
+		rentSorter = new TableRowSorter<DefaultTableModel>(rentRegisterTableModel);
+		rentRegisterTable.setRowSorter(rentSorter);
+		
+		Font ff = new Font("Arial", Font.PLAIN, 12);
+		rentRegisterTable.setFont(ff);
+		rentRegisterTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
+		rentRegisterTable.getTableHeader().setPreferredSize(new Dimension(500, 50));
+		rentRegisterTable.setRowHeight(60);
+		
+		InputMap im = rentRegisterTable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap am = rentRegisterTable.getActionMap();
+
+		KeyStroke escapeKey = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+
+		im.put(escapeKey, "Action.escape");
+		am.put("Action.escape", new AbstractAction() {
+		    public void actionPerformed(ActionEvent evt) {
+		    	
+		    	RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)");
+				
+		    	rentSorter.setRowFilter(rowFilter);  
+		    }
+		});
+		
+		rentRegisterTableModel.addColumn("RT. DT.");
+		rentRegisterTableModel.addColumn("RT. No.");		
+		rentRegisterTableModel.addColumn("Tenant Name");
+		rentRegisterTableModel.addColumn("Address");
+		rentRegisterTableModel.addColumn("Rent Amt");
+		rentRegisterTableModel.addColumn("Service Tax");		
+		rentRegisterTableModel.addColumn("Total Amt");
+		rentRegisterTableModel.addColumn("Mode of Receipt");
+		rentRegisterTableModel.addColumn("<html><center>CHQ/TRF. <br>No.</center></html>");
+		rentRegisterTableModel.addColumn("<html><center>CHQ/TRF. <br>DT</center></html>");
+		rentRegisterTableModel.addColumn("<html><center>Bank <br>Drawn</center></html>");
+		rentRegisterTableModel.addColumn("Branch");
+		rentRegisterTableModel.addColumn("<html><center>Bank <br>Received</center></html>");
+		rentRegisterTableModel.addColumn("Realz. DT.");
+		
+		rentRegisterTableData();				    
+		    
+		jspRentRegister = new JScrollPane(rentRegisterTable);        
+		rentRegisterPanel.add(jspRentRegister);
+	}
+	
+	void rentRegisterTableData(){
+		NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
+		
+		try{
+			Connection conn = DriverManager.
+				    getConnection("jdbc:h2:~/vrnt", "sa", "");
+			Statement stm = conn.createStatement();
+			String st = "select * from rent where status = 'cleared'";
+			ResultSet rs = stm.executeQuery(st);
+		
+			while (rs.next()){
+				int receiptNo = rs.getInt("RECEIPT");
+				String receiptDate = simpleFormat.format( rs.getDate("DAT"));
+				
+				
+				String nam = rs.getString("NAME");
+				String addr1 = rs.getString("ADDR_1");
+				String addr2 = rs.getString("ADDR_2");
+				String addr3 = rs.getString("ADDR_3");
+				String area1 = rs.getString("AREA");
+				String city1 = rs.getString("CITY");
+				String pinCode1 = rs.getString("PINCODE");
+				
+				
+				
+				
+				String address = "<html>"+addr1;
+				address += (addr2.length() != 0) ? "<br/>"+addr2 : "";
+				address += (addr3.length() != 0) ? "<br/>"+addr3 : "";
+				address += (area1.length() != 0) ? "<br/>"+area1 : "";
+				address += (city1.length() != 0) ? "<br/>"+city1 : "";
+				address += (pinCode1.length() != 0) ? " "+pinCode1 : "";				
+				address += "</html>";
+				
+				
+				
+				String currency = "Rs. ";
+	
+				String rentAmount = currency+formatter.format(rs.getDouble("RENT_AMT"));
+				String serviceTax = String.valueOf(rs.getFloat("SERVICE_TAX"));
+				String totalAmount = currency+formatter.format(rs.getDouble("TOTAL_AMT"));
+				String mode = rs.getString("PAY_MODE");
+				String chqNum = rs.getString("CHQNO");
+				String issueDate = rs.getString("ISSUE_DATE");
+				String bank = rs.getString("BANK");
+				String branch = rs.getString("BRANCH");
+				String bankRecvd = rs.getString("BANK_RECEIVED");
+				String relizationDate = rs.getString("RELIZATION_DATE");
+				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
+				
+				rentRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nam, address, rentAmount, serviceTax, totalAmount, mode, chqNum, issueDate, bank, branch, bankRec, relizationDate});
+			}
+	
+		} catch (Exception e){
+			System.err.println(e);
+		}
+		
+		for (int row = 0; row < rentRegisterTable.getRowCount(); row++)
+		{
+		    int rowHeight = rentRegisterTable.getRowHeight();
+
+		    for (int column = 0; column < rentRegisterTable.getColumnCount(); column++)
+		    {
+		        Component comp = rentRegisterTable.prepareRenderer(rentRegisterTable.getCellRenderer(row, column), row, column);
+		        rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+		     }
+
+		    rentRegisterTable.setRowHeight(row, rowHeight);
+		}
+		    
+		    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		    centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		    rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
+		    
+		    rentRegisterTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		    rentRegisterTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		    
+		    rentRegisterTable.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+		    rentRegisterTable.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+		    rentRegisterTable.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+		   
+		   
+		    rentRegisterTable.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+		    
+		    
+		    rentRegisterTable.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
+		    rentRegisterTable.getColumnModel().getColumn(13).setCellRenderer(centerRenderer);
+
 
 	}
 	
@@ -1896,6 +2117,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		else if (e.getSource() == refreshDonationRegister){
 			donationRegisterTableModel.setRowCount(0);
 			DonationRegisterTableData();
+		}
+		
+		else if (e.getSource() == refreshRentRegister){
+			rentRegisterTableModel.setRowCount(0);
+			rentRegisterTableData();
 		}
 		
 		else if (e.getSource() == csvAnnualReport){
@@ -2196,6 +2422,30 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 		}
 		
+		else if(e.getSource() == searchDonation){
+			tab_pane.setSelectedIndex(4);
+			String nameFilter = JOptionPane.showInputDialog(null, "Enter Name to Find");
+			 
+			if(nameFilter != null){
+				RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)"+nameFilter);
+			
+				donationSorter.setRowFilter(rowFilter);
+			}
+			
+		}
+		
+		else if(e.getSource() == searchRent){
+			tab_pane.setSelectedIndex(6);
+			String nameFilter = JOptionPane.showInputDialog(null, "Enter Name to Find");
+			 
+			if(nameFilter != null){
+				RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)"+nameFilter);
+			
+				rentSorter.setRowFilter(rowFilter);
+			}
+			
+		}
+		
 		else if(e.getSource() == saveStatus){
 			tab_pane.setSelectedIndex(1);
 			
@@ -2310,6 +2560,50 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				    }
 			}
 		}
+		
+		else if (e.getSource() == rentRegisterCsv){
+			int ret = chose.showSaveDialog(this);
+			File s;
+			if(ret == JFileChooser.APPROVE_OPTION){
+				s = chose.getSelectedFile();
+				String file_name = s.toString();
+				if (!file_name.toLowerCase().endsWith(".csv")){
+					s = new File(file_name+".csv");
+				}
+				
+				 try{
+				        TableModel model = rentRegisterTable.getModel();
+				        FileWriter excel = new FileWriter(s);
+
+				        for(int i = 0; i < model.getColumnCount(); i++){
+				            excel.write(model.getColumnName(i).replaceAll("<[^>]*>", "") + ",");				            
+				        }
+
+				        excel.write("\n");
+
+				        for(int i=0; i< model.getRowCount(); i++) {				        	
+				            for(int j=0; j < model.getColumnCount(); j++) {
+				            	if(model.getValueAt(i,j) != null)
+				            		excel.write(model.getValueAt(i,j).toString().replaceAll(",", " ").replaceAll("<[br^>]*>", " ").replaceAll("<[^>]*>", "")+",");				                
+				            }
+				            excel.write("\n");
+				        }
+
+				        excel.close();
+				        
+				        Telegraph tele = new Telegraph("Success", "Rent Register Successfully Exported...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+						TelegraphQueue que = new TelegraphQueue();
+						que.add(tele);
+
+				 	}catch(IOException e1){ 
+				    	System.out.println(e1); 
+				    	Telegraph tele = new Telegraph("Error", "Some Problem Occured...", TelegraphType.NOTIFICATION_ERROR, WindowPosition.BOTTOMRIGHT, 4000);
+						TelegraphQueue que = new TelegraphQueue();
+						que.add(tele);
+				    }
+			}
+		}
+
 		
 		else if (e.getActionCommand().equals("Exit")){
 			System.exit(1);
@@ -4147,15 +4441,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					double s2 = rs1.getDouble(2);
 					String s3 = rs1.getString(3);
 					if (s3.equals("cleared")){
-					if (s1.length() != 0){
-						String st1 = "select amount from details where no = '"+s1+"'";
-						ResultSet rs2 = stm1.executeQuery(st1);
-						rs2.next();
-						double d1 = rs2.getDouble(1);
-						double tot = d1 - s2;
-						String st2 = "update details set amount = "+tot+" where no = '"+s1+"'";
-						stm1.executeUpdate(st2);
-					} 
+					
+						/*if (s1.length() != 0){
+							String st1 = "select amount from details where no = '"+s1+"'";
+							ResultSet rs2 = stm1.executeQuery(st1);
+							rs2.next();
+							double d1 = rs2.getDouble(1);
+							double tot = d1 - s2;
+							String st2 = "update details set amount = "+tot+" where no = '"+s1+"'";
+							stm1.executeUpdate(st2);
+						} */
 					
 						String st3 = "update bill set status = 'cancelled' where receipt = "+Integer.parseInt(rece);
 						stm1.executeUpdate(st3);
@@ -4200,7 +4495,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				if(strtdate != null){
 					String enddate = JOptionPane.showInputDialog(null, "Enter ending date", date.getText());
 				if(enddate != null){
-				
+					
+				NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
+					
 				PdfWriter writer = null;
 				
 				//Paragraph para = new Paragraph();
@@ -4245,18 +4542,18 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						table.addCell(new Phrase("Date"));
 						table.addCell(new Phrase("N.S No"));
 						table.addCell(new Phrase("Name"));
-						table.addCell(new Phrase("Chque/D.D No"));
+						table.addCell(new Phrase("CHQ/TRF No"));
 						table.addCell(new Phrase("Amount"));
 						table.setHeaderRows(6);
 						double cashtot=0, chqtot=0, ddtot=0, total, amt;
 			        while(rs.next()){
-			        	 table.addCell(new Phrase(rs.getString(1), n));
-			        	 table.addCell(new Phrase(String.valueOf(rs.getDate(2)), n));
-			        	 table.addCell(new Phrase(rs.getString(3), n));
-			        	 table.addCell(new Phrase(rs.getString(5) + " " + rs.getString(4), n));			        	 			        	 
-			        	 table.addCell(new Phrase(rs.getString(8), n));
-			        	 amt = rs.getDouble(6);
-			        	 table.addCell(new Phrase(String.valueOf(amt), n));
+			        	 table.addCell(new Phrase(rs.getString("RECEIPT"), n));
+			        	 table.addCell(new Phrase(String.valueOf(rs.getDate("DAT")), n));
+			        	 table.addCell(new Phrase(rs.getString("NO"), n));
+			        	 table.addCell(new Phrase(rs.getString("NAME") + " " + rs.getString("INITIAL"), n));			        	 			        	 
+			        	 table.addCell(new Phrase(rs.getString("CHQNO"), n));
+			        	 amt = rs.getDouble("AMT");
+			        	 table.addCell(new Phrase("Rs. "+numberFormatter.format(amt), n));
 			        	 String sss = rs.getString(7);
 			        	 if (sss.equals("CASH")){
 			        		 cashtot += amt;
@@ -4281,7 +4578,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						p2.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p2.setBorder(0);
 						tab.addCell(p2);
-						PdfPCell p3 = new PdfPCell(new Phrase(String.valueOf(cashtot)));
+						PdfPCell p3 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(cashtot)));
 						p3.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p3.setBorder(0);
 						tab.addCell(p3);
@@ -4289,7 +4586,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						p5.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p5.setBorder(0);
 						tab.addCell(p5);
-						PdfPCell p4 = new PdfPCell(new Phrase(String.valueOf(chqtot)));
+						PdfPCell p4 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(chqtot)));
 						p4.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p4.setBorder(0);
 						tab.addCell(p4);
@@ -4297,7 +4594,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						p6.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p6.setBorder(0);
 						tab.addCell(p6);
-						PdfPCell p7 = new PdfPCell(new Phrase(String.valueOf(ddtot)));
+						PdfPCell p7 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(ddtot)));
 						p7.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p7.setBorder(0);
 						tab.addCell(p7);
@@ -4305,7 +4602,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						p8.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p8.setBorder(0);
 						tab.addCell(p8);
-						PdfPCell p9 = new PdfPCell(new Phrase(String.valueOf(total)));
+						PdfPCell p9 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(total)));
 						p9.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						p9.setBorder(0);
 						tab.addCell(p9);
@@ -4349,6 +4646,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					String endate = JOptionPane.showInputDialog(null, "Enter ending date", date.getText());
 				if(endate != null){
 				
+				NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
 				
 				//Paragraph para = new Paragraph();
 				//para.setAlignment(Element.RECTANGLE);
@@ -4411,27 +4709,27 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						double cashtot=0, chqtot=0, ddtot=0, total, amt;
 			        while(rs.next()){
 			        	
-			        	 table.addCell(new Phrase(rs.getString(1), n));
-			        	 table.addCell(new Phrase(String.valueOf(rs.getDate(2)), n));
-			        	 table.addCell(new Phrase(rs.getString(3), n));
-			        	 table.addCell(new Phrase(rs.getString(5) + " " + rs.getString(4), n));
+			        	 table.addCell(new Phrase(rs.getString("RECEIPT"), n));
+			        	 table.addCell(new Phrase(String.valueOf(rs.getDate("DAT")), n));
+			        	 table.addCell(new Phrase(rs.getString("NO"), n));
+			        	 table.addCell(new Phrase(rs.getString("NAME") + " " + rs.getString("INITIAL"), n));
 			        	// table.addCell(new Phrase(rs.getString(5), n));
 			        	// table.addCell(new Phrase(rs.getString(6), n));
 			        	// table.addCell(new Phrase(rs.getString(7), n));
-			        	 table.addCell(new Phrase(rs.getString(6)+"\n"+rs.getString(7)+"\n"+rs.getString(8)+"\n"+rs.getString(9)+"\n"+rs.getString(10)+" - "+rs.getString(11), n));
+			        	 table.addCell(new Phrase(rs.getString("ADDR_1")+"\n"+rs.getString("ADDR_2")+"\n"+rs.getString("ADDR_3")+"\n"+rs.getString("AREA")+"\n"+rs.getString("CITY")+" - "+rs.getString("PINCODE"), n));
 			        				        	
 			        	
-			        	 table.addCell(new Phrase(rs.getString(14), n));
+			        	 table.addCell(new Phrase(rs.getString("TYPE_DONATN"), n));
 			        	// System.out.println(rs.getString(1)+aa);
-			        	 amt = rs.getDouble(15);
-			        	 table.addCell(new Phrase(String.valueOf(amt), n));
-			        	 String sss = rs.getString(16);
+			        	 amt = rs.getDouble("AMT");
+			        	 table.addCell(new Phrase("Rs. "+numberFormatter.format(amt), n));
+			        	 String sss = rs.getString("PAY_MODE");
 			        	 table.addCell(new Phrase(sss, n));
 			        	// table.addCell(new Phrase(String.valueOf(rs.getInt(11)), n));
 			        	// table.addCell(new Phrase(rs.getString(12), n));
 			        	// table.addCell(new Phrase(rs.getString(13), n));
 			        	// table.addCell(new Phrase(rs.getString(14), n));
-			        	table.addCell(new Phrase(String.valueOf(rs.getString(17))+"\n"+rs.getString(18)+"\n"+rs.getString(19)+"\n"+rs.getString(20), n));
+			        	table.addCell(new Phrase(String.valueOf(rs.getString("CHQ_NO"))+"\n"+rs.getString("ISSUE_DATE")+"\n"+rs.getString("BANK")+"\n"+rs.getString("BRANCH"), n));
 			        	
 			        	 if (sss.equals("CASH")){
 			        		 cashtot += amt;
@@ -4455,7 +4753,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 							p2.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p2.setBorder(0);
 							tab.addCell(p2);
-							PdfPCell p3 = new PdfPCell(new Phrase(String.valueOf(cashtot)));
+							PdfPCell p3 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(cashtot)));
 							p3.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p3.setBorder(0);
 							tab.addCell(p3);
@@ -4463,7 +4761,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 							p5.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p5.setBorder(0);
 							tab.addCell(p5);
-							PdfPCell p4 = new PdfPCell(new Phrase(String.valueOf(chqtot)));
+							PdfPCell p4 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(chqtot)));
 							p4.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p4.setBorder(0);
 							tab.addCell(p4);
@@ -4471,7 +4769,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 							p6.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p6.setBorder(0);
 							tab.addCell(p6);
-							PdfPCell p7 = new PdfPCell(new Phrase(String.valueOf(ddtot)));
+							PdfPCell p7 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(ddtot)));
 							p7.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p7.setBorder(0);
 							tab.addCell(p7);
@@ -4479,7 +4777,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 							p8.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p8.setBorder(0);
 							tab.addCell(p8);
-							PdfPCell p9 = new PdfPCell(new Phrase(String.valueOf(total)));
+							PdfPCell p9 = new PdfPCell(new Phrase("Rs. "+numberFormatter.format(total)));
 							p9.setHorizontalAlignment(Element.ALIGN_RIGHT);
 							p9.setBorder(0);
 							tab.addCell(p9);
@@ -4892,14 +5190,15 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				String nsNum = edit_table.getModel().getValueAt(edit_table.convertRowIndexToModel(row), 0).toString();
 				new UserDetails().ViewDetails(nsNum);
 			}
-			
+			else if(tab_pane.getSelectedIndex() == 4 ){
+				
 			int donationCol = donationRegisterTable.columnAtPoint(e.getPoint());
 			int row = donationRegisterTable.rowAtPoint(e.getPoint());
 			
 			String donorType = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 2).toString();
 			String reliDat = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 13).toString();
 			
-			if((tab_pane.getSelectedIndex() == 4) && (donationCol == 2 && !donorType.contains("NS NO."))){
+			if(donationCol == 2 && !donorType.contains("NS NO.")){				
 				String nsNum = JOptionPane.showInputDialog(null, "Enter Ns Number.");
 				
 				if(nsNum != null){
@@ -4969,8 +5268,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					
 				}
 			}			
-			else if((tab_pane.getSelectedIndex() == 4) && (donationCol == 13 && reliDat.length() == 0)){
-				String realizationDate = JOptionPane.showInputDialog(null, "Enter Relization Date");
+			else if(donationCol == 13 && reliDat.length() == 0){
+				String dat = standardFormat.format(Calendar.getInstance().getTime());
+				String realizationDate = JOptionPane.showInputDialog(null, "Enter Relization Date", dat);
 				 
 				
 				if(realizationDate != null){
@@ -4998,6 +5298,45 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 				
 			}
+		  } else if(tab_pane.getSelectedIndex() == 6 ){
+			  int rentCol = rentRegisterTable.columnAtPoint(e.getPoint());
+			  int row = rentRegisterTable.rowAtPoint(e.getPoint());
+				
+				
+				String reliDat = rentRegisterTable.getModel().getValueAt(rentRegisterTable.convertRowIndexToModel(row), 13).toString();
+				if(rentCol == 13 && reliDat.length() == 0){
+					String dat = standardFormat.format(Calendar.getInstance().getTime());
+					String realizationDate = JOptionPane.showInputDialog(null, "Enter Relization Date", dat);
+					 
+					
+					if(realizationDate != null){
+						String rtNum = rentRegisterTable.getModel().getValueAt(rentRegisterTable.convertRowIndexToModel(row), 1).toString();
+						
+						try{
+							Class.forName("org.h2.Driver");
+					        Connection conn = DriverManager.
+					            getConnection("jdbc:h2:~/vrnt", "sa", "");
+					        Statement stm = conn.createStatement();
+					        String st = "update rent set relization_date = '"+realizationDate+"' where receipt = '"+rtNum+"'";
+					        stm.executeUpdate(st);
+					        Telegraph tele = new Telegraph("Success", "Relization Date Updated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+							TelegraphQueue quee = new TelegraphQueue();
+							quee.add(tele);				        
+							
+							rentRegisterTableModel.setRowCount(0);
+							rentRegisterTableData();
+					        
+						}
+						catch(Exception e2){
+							System.err.println(e2);
+						}
+					}
+					
+					
+				}
+				
+		  }
+			
 		}
 		
 	}
