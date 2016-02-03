@@ -1086,7 +1086,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			}
 		});
 		receipt = new JLabel("Receipt No");
-		donationTypeLabel = new JLabel("Type Of Donation");
+		donationTypeLabel = new JLabel("Donor Type");
 		no_p2 = new JLabel("Enter NS no");
 		initial_p2 = new JLabel("Initial");
 		name_p2 = new JLabel("Name");
@@ -1458,7 +1458,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		ph_p4 = new JLabel("Phone Num");
 		rentMonthLabel = new JLabel("Rent For The Month");
 		rentYearLabel = new JLabel("Rent For The Year");
-		corpusLetterLabel_2 = new JLabel("Corpus Letter");
+		
 		
 		amt_p4 = new JLabel("Rent Amount");
 		serviceTaxRateLabel = new JLabel("Service Tax Rate");
@@ -1501,7 +1501,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		payment_mode_2 = new JComboBox(acc);
 		bank_received_2 = new JComboBox(bankReceivedDropDown);		
 		
-		corpusCombo_2 = new JComboBox(corpusDonation);
+		
 		
 		
 		tenantCombo.addActionListener(this);
@@ -1559,8 +1559,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_name_2.setBorder(border);
 		issue_dat_2.setBorder(border);
 		branch_nam_2.setBorder(border);
-		bank_received_2.setBorder(border);
-		corpusCombo_2.setBorder(border);
+		bank_received_2.setBorder(border);		
 		monthCombo.setBorder(border);
 		yearCombo.setBorder(border);
 		//don_type.setBorder(border);
@@ -1630,65 +1629,59 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		
 		
-		
 		c.gridx = 0; c.gridy = 12;
-		rentPanel.add(corpusLetterLabel_2, c);
-		c.gridx = 1; c.gridy = 12;
-		rentPanel.add(corpusCombo_2, c);
-		
-		c.gridx = 0; c.gridy = 13;
 		rentPanel.add(amt_p4, c);
-		c.gridx = 1; c.gridy = 13;
+		c.gridx = 1; c.gridy = 12;
 		rentPanel.add(cand_amt_p4, c);
 		
-		c.gridx = 0; c.gridy = 14;
+		c.gridx = 0; c.gridy = 13;
 		rentPanel.add(serviceTaxRateLabel, c);
-		c.gridx = 1; c.gridy = 14;
+		c.gridx = 1; c.gridy = 13;
 		rentPanel.add(serviceTaxRate, c);
 		
-		c.gridx = 0; c.gridy = 15;
+		c.gridx = 0; c.gridy = 14;
 		rentPanel.add(ServiceTaxAmountLabel, c);
-		c.gridx = 1; c.gridy = 15;
+		c.gridx = 1; c.gridy = 14;
 		rentPanel.add(serviceTaxAmount, c);
 		
-		c.gridx = 0; c.gridy = 16;
+		c.gridx = 0; c.gridy = 15;
 		rentPanel.add(totalAmountLabel, c);
-		c.gridx = 1; c.gridy = 16;
+		c.gridx = 1; c.gridy = 15;
 		rentPanel.add(totalAmount, c);
 		
-		c.gridx = 0; c.gridy = 17;
+		c.gridx = 0; c.gridy = 16;
 		rentPanel.add(pay_mode_2, c);
-		c.gridx = 1; c.gridy = 17;
+		c.gridx = 1; c.gridy = 16;
 		rentPanel.add(payment_mode_2, c);
 		
-		c.gridx = 0; c.gridy = 18;
+		c.gridx = 0; c.gridy = 17;
 		rentPanel.add(pay_num_2, c);
-		c.gridx = 1; c.gridy = 18;
+		c.gridx = 1; c.gridy = 17;
 		rentPanel.add(payment_num_2, c);
 		
-		c.gridx = 0; c.gridy = 19;
+		c.gridx = 0; c.gridy = 18;
 		rentPanel.add(dated_2, c);
-		c.gridx = 1; c.gridy = 19;
+		c.gridx = 1; c.gridy = 18;
 		rentPanel.add(issue_dat_2, c);
 		
-		c.gridx = 0; c.gridy = 20;
+		c.gridx = 0; c.gridy = 19;
 		rentPanel.add(bank_nam_2, c);
-		c.gridx = 1; c.gridy = 20;
+		c.gridx = 1; c.gridy = 19;
 		rentPanel.add(bank_name_2, c);
 		
-		c.gridx = 0; c.gridy = 21;
+		c.gridx = 0; c.gridy = 20;
 		rentPanel.add(branch_2, c);
-		c.gridx = 1; c.gridy = 21;
+		c.gridx = 1; c.gridy = 20;
 		rentPanel.add(branch_nam_2, c);
 		
-		c.gridx = 0; c.gridy = 22;
+		c.gridx = 0; c.gridy = 21;
 		rentPanel.add(bank_recvd_2, c);
-		c.gridx = 1; c.gridy = 22;
+		c.gridx = 1; c.gridy = 21;
 		rentPanel.add(bank_received_2, c);
 		
-		c.gridx = 1; c.gridy = 23;
+		c.gridx = 1; c.gridy = 22;
 		rentPanel.add(proceed1, c);
-		c.gridx = 2; c.gridy = 23;
+		c.gridx = 2; c.gridy = 22;
 		rentPanel.add(reset3, c);
 		
 		if (payment_mode_2.getSelectedItem().equals("CASH")){
@@ -3046,9 +3039,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		if (e.getSource() == reset3){
 			tenantCombo.setSelectedIndex(0);
 			monthCombo.setSelectedIndex(0);
-			yearCombo.setSelectedIndex(0);
-			
-			corpusCombo_2.setSelectedIndex(0);
+			yearCombo.setSelectedIndex(0);			
 			cand_amt_p4.setText("");
 			serviceTaxRate.setText("");
 			serviceTaxAmount.setText("");
@@ -3212,17 +3203,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String receivedDate = dateFormat.format(Date.valueOf(date.getText()));
 			
 			String resultNameFile = "";
-			if(don_type.getSelectedIndex() == 0)
-				resultNameFile = cand_nam_p2.getText() + "( NS NO. "+num_p2.getText() + " )";
-			else if(don_type.getSelectedIndex() == 1)
-				resultNameFile = cand_nam_p2.getText() + "( GENERAL )";
+			if(donationTypeCombo.getSelectedIndex() == 0)
+				resultNameFile = cand_nam_p2.getText() + " ( NS NO. "+num_p2.getText().replace("/", "-") + " )";
+			else if(donationTypeCombo.getSelectedIndex() == 1)
+				resultNameFile = cand_nam_p2.getText() + " ( GENERAL )";
 			else
 				resultNameFile = cand_nam_p2.getText();
 			
 			try {
 //				s = File.createTempFile("vrnt_bill", ".pdf");
 				
-				s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receipt_no.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs."+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText()))+".pdf");
+				s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receipt_no.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs. "+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText()))+".pdf");
 			} catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -3279,7 +3270,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String currencyFull = (don_type.getSelectedIndex() != 2) ? "RUPEES " : "";
 			
 			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText())), si);
-			Phrase nsno = new Phrase("N.S No. ( Donor Reference Number ): "+num_p2.getText(), n);
+			Phrase nsno;
+			
+			if(donationTypeCombo.getSelectedIndex() == 0)
+				nsno = new Phrase("N.S No. ( Donor Reference Number ): "+num_p2.getText(), n);
+			else
+				nsno = new Phrase(donationTypeCombo.getSelectedItem().toString(), n);
 			
 			Phrase rup = new Phrase(currencyFull+result.toUpperCase()+" ONLY", ni);
 			String address = "";
@@ -3457,7 +3453,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			signature.setColspan(3);
 			signature.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			signature.setPaddingRight(30);
-			for (int i = 0; i < 2; i++){
+			
+			//donor copy
 
 			tab.addCell(c);
 
@@ -3501,12 +3498,105 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(ins1_c);
 
 			
-			if (i == 0){
-				tab.addCell(empty);
-				tab.addCell(empty);
-			}
-			}
+			
+			tab.addCell(empty);
+			tab.addCell(empty);
+			
+			
+			//office copy
+			
+//			tab.addCell(c);
 
+			
+			tab.addCell(empty);
+			
+			PdfPCell veda = new PdfPCell(new Phrase("VEDA RAKSHANA NIDHI TRUST, CHENNAI", n));
+			veda.setBorder(0);
+			veda.setColspan(2);
+			
+			PdfPCell officeCopy = new PdfPCell(new Phrase("OFFICE COPY", n));
+			officeCopy.setBorder(0);
+			
+			
+			tab.addCell(veda);
+			tab.addCell(officeCopy);
+			
+			tab.addCell(rece_c);
+			tab.addCell(g);
+			tab.addCell(dat_c);
+			tab.addCell(empty);
+			
+			tab.addCell(donationFromCell);
+			tab.addCell(dummy);
+			
+			tab.addCell(nsno_c);
+			tab.addCell(rs_c);
+			
+			
+			String bankRecString = (bank_received.getSelectedItem().toString().length() !=0 ) ? bank_received.getSelectedItem().toString() : "CASH";
+			PdfPCell bankRec = new PdfPCell(new Phrase("Bank Received: "+bankRecString + "\nCORPUS LETTER: "+corpusCombo.getSelectedItem(), n));
+			bankRec.setBorder(0);
+			
+			tab.addCell(nam_c);
+			tab.addCell(bankRec);
+			
+			
+			
+			tab.addCell(address_c);
+			tab.addCell(mod_c);
+			
+			tab.addCell(rup_c);
+			tab.addCell(don_for_c);
+
+			//tab.addCell(empty);
+			PdfPCell forVrnt = new PdfPCell(new Phrase("FOR VRNT:", n));
+			forVrnt.setBorder(0);
+			
+			tab.addCell(dummy);
+			tab.addCell(dummy);
+			tab.addCell(forVrnt);
+			
+			tab.addCell(empty);
+			
+			tab.addCell(sign_don_c);
+			tab.addCell(dummy);
+			tab.addCell(sign_rec_c);
+			//tab.addCell(empty);
+			
+			
+			if(donationTypeCombo.getSelectedIndex() == 0){
+			
+			double totalAmount = 0;
+			try{
+				Connection conn1 = DriverManager.
+					    getConnection("jdbc:h2:~/vrnt", "sa", "");
+				
+				Statement stm1 = conn1.createStatement();
+				
+				String st = "select amt from bill where no = '"+num_p2.getText()+"'";
+				
+				ResultSet rs1 = stm1.executeQuery(st);
+				
+				while(rs1.next()){
+					double amount = rs1.getDouble("AMT");
+					totalAmount += amount;
+				}
+				
+			} catch(SQLException e1){
+				e1.printStackTrace();
+			}
+			
+			PdfPCell donationAmount = new PdfPCell(new Phrase("TOTAL DONATION AMOUNT TO VRNT UNDER CORPUS LIFE DONOR DONOR NUMBER -\n N.S. NO. "+num_p2.getText()+" AS ON "+receivedDate+" : Rs. "+numberFormatter.format(totalAmount), n)); 
+			donationAmount.setBorder(0);
+			donationAmount.setColspan(3);
+			donationAmount.setHorizontalAlignment(Element.ALIGN_CENTER);
+			
+			tab.addCell(donationAmount);
+			
+			}
+			
+			//tab.addCell(ins1_c);
+			
 			try {
 				doc.add(tab);
 				
@@ -3869,15 +3959,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					System.err.println(e1);
 				}
 			}
-			
-			File vrntRentCorpusLetter = new File("Vrnt Rent Corpus Letter");
-			if(!vrntRentCorpusLetter.exists()){
-				try{
-					vrntRentCorpusLetter.mkdir();
-				} catch(Exception e1){
-					System.err.println(e1);
-				}
-			}
+						
 			
 			File s = null;
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -4176,196 +4258,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				e2.printStackTrace();
 			}
 			
-			if(corpusCombo_2.getSelectedIndex() == 0){
-				File corpusLetter = null;
-				try {					
-					corpusLetter = new File(vrntRentCorpusLetter.getAbsolutePath()+"/RT. NO. "+receipt_no_2.getText()+".pdf");
-					Document document = new Document();
-					writer = PdfWriter.getInstance(document, new FileOutputStream(corpusLetter));
-					document.setPageSize(PageSize.A4);
-					
-					Paragraph receipt = new Paragraph("RECEIPT NO. "+receipt_no_2.getText());
-					receipt.setAlignment(Element.ALIGN_RIGHT);
-					
-					Paragraph date = new Paragraph("DATE: "+receivedDate);
-					date.setAlignment(Element.ALIGN_RIGHT);
-					
-					Paragraph from = new Paragraph("THE EXECUTIVE TRUSTEE\nVEDA RAKSHANA NIDHI TRUST,\nNO. 64/31 SUBRAMANIAN STREET\nWEST MAMBALAM\nCHENNAI 600033\nPHONE:  044-24740549\nEMAIL:  vrnt@vsnl.net / office@vrnt.org");
-					
-					Paragraph to = new Paragraph("Dear Sir,");
-					
-					Paragraph sub = new Paragraph("Sub: Donation towards Corpus Fund of the trust");
-					Paragraph content = new Paragraph("I am happy to know the efforts of VRNT, constituted under the directions of Pujyasri Mahaswamigal of kanchi kamakoti Peetam for preservation of Vedic Vibrations through traditional Vedic education. I am furnishing below details about me and I would request you to kindly accept  Donation of Rs. "+numberFormatter.format(Integer.parseInt(totalAmount.getText()))+" ( "+payment_mode_2.getSelectedItem()+" ) for corpus fund of the trust and utilise the amount, for the activities of the Trust.");
-					content.setAlignment(Element.ALIGN_JUSTIFIED);
-					
-					Paragraph enrollment = new Paragraph("ENROLMENT FOR LIFE DONOR CORPUS");
-					enrollment.setAlignment(Element.ALIGN_CENTER);
-					
-					Phrase tenantNamePhrase = new Phrase(tenantName.getText());
-					
-					String addressString = "";
-					addressString += (addr_14.getText().length() != 0) ?  addr_14.getText() : "";
-					
-					addressString += (addr_24.getText().length() != 0) ? "\n"+addr_24.getText() : "";
-					
-					addressString += (addr_34.getText().length() != 0) ? "\n"+addr_34.getText() : "";
-					
-					addressString += (area_4.getText().length() != 0) ? "\n"+area_4.getText() : "";
-					
-					addressString += (city_town4.getText().length() != 0) ? "\n"+city_town4.getText() : "";
-					
-					addressString += (pin_code_4.getText().length() != 0) ? " "+pin_code_4.getText() : "";
-					
-					Phrase addrPhrase = new Phrase(addressString);
-					Phrase phNum = new Phrase(cand_ph_p4.getText());
-					Phrase email = new Phrase("");
-					Phrase star = new Phrase("");
-					Phrase pan = new Phrase("");
-					Paragraph signPara = new Paragraph("SIGNATURE OF THE DONOR");
-					signPara.setAlignment(Element.ALIGN_RIGHT);
-					Paragraph datePara = new Paragraph("DATE:                                      ");
-					datePara.setAlignment(Element.ALIGN_RIGHT);
-					
-					PdfPTable table1 = new PdfPTable(new float[]{1,5,1,5});
-					
-					PdfPCell oneCell = new PdfPCell(new Phrase("1"));
-					PdfPCell twoCell = new PdfPCell(new Phrase("2"));
-					PdfPCell threeCell = new PdfPCell(new Phrase("3"));
-					PdfPCell fourCell = new PdfPCell(new Phrase("4"));
-					PdfPCell fiveCell = new PdfPCell(new Phrase("5"));
-					PdfPCell sixCell = new PdfPCell(new Phrase("6"));
-					
-					oneCell.setBorder(0);
-					twoCell.setBorder(0);
-					threeCell.setBorder(0);
-					fourCell.setBorder(0);
-					fiveCell.setBorder(0);
-					sixCell.setBorder(0);
-					
-					PdfPCell nsNumCell = new PdfPCell(new Phrase("NS NO. & NAME"));
-					PdfPCell addrCell = new PdfPCell(new Phrase("ADDRESS WITH PINCODE"));
-					PdfPCell phCell = new PdfPCell(new Phrase("PHONE NO."));
-					PdfPCell mailCell = new PdfPCell(new Phrase("EMAIL ID"));
-					PdfPCell starCell = new PdfPCell(new Phrase("BIRTH STAR"));
-					PdfPCell panCell = new PdfPCell(new Phrase("PAN"));
-					
-					nsNumCell.setBorder(0);
-					addrCell.setBorder(0);
-					phCell.setBorder(0);
-					mailCell.setBorder(0);
-					starCell.setBorder(0);
-					panCell.setBorder(0);
-					
-					PdfPCell colon = new PdfPCell(new Phrase(":"));
-					colon.setBorder(0);
-					
-					PdfPCell numCell = new PdfPCell(tenantNamePhrase);
-					PdfPCell addrsCell = new PdfPCell(addrPhrase);
-					PdfPCell phNumCell = new PdfPCell(phNum);
-					PdfPCell emailCell = new PdfPCell(email);
-					PdfPCell birthStarCell = new PdfPCell(star);
-					PdfPCell panNumCell = new PdfPCell(pan);
-					
-					numCell.setBorder(0);
-					addrsCell.setBorder(0);
-					phNumCell.setBorder(0);
-					emailCell.setBorder(0);
-					birthStarCell.setBorder(0);
-					panNumCell.setBorder(0);
-					
-					
-					
-					table1.addCell(oneCell);
-					table1.addCell(nsNumCell);
-					table1.addCell(colon);
-					table1.addCell(numCell);
-					
-					table1.addCell(twoCell);
-					table1.addCell(addrCell);
-					table1.addCell(colon);
-					table1.addCell(addrsCell);
-					
-					table1.addCell(threeCell);
-					table1.addCell(phCell);
-					table1.addCell(colon);
-					table1.addCell(phNumCell);
-					
-					table1.addCell(fourCell);
-					table1.addCell(mailCell);
-					table1.addCell(colon);
-					table1.addCell(emailCell);
-					
-					table1.addCell(fiveCell);
-					table1.addCell(starCell);
-					table1.addCell(colon);
-					table1.addCell(birthStarCell);
-					
-					table1.addCell(sixCell);
-					table1.addCell(panCell);
-					table1.addCell(colon);
-					table1.addCell(panNumCell);
-					
-					DottedLineSeparator line = new DottedLineSeparator();
-					line.setOffset(-2);
-					line.setGap(2f);
-					
-					Paragraph cond1 = new Paragraph("( PLEASE SIGN & SEND THIS  LETTER TO  VRNT CHENNAI OFFICE BY POST )", nb);
-					cond1.setAlignment(Element.ALIGN_CENTER);
-					
-					
-					Paragraph cond2 = new Paragraph("( KINDLY TAKE XEROX COPIES OF THIS LETTER AND IN FUTURE, FILL AND SEND TO US FOR  DONATIONS ABOVE RS.2000 , SO THAT THE DONATION AMOUNT CAN BE TAKEN TO THE CORPUS OF THE TRUST)", n);
-					cond2.setAlignment(Element.ALIGN_CENTER);
-					
-					
-					Paragraph cond3 = new Paragraph("We request the donors to mention their Complete Address with Phone Number or E-Mail ID for communication regarding the donation receipt.", n);
-					cond3.setAlignment(Element.ALIGN_CENTER);
-					
-					
-					
-					document.open();
-					document.add(receipt);
-					document.add(date);
-					document.add(Chunk.NEWLINE);
-					document.add(from);
-					document.add(Chunk.NEWLINE);
-					document.add(to);
-					document.add(Chunk.NEWLINE);
-					document.add(sub);
-					document.add(Chunk.NEWLINE);
-					document.add(content);
-					document.add(enrollment);
-					document.add(Chunk.NEWLINE);
-					document.add(table1);
-					
-					document.add(Chunk.NEWLINE);
-					document.add(signPara);
-					document.add(datePara);
-					document.add(Chunk.NEWLINE);
-					document.add(line);
-					document.add(cond1);
-					document.add(Chunk.NEWLINE);
-					document.add(cond2);
-					document.add(Chunk.NEWLINE);
-					document.add(cond3);
-					
-					//Desktop.getDesktop().open(corpusLetter);
-					document.close();
-					
-					
-					
-				} catch (Exception e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}				
-				
-			}
-			
 			
 			
 			tenantCombo.setSelectedIndex(0);
 			monthCombo.setSelectedIndex(0);
 			yearCombo.setSelectedIndex(0);			
-			corpusCombo_2.setSelectedIndex(0);
 			cand_amt_p4.setText("");
 			serviceTaxRate.setText("");
 			serviceTaxAmount.setText("");
