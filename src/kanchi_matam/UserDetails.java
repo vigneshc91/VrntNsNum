@@ -99,13 +99,20 @@ public class UserDetails extends JFrame implements ActionListener {
 		model.addColumn("NAME");
 		model.addColumn("ADDRESS");
 		model.addColumn("PH. NO.");
-		model.addColumn("EMAIL");
-		
-		
+		model.addColumn("EMAIL");		
 		model.addColumn("RELATIVES");
 		model.addColumn("AR");
 		model.addColumn("PR");
 		
+		Dimension tableSize = user_table.getPreferredSize();
+		user_table.getColumn("NS. NO.").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		user_table.getColumn("NAME").setPreferredWidth(Math.round(tableSize.width * 0.20f));
+		user_table.getColumn("ADDRESS").setPreferredWidth(Math.round(tableSize.width * 0.30f));
+		user_table.getColumn("PH. NO.").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		user_table.getColumn("EMAIL").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		user_table.getColumn("RELATIVES").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		user_table.getColumn("AR").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		user_table.getColumn("PR").setPreferredWidth(Math.round(tableSize.width * 0.05f));
 		
 		
 		AddData();

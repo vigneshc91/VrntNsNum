@@ -750,6 +750,23 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		donationRegisterTableModel.addColumn("<html><center>Bank <br>Received</center></html>");
 		donationRegisterTableModel.addColumn("Realz. DT.");
 		
+		Dimension tableSize = donationRegisterTable.getPreferredSize();
+		donationRegisterTable.getColumn("RT. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("RT. No.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("Donor Type").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		donationRegisterTable.getColumn("Name").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		donationRegisterTable.getColumn("Address").setPreferredWidth(Math.round(tableSize.width * 0.20f));
+		donationRegisterTable.getColumn("Type").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		donationRegisterTable.getColumn("Amount").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("Mode of Receipt").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("<html><center>CHQ/TRF. <br>No.</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("<html><center>CHQ/TRF. <br>DT</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("<html><center>Bank <br>Drawn</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("Branch").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("<html><center>Bank <br>Received</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("Realz. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		
+		
 		DonationRegisterTableData();				    
 		    
 		jspDonationRegister = new JScrollPane(donationRegisterTable);        
@@ -1819,6 +1836,22 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		rentRegisterTableModel.addColumn("Branch");
 		rentRegisterTableModel.addColumn("<html><center>Bank <br>Received</center></html>");
 		rentRegisterTableModel.addColumn("Realz. DT.");
+		
+		Dimension tableSize = rentRegisterTable.getPreferredSize();
+		rentRegisterTable.getColumn("RT. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("RT. No.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("Tenant Name").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		rentRegisterTable.getColumn("Address").setPreferredWidth(Math.round(tableSize.width * 0.25f));
+		rentRegisterTable.getColumn("Rent Amt").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		rentRegisterTable.getColumn("Service Tax").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("Total Amt").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("Mode of Receipt").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("<html><center>CHQ/TRF. <br>No.</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("<html><center>CHQ/TRF. <br>DT</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("<html><center>Bank <br>Drawn</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("Branch").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("<html><center>Bank <br>Received</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("Realz. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
 		
 		rentRegisterTableData();				    
 		    
