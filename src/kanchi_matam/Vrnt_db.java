@@ -198,6 +198,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	DateFormat standardFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	Validator validator = new Validator();
+	CurrencyConverter convert = new CurrencyConverter();
 	
 	Vrnt_db(){
 		super("VRNT");
@@ -1425,8 +1426,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date d = new java.util.Date();
-		final String dat = f.format(d);
-		 
+		final String dat = f.format(d);		 
 		date_2 = new JLabel(dat);
 		date_2.setToolTipText("Not right click to change date");
 		date_2.addMouseListener(new MouseListener(){
@@ -1536,8 +1536,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 				if((amountString.length() > 0) && (rateString.length() > 0)){
 					double amount = Double.parseDouble(amountString); 
-					float rate = Float.parseFloat(rateString)/100;
-					serviceTaxAmount.setText(String.valueOf(amount*rate));
+					float rate = Float.parseFloat(rateString)/100;					
+					serviceTaxAmount.setText(String.valueOf(Math.round(amount*rate)));
 					totalAmount.setText(String.valueOf(Math.round(amount+Float.parseFloat(serviceTaxAmount.getText()))));
 				}
 			}
@@ -1561,7 +1561,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				if((amountString.length() > 0) && (rateString.length() > 0)){
 					double amount = Double.parseDouble(amountString); 
 					float rate = Float.parseFloat(rateString)/100;
-					serviceTaxAmount.setText(String.valueOf(amount*rate));
+					serviceTaxAmount.setText(String.valueOf(Math.round(amount*rate)));
 					totalAmount.setText(String.valueOf(Math.round(amount+Float.parseFloat(serviceTaxAmount.getText()))));
 				}
 			}
@@ -3326,8 +3326,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
 			
-			String result = formatter.format(Integer.parseInt(cand_amt_p2.getText()));
-			
+			//String result = formatter.format(Integer.parseInt(cand_amt_p2.getText()));
+			String result = convert.Convert(cand_amt_p2.getText());
 
 			Phrase vrnt = new Phrase(" ", fi);
 
@@ -4086,8 +4086,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
 			
-			String result = formatter.format(Integer.parseInt(totalAmount.getText()));
-			
+			//String result = formatter.format(Integer.parseInt(totalAmount.getText()));
+			String result = convert.Convert(totalAmount.getText());
 
 			Phrase vrnt = new Phrase(" ", fi);
 
@@ -4098,7 +4098,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			Phrase rece = new Phrase("Receipt Number: "+receipt_no_2.getText(), si);
 			
 			
-			Phrase donat = new Phrase("Rent", si);
+			Phrase donat = new Phrase("RENT RECEIPT", si);
 			g = new PdfPCell(donat);
 			g.setHorizontalAlignment(Element.ALIGN_CENTER);
 			
@@ -4106,10 +4106,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			Phrase dat = new Phrase("Date: "+receivedDate, si);
 			
-			Phrase donationFrom = new Phrase("RENT RECEIVED FROM:", n);
+			Phrase donationFrom = new Phrase("RENT FOR THE MONTH OF : "+monthCombo.getSelectedItem()+" - "+yearCombo.getSelectedItem(), n);
 			
 			String currency = "Rs. ";
 			String currencyFull = "RUPEES ";
+			
 			
 			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Integer.parseInt(totalAmount.getText())), si);
 			
@@ -4153,7 +4154,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 
 			
 			Phrase don_for = new Phrase("THIS DONATION IS FOR CORPUS OF THE TRUST", ni);
-			Phrase sign_don = new Phrase("SIGNATURE OF DONOR", si);
+			Phrase sign_don = new Phrase("SIGNATURE OF TENANT", si);
 			Phrase sign_rec = new Phrase("Signature of Receiver", si);
 			Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
 			
@@ -4310,9 +4311,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			tab.addCell(mod_c);
 			
 			tab.addCell(rup_c);
-			tab.addCell(don_for_c);
+			//tab.addCell(don_for_c);
 
-			//tab.addCell(empty);
+			tab.addCell(empty);
 			
 			
 			
@@ -4925,8 +4926,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						
 						NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
 						
-						String result = formatter.format(amount);
-						
+						//String result = formatter.format(amount);
+						String result = convert.Convert(String.valueOf(amount));
 
 						Phrase vrnt = new Phrase(" ", fi);
 
