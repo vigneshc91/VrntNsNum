@@ -651,20 +651,20 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		
 		while (rs.next()){
 			String no = rs.getString(1).toUpperCase();
-			String initial = rs.getString(2).toUpperCase();
+			String initial = (StringUtils.isNullOrEmpty(rs.getString(2)))? "" : rs.getString(2).toUpperCase();
 			String nam = rs.getString(3).toUpperCase(); 
-			String addr1 = rs.getString(4).toUpperCase() + " ";
-			String addr2 = (StringUtils.isNullOrEmpty(rs.getString(5))) ? rs.getString(5) : rs.getString(5).toUpperCase();
+			String addr1 = (StringUtils.isNullOrEmpty(rs.getString(4)))? "" : rs.getString(4).toUpperCase() + " ";
+			String addr2 = (StringUtils.isNullOrEmpty(rs.getString(5))) ? "" : rs.getString(5).toUpperCase();
 			addr1 += addr2;
-			String addr3 = (StringUtils.isNullOrEmpty(rs.getString(6))) ? rs.getString(6) : rs.getString(6).toUpperCase();
+			String addr3 = (StringUtils.isNullOrEmpty(rs.getString(6))) ? "" : rs.getString(6).toUpperCase();
 			addr1 += addr3;			
-			String area1 = rs.getString(7).toUpperCase();
-			String city1 = rs.getString(8).toUpperCase();
-			String pinCode1 = rs.getString(9).toUpperCase();
+			String area1 = (StringUtils.isNullOrEmpty(rs.getString(7))) ? "" : rs.getString(7).toUpperCase();
+			String city1 = (StringUtils.isNullOrEmpty(rs.getString(8))) ? "" : rs.getString(8).toUpperCase();
+			String pinCode1 = (StringUtils.isNullOrEmpty(rs.getString(9))) ? "" : rs.getString(9).toUpperCase();
 			
 			
 			String amount = "Rs. "+formatter.format(rs.getFloat(13));
-			String relatives = rs.getString(14);
+			String relatives = (StringUtils.isNullOrEmpty(rs.getString(14))) ? "" : rs.getString(14);
 			String annualReport = rs.getString(15);
 			String prasadam = rs.getString(16);
 			
