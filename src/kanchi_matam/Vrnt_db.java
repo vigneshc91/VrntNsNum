@@ -66,6 +66,7 @@ import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Dictionary;
@@ -199,6 +200,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	
 	Validator validator = new Validator();
 	CurrencyConverter convert = new CurrencyConverter();
+	
+	public static final int TEXT_FIELD_SIZE = 50;
 	
 	Vrnt_db(){
 		super("VRNT");
@@ -420,21 +423,21 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		amt_p1 = new JLabel("Amount");
 		other_ns_num_p1 = new JLabel("Other Relatives NS No");
 		
-		num_p1 = new JTextField(15);
-		cand_initial_p1 = new JTextField(15);
-		cand_nam_p1 = new JTextField(15);
+		num_p1 = new JTextField(TEXT_FIELD_SIZE);
+		cand_initial_p1 = new JTextField(TEXT_FIELD_SIZE);
+		cand_nam_p1 = new JTextField(TEXT_FIELD_SIZE);
 		//cand_add_p1 = new JTextArea(4, 15);
-		addr_11 = new JTextField(15);
-		addr_21 = new JTextField(15);
-		addr_31 = new JTextField(15);
-		area_1 = new JTextField(15);
-		city_town1 = new JTextField(15);
-		pin_code_1 = new JTextField(15);
-		cand_ph_p1 = new JTextField(15);
-		cand_email_p1 = new JTextField(15);
-		cand_pan_p1 = new JTextField(15);
-		cand_amt_p1 = new JTextField(15);
-		cand_other_ns_num_p1 = new JTextField(15);
+		addr_11 = new JTextField(TEXT_FIELD_SIZE);
+		addr_21 = new JTextField(TEXT_FIELD_SIZE);
+		addr_31 = new JTextField(TEXT_FIELD_SIZE);
+		area_1 = new JTextField(TEXT_FIELD_SIZE);
+		city_town1 = new JTextField(TEXT_FIELD_SIZE);
+		pin_code_1 = new JTextField(TEXT_FIELD_SIZE);
+		cand_ph_p1 = new JTextField(TEXT_FIELD_SIZE);
+		cand_email_p1 = new JTextField(TEXT_FIELD_SIZE);
+		cand_pan_p1 = new JTextField(TEXT_FIELD_SIZE);
+		cand_amt_p1 = new JTextField(TEXT_FIELD_SIZE);
+		cand_other_ns_num_p1 = new JTextField(TEXT_FIELD_SIZE);
 		
 		save = new JButton("Save");
 		reset = new JButton("Reset");	
@@ -803,13 +806,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					donorType = "NS NO. "+nsNum;
 				
 				String address = "<html>"+addr1;
-				address += (addr2.length() != 0) ? "<br/>"+addr2 : "";
-				address += (addr3.length() != 0) ? "<br/>"+addr3 : "";
-				address += (area1.length() != 0) ? "<br/>"+area1 : "";
-				address += (city1.length() != 0) ? "<br/>"+city1 : "";
-				address += (pinCode1.length() != 0) ? " "+pinCode1 : "";
-				address += (ph.length() != 0) ? "<br/>("+ph+")" : "";
-				address += (email.length() != 0) ? "<br/>("+email+")" : "";
+				address += (addr2 != null && addr2.length() != 0) ? "<br/>"+addr2 : "";
+				address += (addr3 != null && addr3.length() != 0) ? "<br/>"+addr3 : "";
+				address += (area1 != null && area1.length() != 0) ? "<br/>"+area1 : "";
+				address += (city1 != null && city1.length() != 0) ? "<br/>"+city1 : "";
+				address += (pinCode1 != null && pinCode1.length() != 0) ? " "+pinCode1 : "";
+				address += (ph != null && ph.length() != 0) ? "<br/>("+ph+")" : "";
+				address += (email != null && email.length() != 0) ? "<br/>("+email+")" : "";
 				address += "</html>";
 				String donType = rs.getString("TYPE_DONATN");
 				
@@ -822,7 +825,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				String bank = rs.getString("BANK");
 				String branch = rs.getString("BRANCH");
 				String bankRecvd = rs.getString("BANK_RECEIVED");
-				String relizationDate = rs.getString("RELIZATION_DATE");
+				String relizationDate = simpleFormat.format(standardFormat.parse(rs.getString("RELIZATION_DATE")));
 				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
 				
 				donationRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, donorType, nam, address, donType, amount, mode, chqNum, issueDate, bank, branch, bankRec, relizationDate});
@@ -883,21 +886,21 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		amt_p3 = new JLabel("Amount");
 		other_ns_num_p3 = new JLabel("Other Relatives NS No");
 		
-		num_p3 = new JTextField(15);
-		cand_initial_p3 = new JTextField(15);
-		cand_nam_p3 = new JTextField(15);
+		num_p3 = new JTextField(TEXT_FIELD_SIZE);
+		cand_initial_p3 = new JTextField(TEXT_FIELD_SIZE);
+		cand_nam_p3 = new JTextField(TEXT_FIELD_SIZE);
 		//cand_add_p3 = new JTextArea(4, 15);
-		addr_13 = new JTextField(15);
-		addr_23 = new JTextField(15);
-		addr_33 = new JTextField(15);
-		area_3 = new JTextField(15);
-		city_town3 = new JTextField(15);
-		pin_code_3 = new JTextField(15);
-		cand_ph_p3 = new JTextField(15);
-		cand_email_p3 = new JTextField(15);
-		cand_pan_p3 = new JTextField(15);
-		cand_amt_p3 = new JTextField(15);
-		cand_other_ns_num_p3 = new JTextField(15);
+		addr_13 = new JTextField(TEXT_FIELD_SIZE);
+		addr_23 = new JTextField(TEXT_FIELD_SIZE);
+		addr_33 = new JTextField(TEXT_FIELD_SIZE);
+		area_3 = new JTextField(TEXT_FIELD_SIZE);
+		city_town3 = new JTextField(TEXT_FIELD_SIZE);
+		pin_code_3 = new JTextField(TEXT_FIELD_SIZE);
+		cand_ph_p3 = new JTextField(TEXT_FIELD_SIZE);
+		cand_email_p3 = new JTextField(TEXT_FIELD_SIZE);
+		cand_pan_p3 = new JTextField(TEXT_FIELD_SIZE);
+		cand_amt_p3 = new JTextField(TEXT_FIELD_SIZE);
+		cand_other_ns_num_p3 = new JTextField(TEXT_FIELD_SIZE);
 		
 		//save = new JButton("Save");
 		//reset = new JButton("Reset");
@@ -1067,12 +1070,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		String[] corpusDonation = {"YES", "NO"};
 		String[] bankReceivedDropDown = {"", "ICICI", "BOB", "IB - WM", "CB - 732", "IB - K", "CB - 645"};
 		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
-		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+		//DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date d = new java.util.Date();
-		final String dat = f.format(d);
+		final String dat = simpleFormat.format(d);
 		 
 		date = new JLabel(dat);
-		date.setToolTipText("Not right click to change date");
+		//To Make the date editable uncomment these lines
+		/*date.setToolTipText("Not right click to change date");
 		date.addMouseListener(new MouseListener(){
 			
 			public void mouseClicked(MouseEvent e){
@@ -1105,7 +1109,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				// TODO Auto-generated method stub
 				
 			}
-		});
+		});*/
 		receipt = new JLabel("Receipt No");
 		donationTypeLabel = new JLabel("Donor Type");
 		no_p2 = new JLabel("Enter NS no");
@@ -1132,26 +1136,26 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		branch = new JLabel("Branch");
 		bank_recvd = new JLabel("Bank Received By VRNT");
 		
-		receipt_no = new JTextField(15);
+		receipt_no = new JTextField(TEXT_FIELD_SIZE);
 		donationTypeCombo = new JComboBox(donorType);
-		num_p2 = new JTextField(15);
-		cand_initial_p2 = new JTextField(15);
-		cand_nam_p2 = new JTextField(15);
+		num_p2 = new JTextField(TEXT_FIELD_SIZE);
+		cand_initial_p2 = new JTextField(TEXT_FIELD_SIZE);
+		cand_nam_p2 = new JTextField(TEXT_FIELD_SIZE);
 		//cand_add_p2 = new JTextArea(4, 15);
-		addr_12 = new JTextField(15);
-		addr_22 = new JTextField(15);
-		addr_32 = new JTextField(15);
-		area_2 = new JTextField(15);
-		city_town2 = new JTextField(15);
-		pin_code_2 = new JTextField(15);
-		cand_ph_p2 = new JTextField(15);
-		cand_email_p2 = new JTextField(15);
-		cand_pan_p2 = new JTextField(15);
-		cand_amt_p2 = new JTextField(15);
-		payment_num = new JTextField(15);
-		bank_name = new JTextField(15);
-		branch_nam = new JTextField(15);
-		issue_dat = new JTextField(15);
+		addr_12 = new JTextField(TEXT_FIELD_SIZE);
+		addr_22 = new JTextField(TEXT_FIELD_SIZE);
+		addr_32 = new JTextField(TEXT_FIELD_SIZE);
+		area_2 = new JTextField(TEXT_FIELD_SIZE);
+		city_town2 = new JTextField(TEXT_FIELD_SIZE);
+		pin_code_2 = new JTextField(TEXT_FIELD_SIZE);
+		cand_ph_p2 = new JTextField(TEXT_FIELD_SIZE);
+		cand_email_p2 = new JTextField(TEXT_FIELD_SIZE);
+		cand_pan_p2 = new JTextField(TEXT_FIELD_SIZE);
+		cand_amt_p2 = new JTextField(TEXT_FIELD_SIZE);
+		payment_num = new JTextField(TEXT_FIELD_SIZE);
+		bank_name = new JTextField(TEXT_FIELD_SIZE);
+		branch_nam = new JTextField(TEXT_FIELD_SIZE);
+		issue_dat = new JTextField(TEXT_FIELD_SIZE);
 		bank_received = new JComboBox(bankReceivedDropDown);
 		don_type = new JComboBox(pay);
 		payment_mode = new JComboBox(acc);
@@ -1424,9 +1428,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		String[] year = {"", "2015", "2016", "2017", "2018", "2019", "2020"};
 		String[] bankReceivedDropDown = {"", "ICICI", "BOB", "IB - WM", "CB - 732", "IB - K", "CB - 645"};
 		calendar1 = new JCalendar(JCalendar.DISPLAY_DATE, false);
-		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+		//DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date d = new java.util.Date();
-		final String dat = f.format(d);		 
+		final String dat = simpleFormat.format(d);		 
 		date_2 = new JLabel(dat);
 		date_2.setToolTipText("Not right click to change date");
 		date_2.addMouseListener(new MouseListener(){
@@ -1494,27 +1498,27 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		bank_recvd_2 = new JLabel("Bank Received By VRNT");
 		
 		
-		receipt_no_2 = new JTextField(15);
+		receipt_no_2 = new JTextField(TEXT_FIELD_SIZE);
 		tenantCombo = new JComboBox(tenant);
-		tenantName = new JTextField(15);
+		tenantName = new JTextField(TEXT_FIELD_SIZE);
 		//cand_add_p2 = new JTextArea(4, 15);
-		addr_14 = new JTextField(15);
-		addr_24 = new JTextField(15);
-		addr_34 = new JTextField(15);
-		area_4 = new JTextField(15);
-		city_town4 = new JTextField(15);
-		pin_code_4 = new JTextField(15);
-		cand_ph_p4 = new JTextField(15);
+		addr_14 = new JTextField(TEXT_FIELD_SIZE);
+		addr_24 = new JTextField(TEXT_FIELD_SIZE);
+		addr_34 = new JTextField(TEXT_FIELD_SIZE);
+		area_4 = new JTextField(TEXT_FIELD_SIZE);
+		city_town4 = new JTextField(TEXT_FIELD_SIZE);
+		pin_code_4 = new JTextField(TEXT_FIELD_SIZE);
+		cand_ph_p4 = new JTextField(TEXT_FIELD_SIZE);
 		
-		cand_amt_p4 = new JTextField(15);		
-		serviceTaxRate = new JTextField(15);
-		serviceTaxAmount = new JTextField(15);
-		totalAmount = new JTextField(15);
+		cand_amt_p4 = new JTextField(TEXT_FIELD_SIZE);		
+		serviceTaxRate = new JTextField(TEXT_FIELD_SIZE);
+		serviceTaxAmount = new JTextField(TEXT_FIELD_SIZE);
+		totalAmount = new JTextField(TEXT_FIELD_SIZE);
 		
-		payment_num_2 = new JTextField(15);
-		bank_name_2 = new JTextField(15);
-		branch_nam_2 = new JTextField(15);
-		issue_dat_2 = new JTextField(15);
+		payment_num_2 = new JTextField(TEXT_FIELD_SIZE);
+		bank_name_2 = new JTextField(TEXT_FIELD_SIZE);
+		branch_nam_2 = new JTextField(TEXT_FIELD_SIZE);
+		issue_dat_2 = new JTextField(TEXT_FIELD_SIZE);
 		monthCombo = new JComboBox(month);
 		yearCombo = new JComboBox(year);
 		payment_mode_2 = new JComboBox(acc);
@@ -1906,7 +1910,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				String bank = rs.getString("BANK");
 				String branch = rs.getString("BRANCH");
 				String bankRecvd = rs.getString("BANK_RECEIVED");
-				String relizationDate = rs.getString("RELIZATION_DATE");
+				String relizationDate = simpleFormat.format( standardFormat.parse(rs.getString("RELIZATION_DATE")));
 				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
 				
 				rentRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nam, address, rentAmount, serviceTax, totalAmount, mode, chqNum, issueDate, bank, branch, bankRec, relizationDate});
@@ -1956,6 +1960,519 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		String currentDateTime = dateformat.format(cal.getTime());
 		
 		return currentDateTime;
+	}
+	
+	public void RegenerateReceipt(String receiptNumber){
+		if (receiptNumber != null){
+			try {
+				Class.forName("org.h2.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        Connection conn = null;
+			try {
+				conn = DriverManager.
+				    getConnection("jdbc:h2:~/vrnt", "sa", "");
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        // add application code here
+			int receiptNo = 0;
+			String donorType = null, nsNum = null, initial = null, nam = null, addr1 = null, addr2 = null, addr3 = null, area1 = null, city1 = null, pinCode1 = null, ph = null, email = null, panNo = null, donationType = null, payMode = null, chqNo = null, issueDat = null, bank = null, branch = null, bankReceived = null, status = null;
+			Date receiptDate = null;
+			double amount = 0;
+			
+	        try {
+				Statement stm = conn.createStatement();
+				String st = "select * from bill where receipt = "+Integer.parseInt(receiptNumber);
+				ResultSet rs = stm.executeQuery(st);
+				rs.next();
+				receiptNo = rs.getInt("RECEIPT");
+				receiptDate = rs.getDate("DAT");
+				donorType = rs.getString("DONOR_TYPE");
+				nsNum = rs.getString("NO");
+				initial = rs.getString("INITIAL");
+				nam = rs.getString("NAME") ;
+				addr1 = rs.getString("ADDR_1");
+				addr2 = rs.getString("ADDR_2");
+				addr3 = rs.getString("ADDR_3");
+				area1 = rs.getString("AREA");
+				city1 = rs.getString("CITY");
+				pinCode1 = rs.getString("PINCODE");
+				ph = rs.getString("PHONE_NUM");
+				email = rs.getString("EMAIL");
+				panNo = rs.getString("PAN_NO");
+				donationType = rs.getString("TYPE_DONATN");
+				amount = rs.getDouble("AMT");
+				payMode = rs.getString("PAY_MODE");
+				issueDat = rs.getString("ISSUE_DATE"); 
+				bank = rs.getString("BANK");
+				branch = rs.getString("BRANCH");						
+				bankReceived = rs.getString("BANK_RECEIVED");
+				status = rs.getString("STATUS");
+				
+				//JOptionPane.showMessageDialog(null, "Saved Successfully...", "Success", JOptionPane.INFORMATION_MESSAGE);
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+				if(e2.getErrorCode() == 2000){
+					Telegraph tele = new Telegraph("Receipt Not Found", "The Receipt Number you entered is not found...", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);
+					TelegraphQueue que = new TelegraphQueue();
+					que.add(tele);
+				}
+				
+			}
+	        if (status.equals("cleared")){
+	        
+	        	PdfWriter writer = null;
+				
+				File vrntBill = new File("Vrnt Donation Bill");
+				if(!vrntBill.exists()){
+					try{
+						vrntBill.mkdir();
+					} catch(Exception e1){
+						System.err.println(e1);
+					}
+				}
+				
+				
+				
+				
+				File s = null;
+				DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
+				
+				String receivedDate = dateFormat.format(receiptDate);
+				
+				String resultNameFile = "";
+				if(donorType.equals("NS NO."))
+					resultNameFile = nam + " ( NS NO. "+nsNum.replace("/", "-") + " )";
+				else if(donorType.equals("GENERAL DONOR"))
+					resultNameFile = nam + " ( GENERAL )";
+				else
+					resultNameFile = nam;
+				
+				try {
+//					s = File.createTempFile("vrnt_bill", ".pdf");
+					
+					s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receiptNo+", "+receivedDate+" - "+resultNameFile+" - Rs. "+numberFormatter.format(amount)+".pdf");
+					
+					if(s.exists())
+						s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receiptNo+", "+receivedDate+" - "+resultNameFile+" - Rs. "+numberFormatter.format(amount)+" (1).pdf");
+					
+				} catch (Exception e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				Document doc = new Document();
+				try {
+					writer = PdfWriter.getInstance(doc, new FileOutputStream(s));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (DocumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				doc.setPageSize(PageSize.A5);
+				//doc.setMargins(36, 72, 108, 180);
+				doc.setMarginMirroring(true);
+				doc.open();
+				com.itextpdf.text.Font fi = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 16);
+				com.itextpdf.text.Font n = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 8, Font.BOLD);			
+				com.itextpdf.text.Font nb = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD);
+				com.itextpdf.text.Font si = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 8);
+				com.itextpdf.text.Font ni = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 6);
+				PdfPTable tab = new PdfPTable(3);
+				PdfPCell a, b, c, d, f, g;
+				//tab.setWidths(new int[] {80, 60, 60});
+				tab.setWidthPercentage(100);
+				
+				NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
+				
+				//String result = formatter.format(amount);
+				String stringAmount = String.valueOf(amount);
+				if(stringAmount.lastIndexOf(".") > -1)
+					stringAmount = stringAmount.substring(0, stringAmount.lastIndexOf("."));
+				
+				String result = convert.Convert(stringAmount);
+
+				Phrase vrnt = new Phrase(" ", fi);
+
+				c = new PdfPCell(vrnt);
+
+				c.setFixedHeight(40);
+
+				Phrase rece = new Phrase("Receipt Number: "+receiptNo, si);
+				
+				
+				Phrase donat = new Phrase(donationType, si);
+				g = new PdfPCell(donat);
+				g.setHorizontalAlignment(Element.ALIGN_CENTER);
+				
+				
+				
+				Phrase dat = new Phrase("Date: "+receivedDate, si);
+				
+				Phrase donationFrom = new Phrase(donationType+" RECEIVED FROM:", n);
+				
+				String currency = (!donationType.equals("FOREIGN CORPUS")) ? "Rs. " : "";
+				String currencyFull = (!donationType.equals("FOREIGN CORPUS")) ? "RUPEES " : "";
+				
+				Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(amount), si);
+				Phrase nsno;
+				
+				if(donorType.equals("NS NO."))
+					nsno = new Phrase("N.S No. ( Donor Reference Number ): "+nsNum, n);
+				else
+					nsno = new Phrase(donorType, n);
+				
+				Phrase rup = new Phrase(currencyFull+result.toUpperCase()+" ONLY", ni);
+				String address = "";
+				
+				address += (addr1.length() != 0) ?  addr1 : "";
+					
+				address += (addr2.length() != 0) ? "\n"+addr2 : "";
+				
+				address += (addr3.length() != 0) ? "\n"+addr3 : "";
+				
+				address += (area1.length() != 0) ? "\n"+area1 : "";
+				
+				address += (city1.length() != 0) ? "\n"+city1 : "";
+				
+				address += (pinCode1.length() != 0) ? " "+pinCode1 : " ";
+				
+				address += (ph.length() != 0) ? "\nPh No: "+ph : "";
+				
+				address += (email.length() != 0) ? "\nEmail: "+email : "";
+				
+				address += (panNo.length() != 0) ? "\nPAN No: "+panNo : "";
+				
+				
+				
+				Phrase addr = new Phrase(address, si);
+				
+				String paymentDetails = ""; 
+				paymentDetails += "Mode Of Receipt: "+payMode;
+				switch(payMode){
+					case "CHQ":
+						paymentDetails += "\n" + "CHEQUE NO : " + chqNo  + "\n" +"Date: " + issueDat;
+						paymentDetails += "\n" + "Bank Drawn: " + bank;
+						paymentDetails += "\n" + "Branch: " + branch;
+						break;
+					case "A/C TRANSFER":
+						paymentDetails += "\n" + "TRNF NO : " + chqNo  + "\n" +"Date: " + issueDat;
+						break;
+				}
+				
+				Phrase mod = new Phrase(paymentDetails, si);
+
+				
+				Phrase don_for = new Phrase("THIS DONATION IS FOR CORPUS OF THE TRUST", ni);
+				Phrase sign_don = new Phrase("SIGNATURE OF DONOR", si);
+				Phrase sign_rec = new Phrase("Signature of Receiver", si);
+				Phrase trust = new Phrase("Exe. Trustee/Treasurer", si);
+				
+
+				String fullName = nam + " "+ initial;
+
+				Phrase name = new Phrase(fullName, n);
+
+				
+
+				Phrase amt = new Phrase("Donation towards "+donationType+" fund", si);
+				
+				Phrase pay = new Phrase("Payment Details", si);
+				
+				
+				Phrase emp = new Phrase("\0");
+				
+				
+				Phrase ins1 = new Phrase(" ", ni);
+				
+				PdfPCell donationFromCell = new PdfPCell(donationFrom);
+				
+				PdfPCell nam_c = new PdfPCell(name);
+				nam_c.setFixedHeight(20);
+				
+				PdfPCell address_c = new PdfPCell(addr);
+				address_c.setFixedHeight(80);
+				
+				PdfPCell dummy = new PdfPCell(emp);
+				PdfPCell rece_c = new PdfPCell(rece);
+				
+				PdfPCell dat_c = new PdfPCell(dat);
+				dat_c.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+				PdfPCell nsno_c = new PdfPCell(nsno);
+				PdfPCell amt_c = new PdfPCell(amt);
+				PdfPCell rs_c = new PdfPCell(rs);
+				
+				PdfPCell rup_c = new PdfPCell(rup);
+				PdfPCell pay_c = new PdfPCell(pay);
+				PdfPCell mod_c = new PdfPCell(mod);
+				mod_c.setFixedHeight(80);
+
+				PdfPCell don_for_c = new PdfPCell(don_for);
+				PdfPCell empty = new PdfPCell(emp);
+				
+				PdfPCell sign_don_c = new PdfPCell(sign_don);
+				PdfPCell sign_rec_c = new PdfPCell(sign_rec);
+				PdfPCell trust_c = new PdfPCell(trust);
+				PdfPCell ins1_c = new PdfPCell(ins1);
+				ins1_c.setFixedHeight(20);
+
+				empty.setFixedHeight(6);
+
+//				pay_c.setColspan(2);
+
+//				rs_c.setColspan(2);
+				rup_c.setColspan(3);
+//				mod_c.setColspan(2);
+				
+				donationFromCell.setColspan(2);
+				
+				nsno_c.setColspan(2);
+				nam_c.setColspan(2);
+				address_c.setColspan(2);
+
+				empty.setColspan(3);
+				don_for_c.setColspan(3);
+				ins1_c.setColspan(3);
+
+
+				c.setBorder(0);
+				g.setBorder(0);
+				empty.setBorder(0);
+				dummy.setBorder(0);
+				donationFromCell.setBorder(0);
+				nam_c.setBorder(0);
+				rece_c.setBorder(0);
+				address_c.setBorder(0);
+
+				dat_c.setBorder(0);
+
+				nsno_c.setBorder(0);
+
+				amt_c.setBorder(0);
+				rs_c.setBorder(0);
+				rup_c.setBorder(0);
+				pay_c.setBorder(0);
+				mod_c.setBorder(0);
+
+				don_for_c.setBorder(0);
+				sign_don_c.setBorder(0);
+				sign_rec_c.setBorder(0);
+				trust_c.setBorder(0);
+				ins1_c.setBorder(0);
+
+
+				com.itextpdf.text.Image  sign = null;
+				PdfPCell signature = null;
+				
+				try {
+
+					sign = Image.getInstance(this.getClass().getResource("ET-SIGN.png"));
+					signature = new PdfPCell(sign);
+
+
+					sign.scaleAbsolute(80, 15);
+
+					
+				} catch (BadElementException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
+				} catch (MalformedURLException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
+				} catch (IOException e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
+				}
+				signature.setBorder(0);
+				signature.setColspan(3);
+				signature.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				signature.setPaddingRight(30);
+				
+				//donor copy
+
+				tab.addCell(c);
+
+				
+				tab.addCell(empty);
+				
+				
+				tab.addCell(rece_c);
+				tab.addCell(g);
+				tab.addCell(dat_c);
+				tab.addCell(empty);
+				
+				tab.addCell(donationFromCell);
+				tab.addCell(dummy);
+				
+				tab.addCell(nsno_c);
+				tab.addCell(rs_c);
+				
+				
+				
+				tab.addCell(nam_c);
+				tab.addCell(dummy);
+				
+				
+				
+				tab.addCell(address_c);
+				tab.addCell(mod_c);
+				
+				tab.addCell(rup_c);
+				tab.addCell(don_for_c);
+
+				//tab.addCell(empty);
+				
+				
+				
+				tab.addCell(signature);
+				tab.addCell(sign_don_c);
+				tab.addCell(sign_rec_c);
+				tab.addCell(trust_c);
+				//tab.addCell(empty);
+				tab.addCell(ins1_c);
+
+				
+				
+				tab.addCell(empty);
+				tab.addCell(empty);
+				
+				
+				//office copy
+				
+//				tab.addCell(c);
+
+				
+				tab.addCell(empty);
+				
+				PdfPCell veda = new PdfPCell(new Phrase("VEDA RAKSHANA NIDHI TRUST, CHENNAI", n));
+				veda.setBorder(0);
+				veda.setColspan(2);
+				
+				PdfPCell officeCopy = new PdfPCell(new Phrase("OFFICE COPY", n));
+				officeCopy.setBorder(0);
+				
+				
+				tab.addCell(veda);
+				tab.addCell(officeCopy);
+				
+				tab.addCell(rece_c);
+				tab.addCell(g);
+				tab.addCell(dat_c);
+				tab.addCell(empty);
+				
+				tab.addCell(donationFromCell);
+				tab.addCell(dummy);
+				
+				tab.addCell(nsno_c);
+				tab.addCell(rs_c);
+				
+				
+				String bankRecString = bankReceived;
+				PdfPCell bankRec = new PdfPCell(new Phrase("Bank Received: "+bankRecString, n));
+				bankRec.setBorder(0);
+				
+				tab.addCell(nam_c);
+				tab.addCell(bankRec);
+				
+				
+				
+				tab.addCell(address_c);
+				tab.addCell(mod_c);
+				
+				tab.addCell(rup_c);
+				tab.addCell(don_for_c);
+
+				//tab.addCell(empty);
+				PdfPCell forVrnt = new PdfPCell(new Phrase("FOR VRNT:", n));
+				forVrnt.setBorder(0);
+				
+				tab.addCell(dummy);
+				tab.addCell(dummy);
+				tab.addCell(forVrnt);
+				
+				tab.addCell(empty);
+				
+				tab.addCell(sign_don_c);
+				tab.addCell(dummy);
+				tab.addCell(sign_rec_c);
+				//tab.addCell(empty);
+				
+				
+				if(donorType.equals("NS NO.")){
+				
+				double totalAmount = 0;
+				try{
+					Connection conn1 = DriverManager.
+						    getConnection("jdbc:h2:~/vrnt", "sa", "");
+					
+					Statement stm1 = conn1.createStatement();
+					
+					String st = "select amt from bill where no = '"+nsNum+"'";
+					
+					ResultSet rs1 = stm1.executeQuery(st);
+					
+					while(rs1.next()){
+						double amount1 = rs1.getDouble("AMT");
+						totalAmount += amount1;
+					}
+					
+				} catch(SQLException e1){
+					e1.printStackTrace();
+				}
+				
+				PdfPCell donationAmount = new PdfPCell(new Phrase("TOTAL DONATION AMOUNT TO VRNT UNDER CORPUS LIFE DONOR DONOR NUMBER -\n N.S. NO. "+num_p2.getText()+" AS ON "+receivedDate+" : Rs. "+numberFormatter.format(totalAmount), n)); 
+				donationAmount.setBorder(0);
+				donationAmount.setColspan(3);
+				donationAmount.setHorizontalAlignment(Element.ALIGN_CENTER);
+				
+				tab.addCell(donationAmount);
+				
+				}
+				
+				//tab.addCell(ins1_c);
+				
+				try {
+					doc.add(tab);
+					
+//					doc.add(donor_img);
+//					doc.add(off_img);
+				} catch (DocumentException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
+				
+				
+				
+				
+				doc.close();
+				try {
+					Desktop.getDesktop().open(s);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				Telegraph tele = new Telegraph("Receipt Generated", "The Receipt Generated Successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
+				TelegraphQueue quee = new TelegraphQueue();
+				quee.add(tele);
+	        
+	        
+	        } else {
+	        	Telegraph tele = new Telegraph("Receipt Cancelled", "The Receipt is cancelled", TelegraphType.NOTIFICATION_ERROR, WindowPosition.BOTTOMRIGHT, 4000);
+				TelegraphQueue quee = new TelegraphQueue();
+				quee.add(tele);
+	        }
+		}
+
 	}
 	
 	public static void main(String[] args) {
@@ -2962,7 +3479,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        		cand_nam_p2.setText(rs.getString(3));
 		        		addr_12.setText(rs.getString(4));
 		        		addr_22.setText(rs.getString(5));
-		        		addr_33.setText(rs.getString(6));
+		        		addr_32.setText(rs.getString(6));
 		        		area_2.setText(rs.getString(7));
 		        		city_town2.setText(rs.getString(8));
 		        		pin_code_2.setText(rs.getString(9));
@@ -3218,13 +3735,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        try {
 		        	String realizationDate = "";
 		        	if(payment_mode.getSelectedItem().equals("CASH"))
-		        		realizationDate = date.getText();
+		        		realizationDate = standardFormat.format(simpleFormat.parse(date.getText()));
 		        	else if(payment_mode.getSelectedItem().equals("CHQ"))
 		        		realizationDate = "";
 		        	else
 		        		realizationDate = issue_dat.getText();
-					Statement stm = conn.createStatement();
-					String st = "insert into bill values("+receipt_no.getText()+", '"+date.getText()+"', '"+donationTypeCombo.getSelectedItem()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+addr_32.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+cand_pan_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+realizationDate+"', '"+bank_received.getSelectedItem()+"', 'cleared'"+")";
+					Statement stm = conn.createStatement();					
+					String st = "insert into bill values("+receipt_no.getText()+", '"+ standardFormat.format(simpleFormat.parse(date.getText())) +"', '"+donationTypeCombo.getSelectedItem()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+addr_32.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+cand_pan_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+realizationDate+"', '"+bank_received.getSelectedItem()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					
 					//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
@@ -3248,6 +3765,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 					
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 		        
 				try {
@@ -3282,7 +3802,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
 			
-			String receivedDate = dateFormat.format(Date.valueOf(date.getText()));
+			String receivedDate = null;
+			try {
+				receivedDate = dateFormat.format(simpleFormat.parse(date.getText()));
+			} catch (ParseException e4) {
+				// TODO Auto-generated catch block
+				e4.printStackTrace();
+			}
 			
 			String resultNameFile = "";
 			if(donationTypeCombo.getSelectedIndex() == 0)
@@ -3295,7 +3821,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			try {
 //				s = File.createTempFile("vrnt_bill", ".pdf");
 				
-				s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receipt_no.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs. "+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText()))+".pdf");
+				s = new File(vrntBill.getAbsolutePath()+"/RT. NO. "+receipt_no.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs. "+numberFormatter.format(Double.parseDouble(cand_amt_p2.getText()))+".pdf");
 			} catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -3327,8 +3853,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
 			
 			//String result = formatter.format(Integer.parseInt(cand_amt_p2.getText()));
-			String result = convert.Convert(cand_amt_p2.getText());
-
+			String result = "";
+			if(cand_amt_p2.getText().lastIndexOf(".") > -1)
+				result = convert.Convert(cand_amt_p2.getText().substring(0, cand_amt_p2.getText().lastIndexOf(".")));
+			else
+				result = convert.Convert(cand_amt_p2.getText());
+			
 			Phrase vrnt = new Phrase(" ", fi);
 
 			c = new PdfPCell(vrnt);
@@ -3351,7 +3881,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String currency = (don_type.getSelectedIndex() != 2) ? "Rs. " : "";
 			String currencyFull = (don_type.getSelectedIndex() != 2) ? "RUPEES " : "";
 			
-			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText())), si);
+			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Double.parseDouble(cand_amt_p2.getText())), si);
 			Phrase nsno;
 			
 			if(donationTypeCombo.getSelectedIndex() == 0)
@@ -3708,7 +4238,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					Paragraph to = new Paragraph("Dear Sir,");
 					
 					Paragraph sub = new Paragraph("Sub: Donation towards Corpus Fund of the trust");
-					Paragraph content = new Paragraph("I am happy to know the efforts of VRNT, constituted under the directions of Pujyasri Mahaswamigal of kanchi kamakoti Peetam for preservation of Vedic Vibrations through traditional Vedic education. I am furnishing below details about me and I would request you to kindly accept  Donation of Rs. "+numberFormatter.format(Integer.parseInt(cand_amt_p2.getText()))+" ( "+payment_mode.getSelectedItem()+" ) for corpus fund of the trust and utilise the amount, for the activities of the Trust.");
+					Paragraph content = new Paragraph("I am happy to know the efforts of VRNT, constituted under the directions of Pujyasri Mahaswamigal of kanchi kamakoti Peetam for preservation of Vedic Vibrations through traditional Vedic education. I am furnishing below details about me and I would request you to kindly accept  Donation of Rs. "+numberFormatter.format(Double.parseDouble(cand_amt_p2.getText()))+" ( "+payment_mode.getSelectedItem()+" ) for corpus fund of the trust and utilise the amount, for the activities of the Trust.");
 					content.setAlignment(Element.ALIGN_JUSTIFIED);
 					
 					Paragraph enrollment = new Paragraph("ENROLMENT FOR LIFE DONOR CORPUS");
@@ -3997,7 +4527,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        	else
 		        		realizationDate = issue_dat_2.getText();
 					Statement stm = conn.createStatement();
-					String st = "insert into rent values("+receipt_no_2.getText()+", '"+date_2.getText()+"', '"+tenantName.getText()+"'"+","+"'"+addr_14.getText()+"'"+", '"+addr_24.getText()+"', '"+addr_34.getText()+"', '"+area_4.getText()+"', '"+city_town4.getText()+"', '"+pin_code_4.getText()+"', '"+cand_ph_p4.getText()+"', '"+monthCombo.getSelectedItem()+"', '"+yearCombo.getSelectedItem()+"', "+cand_amt_p4.getText()+","+serviceTaxRate.getText()+", "+totalAmount.getText()+", '"+payment_mode_2.getSelectedItem()+"', '"+payment_num_2.getText()+"', '"+issue_dat_2.getText()+"', '"+bank_name_2.getText()+"', '"+branch_nam_2.getText()+"', '"+realizationDate+"', '"+bank_received_2.getSelectedItem()+"', 'cleared'"+")";
+					String st = "insert into rent values("+receipt_no_2.getText()+", '" + standardFormat.format(simpleFormat.parse(date_2.getText())) + "', '"+tenantName.getText()+"'"+","+"'"+addr_14.getText()+"'"+", '"+addr_24.getText()+"', '"+addr_34.getText()+"', '"+area_4.getText()+"', '"+city_town4.getText()+"', '"+pin_code_4.getText()+"', '"+cand_ph_p4.getText()+"', '"+monthCombo.getSelectedItem()+"', '"+yearCombo.getSelectedItem()+"', "+cand_amt_p4.getText()+","+serviceTaxRate.getText()+", "+totalAmount.getText()+", '"+payment_mode_2.getSelectedItem()+"', '"+payment_num_2.getText()+"', '"+issue_dat_2.getText()+"', '"+bank_name_2.getText()+"', '"+branch_nam_2.getText()+"', '"+realizationDate+"', '"+bank_received_2.getSelectedItem()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					
 					//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
@@ -4021,6 +4551,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 					
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 		        
 				try {
@@ -4047,7 +4580,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
 			
-			String receivedDate = dateFormat.format(Date.valueOf(date.getText()));
+			String receivedDate = null;
+			try {
+				receivedDate = dateFormat.format(simpleFormat.parse(date.getText()));
+			} catch (ParseException e4) {
+				// TODO Auto-generated catch block
+				e4.printStackTrace();
+			}
 			
 			String resultNameFile = tenantName.getText();
 			
@@ -4055,7 +4594,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			try {
 //				s = File.createTempFile("vrnt_bill", ".pdf");
 				
-				s = new File(vrntRentBill.getAbsolutePath()+"/RT. NO. "+receipt_no_2.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs."+numberFormatter.format(Integer.parseInt(totalAmount.getText()))+".pdf");
+				s = new File(vrntRentBill.getAbsolutePath()+"/RT. NO. "+receipt_no_2.getText()+", "+receivedDate+" - "+resultNameFile+" - Rs."+numberFormatter.format(Double.parseDouble(totalAmount.getText()))+".pdf");
 			} catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -4087,8 +4626,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
 			
 			//String result = formatter.format(Integer.parseInt(totalAmount.getText()));
-			String result = convert.Convert(totalAmount.getText());
-
+			String result = "";
+			if(totalAmount.getText().lastIndexOf(".") > -1)
+				result = convert.Convert(totalAmount.getText().substring(0, totalAmount.getText().lastIndexOf(".")));
+			else
+				result = convert.Convert(totalAmount.getText());
+			
 			Phrase vrnt = new Phrase(" ", fi);
 
 			c = new PdfPCell(vrnt);
@@ -4112,7 +4655,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			String currencyFull = "RUPEES ";
 			
 			
-			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Integer.parseInt(totalAmount.getText())), si);
+			Phrase rs = new Phrase("AMOUNT "+currency+numberFormatter.format(Double.parseDouble(totalAmount.getText())), si);
 			
 			
 			Phrase rup = new Phrase(currencyFull+result.toUpperCase()+" ONLY", ni);
@@ -4927,7 +5470,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						NumberFormat formatter = new RuleBasedNumberFormat(Locale.ENGLISH, RuleBasedNumberFormat.SPELLOUT);
 						
 						//String result = formatter.format(amount);
-						String result = convert.Convert(String.valueOf(amount));
+						String stringAmount = String.valueOf(amount);
+						if(stringAmount.lastIndexOf(".") > -1)
+							stringAmount = stringAmount.substring(0, stringAmount.lastIndexOf("."));
+						
+						String result = convert.Convert(stringAmount);
 
 						Phrase vrnt = new Phrase(" ", fi);
 
@@ -4955,7 +5502,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 						Phrase nsno;
 						
 						if(donorType.equals("NS NO."))
-							nsno = new Phrase("N.S No. ( Donor Reference Number ): "+num_p2.getText(), n);
+							nsno = new Phrase("N.S No. ( Donor Reference Number ): "+nsNum, n);
 						else
 							nsno = new Phrase(donorType, n);
 						
@@ -5361,8 +5908,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			String donorType = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 2).toString();
 			String reliDat = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 13).toString();
+			String modeOfReceipt = donationRegisterTable.getModel().getValueAt(donationRegisterTable.convertRowIndexToModel(row), 7).toString();
 			
-			if(donationCol == 2 && !donorType.contains("NS NO.")){				
+			if(donationCol == 2){				
 				String nsNum = JOptionPane.showInputDialog(null, "Enter Ns Number.");
 				
 				if(nsNum != null){
@@ -5382,17 +5930,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				        
 				        if(rs.first()){	        	
 				        	
-				        	String initial = rs.getString(2);
+				        	String initial = rs.getString(2)!= null ? rs.getString(2) : "";
 				        	String name = rs.getString(3);
-				        	String addr_1 = rs.getString(4);
-				        	String addr_2 = rs.getString(5);
-				        	String addr_3 = rs.getString(6);
-				        	String area = rs.getString(7);
-				        	String city = rs.getString(8);
-				        	String pin = rs.getString(9);
-				        	String ph = rs.getString(10);
-				        	String email = rs.getString(11);
-				        	String pan = rs.getString(12);
+				        	String addr_1 = rs.getString(4)!= null ? rs.getString(4) : "";
+				        	String addr_2 = rs.getString(5)!= null ? rs.getString(5) : "";
+				        	String addr_3 = rs.getString(6)!= null ? rs.getString(6) : "";
+				        	String area = rs.getString(7)!= null ? rs.getString(7) : "";
+				        	String city = rs.getString(8)!= null ? rs.getString(8) : "";
+				        	String pin = rs.getString(9)!= null ? rs.getString(9) : "";
+				        	String ph = rs.getString(10)!= null ? rs.getString(10) : "";
+				        	String email = rs.getString(11)!= null ? rs.getString(11) : "";
+				        	String pan = rs.getString(12)!= null ? rs.getString(12) : "";
 				        	
 				        	try{
 								Class.forName("org.h2.Driver");
@@ -5407,6 +5955,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 								
 								donationRegisterTableModel.setRowCount(0);
 								DonationRegisterTableData();
+								RegenerateReceipt(rtNum);
 						        
 							}
 							catch(Exception e2){
@@ -5432,8 +5981,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					
 				}
 			}			
-			else if(donationCol == 13 && reliDat.length() == 0){
-				String dat = standardFormat.format(Calendar.getInstance().getTime());
+			else if(donationCol == 13 && modeOfReceipt.equals("CHQ")){
+				DateFormat customFormat = new SimpleDateFormat("dd-MM-yyyy");
+				String dat = customFormat.format(Calendar.getInstance().getTime());
 				String realizationDate = JOptionPane.showInputDialog(null, "Enter Relization Date", dat);
 				 
 				
@@ -5445,7 +5995,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				        Connection conn = DriverManager.
 				            getConnection("jdbc:h2:~/vrnt", "sa", "");
 				        Statement stm = conn.createStatement();
-				        String st = "update bill set relization_date = '"+realizationDate+"' where receipt = '"+rtNum+"'";
+				        String st = "update bill set relization_date = '" + standardFormat.format(customFormat.parse(realizationDate)) + "' where receipt = '"+rtNum+"'";
 				        stm.executeUpdate(st);
 				        Telegraph tele = new Telegraph("Success", "Relization Date Updated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 						TelegraphQueue quee = new TelegraphQueue();
@@ -5468,8 +6018,10 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 				
 				String reliDat = rentRegisterTable.getModel().getValueAt(rentRegisterTable.convertRowIndexToModel(row), 13).toString();
-				if(rentCol == 13 && reliDat.length() == 0){
-					String dat = standardFormat.format(Calendar.getInstance().getTime());
+				String modeOfReceipt = rentRegisterTable.getModel().getValueAt(rentRegisterTable.convertRowIndexToModel(row), 7).toString();
+				if(rentCol == 13 && modeOfReceipt.equals("CHQ")){
+					DateFormat customFormat = new SimpleDateFormat("dd-MM-yyyy");
+					String dat = customFormat.format(Calendar.getInstance().getTime());
 					String realizationDate = JOptionPane.showInputDialog(null, "Enter Relization Date", dat);
 					 
 					
@@ -5481,7 +6033,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					        Connection conn = DriverManager.
 					            getConnection("jdbc:h2:~/vrnt", "sa", "");
 					        Statement stm = conn.createStatement();
-					        String st = "update rent set relization_date = '"+realizationDate+"' where receipt = '"+rtNum+"'";
+					        String st = "update rent set relization_date = '" + standardFormat.format(customFormat.parse(realizationDate)) + "' where receipt = '"+rtNum+"'";
 					        stm.executeUpdate(st);
 					        Telegraph tele = new Telegraph("Success", "Relization Date Updated successfully...", TelegraphType.NOTIFICATION_DONE, WindowPosition.BOTTOMRIGHT, 4000);
 							TelegraphQueue quee = new TelegraphQueue();

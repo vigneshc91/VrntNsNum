@@ -18,6 +18,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -44,6 +46,7 @@ public class UserDetails extends JFrame implements ActionListener {
 	String openingBalance;
 	NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("en", "IN"));
 	double totalAmount;
+	DateFormat simpleFormat = new SimpleDateFormat("dd-MMM-yyyy");
 	
 	JPanel panel = new JPanel();
 	DefaultTableModel model = new DefaultTableModel(){
@@ -244,7 +247,7 @@ public class UserDetails extends JFrame implements ActionListener {
 				
 				
 				
-				listModel.addRow(new Object[] {receiptDate, receiptNumber, amount, modeAndNum, bankRec});
+				listModel.addRow(new Object[] { simpleFormat.format(receiptDate), receiptNumber, amount, modeAndNum, bankRec});
 				
 				listTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 				listTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
