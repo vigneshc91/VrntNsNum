@@ -108,12 +108,12 @@ public class UserDetails extends JFrame implements ActionListener {
 		model.addColumn("PR");
 		
 		Dimension tableSize = user_table.getPreferredSize();
-		user_table.getColumn("NS. NO.").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		user_table.getColumn("NAME").setPreferredWidth(Math.round(tableSize.width * 0.20f));
-		user_table.getColumn("ADDRESS").setPreferredWidth(Math.round(tableSize.width * 0.30f));
+		user_table.getColumn("NS. NO.").setPreferredWidth(Math.round(tableSize.width * 0.07f));
+		user_table.getColumn("NAME").setPreferredWidth(Math.round(tableSize.width * 0.17f));
+		user_table.getColumn("ADDRESS").setPreferredWidth(Math.round(tableSize.width * 0.22f));
 		user_table.getColumn("PH. NO.").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		user_table.getColumn("EMAIL").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		user_table.getColumn("RELATIVES").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		user_table.getColumn("EMAIL").setPreferredWidth(Math.round(tableSize.width * 0.19f));
+		user_table.getColumn("RELATIVES").setPreferredWidth(Math.round(tableSize.width * 0.15f));
 		user_table.getColumn("AR").setPreferredWidth(Math.round(tableSize.width * 0.05f));
 		user_table.getColumn("PR").setPreferredWidth(Math.round(tableSize.width * 0.05f));
 		
@@ -217,6 +217,13 @@ public class UserDetails extends JFrame implements ActionListener {
 				listModel.addColumn("AMOUNT");
 				listModel.addColumn("MODE OF PAYMENT");
 				listModel.addColumn("BANK REC");
+				
+				Dimension tableSize = listTable.getPreferredSize();
+				listTable.getColumn("RT. DT.").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+				listTable.getColumn("RT. NO.").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+				listTable.getColumn("AMOUNT").setPreferredWidth(Math.round(tableSize.width * 0.20f));
+				listTable.getColumn("MODE OF PAYMENT").setPreferredWidth(Math.round(tableSize.width * 0.40f));
+				listTable.getColumn("BANK REC").setPreferredWidth(Math.round(tableSize.width * 0.20f));
 				
 			while(rs1.next()){
 				

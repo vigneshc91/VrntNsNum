@@ -63,6 +63,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
+import com.toedter.calendar.JDateChooser;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -97,7 +98,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	JLabel viewTabStatusBar;
 	JLabel donationTypeLabel, corpusLetterLabel;
 	
-	JTextField payment_num, bank_name, branch_nam, issue_dat, receipt_no;
+	JDateChooser issue_dat, issue_dat_2;
+	JTextField payment_num, bank_name, branch_nam, receipt_no;
 	JComboBox don_type, payment_mode, bank_received, donationTypeCombo, corpusCombo;	
 	JLabel no_p1, initial_p1, name_p1, add_p1, ph_p1, email_p1, pan_p1, amt_p1, other_ns_num_p1, no_p2, initial_p2, name_p2, add_p2, ph_p2, email_p2, pan_p2, amt_p2, other_ns_num_p2, no_p3, initial_p3, name_p3, add_p3, ph_p3, email_p3, pan_p3, amt_p3, other_ns_num_p3;
 	JTextField num_p1, cand_initial_p1, cand_nam_p1, cand_ph_p1, cand_email_p1, cand_pan_p1, cand_amt_p1, cand_other_ns_num_p1, num_p2, cand_initial_p2, cand_nam_p2, cand_ph_p2, cand_email_p2, cand_pan_p2, cand_amt_p2, cand_other_ns_num_p2, num_p3, cand_initial_p3, cand_nam_p3, cand_ph_p3, cand_email_p3, cand_pan_p3, cand_amt_p3, cand_other_ns_num_p3;
@@ -191,7 +193,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 	Font f;
 	
 	JLabel tenantLabel, date_2, receipt_2, tenant_name, ph_p4, rentMonthLabel, rentYearLabel, corpusLetterLabel_2, amt_p4, serviceTaxRateLabel, ServiceTaxAmountLabel, totalAmountLabel, pay_mode_2, pay_num_2, dated_2, bank_nam_2, branch_2, bank_recvd_2;
-	JTextField tenantName, receipt_no_2, addr_14, addr_24, addr_34, area_4, city_town4, pin_code_4, cand_ph_p4, totalAmount, serviceTaxRate, serviceTaxAmount, cand_amt_p4, payment_num_2, bank_name_2, branch_nam_2, issue_dat_2; 
+	JTextField tenantName, receipt_no_2, addr_14, addr_24, addr_34, area_4, city_town4, pin_code_4, cand_ph_p4, totalAmount, serviceTaxRate, serviceTaxAmount, cand_amt_p4, payment_num_2, bank_name_2, branch_nam_2; 
 	JComboBox tenantCombo, payment_mode_2, bank_received_2, corpusCombo_2, monthCombo, yearCombo;
 	
 	DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -612,17 +614,17 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		model.addColumn("PR");
 		
 		Dimension tableSize = edit_table.getPreferredSize();
-		edit_table.getColumn("NS NO").setPreferredWidth(Math.round(tableSize.width * 0.04f));
-		edit_table.getColumn("INITIAL").setPreferredWidth(Math.round(tableSize.width * 0.04f));
-		edit_table.getColumn("NAME").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		edit_table.getColumn("ADDRESS").setPreferredWidth(Math.round(tableSize.width * 0.28f));
-		edit_table.getColumn("AREA").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		edit_table.getColumn("CITY").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		edit_table.getColumn("PINCODE").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		edit_table.getColumn("AMOUNT").setPreferredWidth(Math.round(tableSize.width * 0.10f));
+		edit_table.getColumn("NS NO").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		edit_table.getColumn("INITIAL").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		edit_table.getColumn("NAME").setPreferredWidth(Math.round(tableSize.width * 0.15f));
+		edit_table.getColumn("ADDRESS").setPreferredWidth(Math.round(tableSize.width * 0.21f));
+		edit_table.getColumn("AREA").setPreferredWidth(Math.round(tableSize.width * 0.13f));
+		edit_table.getColumn("CITY").setPreferredWidth(Math.round(tableSize.width * 0.12f));
+		edit_table.getColumn("PINCODE").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		edit_table.getColumn("AMOUNT").setPreferredWidth(Math.round(tableSize.width * 0.08f));
 		edit_table.getColumn("RELATIVES").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		edit_table.getColumn("AR").setPreferredWidth(Math.round(tableSize.width * 0.02f));
-		edit_table.getColumn("PR").setPreferredWidth(Math.round(tableSize.width * 0.02f));
+		edit_table.getColumn("AR").setPreferredWidth(Math.round(tableSize.width * 0.03f));
+		edit_table.getColumn("PR").setPreferredWidth(Math.round(tableSize.width * 0.03f));
 		
 		view_tab_data();
 		
@@ -755,18 +757,18 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		donationRegisterTableModel.addColumn("Realz. DT.");
 		
 		Dimension tableSize = donationRegisterTable.getPreferredSize();
-		donationRegisterTable.getColumn("RT. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("RT. DT.").setPreferredWidth(Math.round(tableSize.width * 0.06f));
 		donationRegisterTable.getColumn("RT. No.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		donationRegisterTable.getColumn("Donor Type").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		donationRegisterTable.getColumn("Name").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		donationRegisterTable.getColumn("Address").setPreferredWidth(Math.round(tableSize.width * 0.20f));
+		donationRegisterTable.getColumn("Donor Type").setPreferredWidth(Math.round(tableSize.width * 0.07f));
+		donationRegisterTable.getColumn("Name").setPreferredWidth(Math.round(tableSize.width * 0.11f));
+		donationRegisterTable.getColumn("Address").setPreferredWidth(Math.round(tableSize.width * 0.17f));
 		donationRegisterTable.getColumn("Type").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		donationRegisterTable.getColumn("Amount").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		donationRegisterTable.getColumn("Mode of Receipt").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		donationRegisterTable.getColumn("<html><center>CHQ/TRF. <br>No.</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		donationRegisterTable.getColumn("<html><center>CHQ/TRF. <br>DT</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		donationRegisterTable.getColumn("<html><center>Bank <br>Drawn</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		donationRegisterTable.getColumn("Branch").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		donationRegisterTable.getColumn("Amount").setPreferredWidth(Math.round(tableSize.width * 0.07f));
+		donationRegisterTable.getColumn("Mode of Receipt").setPreferredWidth(Math.round(tableSize.width * 0.07f));
+		donationRegisterTable.getColumn("<html><center>CHQ/TRF. <br>No.</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.13f));
+		donationRegisterTable.getColumn("<html><center>CHQ/TRF. <br>DT</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.03f));
+		donationRegisterTable.getColumn("<html><center>Bank <br>Drawn</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.04f));
+		donationRegisterTable.getColumn("Branch").setPreferredWidth(Math.round(tableSize.width * 0.03f));
 		donationRegisterTable.getColumn("<html><center>Bank <br>Received</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
 		donationRegisterTable.getColumn("Realz. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
 		
@@ -821,11 +823,11 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				String amount = currency+formatter.format(rs.getDouble("AMT"));
 				String mode = rs.getString("PAY_MODE");
 				String chqNum = rs.getString("CHQNO");
-				String issueDate = rs.getString("ISSUE_DATE");
+				String issueDate = rs.getString("ISSUE_DATE") != null ? simpleFormat.format(standardFormat.parse(rs.getString("ISSUE_DATE"))) : "";
 				String bank = rs.getString("BANK");
 				String branch = rs.getString("BRANCH");
 				String bankRecvd = rs.getString("BANK_RECEIVED");
-				String relizationDate = simpleFormat.format(standardFormat.parse(rs.getString("RELIZATION_DATE")));
+				String relizationDate = rs.getString("RELIZATION_DATE").length() > 0 ? simpleFormat.format(standardFormat.parse(rs.getString("RELIZATION_DATE"))) : "";
 				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
 				
 				donationRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, donorType, nam, address, donType, amount, mode, chqNum, issueDate, bank, branch, bankRec, relizationDate});
@@ -1155,7 +1157,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		payment_num = new JTextField(TEXT_FIELD_SIZE);
 		bank_name = new JTextField(TEXT_FIELD_SIZE);
 		branch_nam = new JTextField(TEXT_FIELD_SIZE);
-		issue_dat = new JTextField(TEXT_FIELD_SIZE);
+		issue_dat = new JDateChooser();
+		issue_dat.setDateFormatString("dd-MM-yyyy");		
 		bank_received = new JComboBox(bankReceivedDropDown);
 		don_type = new JComboBox(pay);
 		payment_mode = new JComboBox(acc);
@@ -1359,7 +1362,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			payment_num.setEditable(false);
 			bank_name.setEditable(false);
 			branch_nam.setEditable(false);
-			issue_dat.setEditable(false);
+			issue_dat.setEnabled(false);
 			bank_received.setEnabled(false);;
 		}
 		
@@ -1518,7 +1521,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		payment_num_2 = new JTextField(TEXT_FIELD_SIZE);
 		bank_name_2 = new JTextField(TEXT_FIELD_SIZE);
 		branch_nam_2 = new JTextField(TEXT_FIELD_SIZE);
-		issue_dat_2 = new JTextField(TEXT_FIELD_SIZE);
+		issue_dat_2 = new JDateChooser();
+		issue_dat_2.setDateFormatString("dd-MM-yyyy");
 		monthCombo = new JComboBox(month);
 		yearCombo = new JComboBox(year);
 		payment_mode_2 = new JComboBox(acc);
@@ -1758,7 +1762,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			payment_num_2.setEditable(false);
 			bank_name_2.setEditable(false);
 			branch_nam_2.setEditable(false);
-			issue_dat_2.setEditable(false);
+			issue_dat_2.setEnabled(false);
 			bank_received_2.setEnabled(false);;
 		}
 		
@@ -1836,26 +1840,26 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		rentRegisterTableModel.addColumn("Mode of Receipt");
 		rentRegisterTableModel.addColumn("<html><center>CHQ/TRF. <br>No.</center></html>");
 		rentRegisterTableModel.addColumn("<html><center>CHQ/TRF. <br>DT</center></html>");
-		rentRegisterTableModel.addColumn("<html><center>Bank <br>Drawn</center></html>");
-		rentRegisterTableModel.addColumn("Branch");
+		rentRegisterTableModel.addColumn("<html><center>Rent For The <br>Month</center></html>");
+		//rentRegisterTableModel.addColumn("Branch");
 		rentRegisterTableModel.addColumn("<html><center>Bank <br>Received</center></html>");
 		rentRegisterTableModel.addColumn("Realz. DT.");
 		
 		Dimension tableSize = rentRegisterTable.getPreferredSize();
-		rentRegisterTable.getColumn("RT. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("RT. DT.").setPreferredWidth(Math.round(tableSize.width * 0.07f));
 		rentRegisterTable.getColumn("RT. No.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("Tenant Name").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		rentRegisterTable.getColumn("Address").setPreferredWidth(Math.round(tableSize.width * 0.25f));
-		rentRegisterTable.getColumn("Rent Amt").setPreferredWidth(Math.round(tableSize.width * 0.10f));
-		rentRegisterTable.getColumn("Service Tax").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("Total Amt").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("Mode of Receipt").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("<html><center>CHQ/TRF. <br>No.</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("<html><center>CHQ/TRF. <br>DT</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("<html><center>Bank <br>Drawn</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("Branch").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("Tenant Name").setPreferredWidth(Math.round(tableSize.width * 0.13f));
+		rentRegisterTable.getColumn("Address").setPreferredWidth(Math.round(tableSize.width * 0.13f));
+		rentRegisterTable.getColumn("Rent Amt").setPreferredWidth(Math.round(tableSize.width * 0.06f));
+		rentRegisterTable.getColumn("Service Tax").setPreferredWidth(Math.round(tableSize.width * 0.06f));
+		rentRegisterTable.getColumn("Total Amt").setPreferredWidth(Math.round(tableSize.width * 0.08f));
+		rentRegisterTable.getColumn("Mode of Receipt").setPreferredWidth(Math.round(tableSize.width * 0.07f));
+		rentRegisterTable.getColumn("<html><center>CHQ/TRF. <br>No.</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.11f));
+		rentRegisterTable.getColumn("<html><center>CHQ/TRF. <br>DT</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.06f));
+		rentRegisterTable.getColumn("<html><center>Rent For The <br>Month</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.07f));
+		//rentRegisterTable.getColumn("Branch").setPreferredWidth(Math.round(tableSize.width * 0.05f));
 		rentRegisterTable.getColumn("<html><center>Bank <br>Received</center></html>").setPreferredWidth(Math.round(tableSize.width * 0.05f));
-		rentRegisterTable.getColumn("Realz. DT.").setPreferredWidth(Math.round(tableSize.width * 0.05f));
+		rentRegisterTable.getColumn("Realz. DT.").setPreferredWidth(Math.round(tableSize.width * 0.06f));
 		
 		rentRegisterTableData();				    
 		    
@@ -1900,20 +1904,22 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				
 				
 				String currency = "Rs. ";
-	
+				
 				String rentAmount = currency+formatter.format(rs.getDouble("RENT_AMT"));
-				String serviceTax = String.valueOf(rs.getFloat("SERVICE_TAX"));
+				String serviceTax = currency+formatter.format(Math.round(rs.getDouble("RENT_AMT") * (rs.getFloat("SERVICE_TAX")/100)));
 				String totalAmount = currency+formatter.format(rs.getDouble("TOTAL_AMT"));
 				String mode = rs.getString("PAY_MODE");
 				String chqNum = rs.getString("CHQNO");
-				String issueDate = rs.getString("ISSUE_DATE");
-				String bank = rs.getString("BANK");
-				String branch = rs.getString("BRANCH");
+				String issueDate = rs.getString("ISSUE_DATE") != null ? simpleFormat.format(standardFormat.parse(rs.getString("ISSUE_DATE"))) : "";
+				String monthYear = rs.getString("MONTH") + " - " + rs.getString("YEAR");
+				
+				//String bank = rs.getString("BANK");
+				//String branch = rs.getString("BRANCH");
 				String bankRecvd = rs.getString("BANK_RECEIVED");
-				String relizationDate = simpleFormat.format( standardFormat.parse(rs.getString("RELIZATION_DATE")));
+				String relizationDate = rs.getString("RELIZATION_DATE").length() > 0 ? simpleFormat.format( standardFormat.parse(rs.getString("RELIZATION_DATE"))) : "";
 				String bankRec = (mode.equals("CASH") && bankRecvd.length() == 0) ? "CASH" : bankRecvd;
 				
-				rentRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nam, address, rentAmount, serviceTax, totalAmount, mode, chqNum, issueDate, bank, branch, bankRec, relizationDate});
+				rentRegisterTableModel.addRow(new Object[] {receiptDate, receiptNo, nam, address, rentAmount, serviceTax, totalAmount, mode, chqNum, issueDate, monthYear, bankRec, relizationDate});
 			}
 	
 		} catch (Exception e){
@@ -1949,8 +1955,8 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		    rentRegisterTable.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
 		    
 		    
+		    rentRegisterTable.getColumnModel().getColumn(11).setCellRenderer(centerRenderer);
 		    rentRegisterTable.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
-		    rentRegisterTable.getColumnModel().getColumn(13).setCellRenderer(centerRenderer);
 
 
 	}
@@ -3516,34 +3522,34 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				payment_num.setText("");
 				bank_name.setText("");
 				branch_nam.setText("");
-				issue_dat.setText("");
+				issue_dat.setDate(null);
 				bank_received.setSelectedIndex(0);
 				payment_num.setEditable(false);
 				bank_name.setEditable(false);
 				branch_nam.setEditable(false);
-				issue_dat.setEditable(false);
+				issue_dat.setEnabled(false);
 				bank_received.setEnabled(false);
 			} else if (payment_mode.getSelectedItem().equals("CHQ")){
 				payment_num.setText("");
 				bank_name.setText("");
 				branch_nam.setText("");
-				issue_dat.setText("");
+				issue_dat.setDate(null);
 				bank_received.setSelectedIndex(0);
 				payment_num.setEditable(true);
 				bank_name.setEditable(true);
 				branch_nam.setEditable(true);
-				issue_dat.setEditable(true);
+				issue_dat.setEnabled(true);
 				bank_received.setEnabled(true);
 			} else if (payment_mode.getSelectedItem().equals("A/C TRANSFER")){
 				payment_num.setText("");
 				bank_name.setText("");
 				branch_nam.setText("");
-				issue_dat.setText("");
+				issue_dat.setDate(null);
 				bank_received.setSelectedIndex(0);
 				payment_num.setEditable(true);
 				bank_name.setEditable(false);
 				branch_nam.setEditable(false);
-				issue_dat.setEditable(true);
+				issue_dat.setEnabled(true);
 				bank_received.setEnabled(true);
 			}
 			
@@ -3554,34 +3560,34 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 				payment_num_2.setText("");
 				bank_name_2.setText("");
 				branch_nam_2.setText("");
-				issue_dat_2.setText("");
+				issue_dat_2.setDate(null);
 				bank_received_2.setSelectedIndex(0);
 				payment_num_2.setEditable(false);
 				bank_name_2.setEditable(false);
 				branch_nam_2.setEditable(false);
-				issue_dat_2.setEditable(false);
+				issue_dat_2.setEnabled(false);
 				bank_received_2.setEnabled(false);
 			} else if (payment_mode_2.getSelectedItem().equals("CHQ")){
 				payment_num_2.setText("");
 				bank_name_2.setText("");
 				branch_nam_2.setText("");
-				issue_dat_2.setText("");
+				issue_dat_2.setDate(null);
 				bank_received_2.setSelectedIndex(0);
 				payment_num_2.setEditable(true);
 				bank_name_2.setEditable(true);
 				branch_nam_2.setEditable(true);
-				issue_dat_2.setEditable(true);
+				issue_dat_2.setEnabled(true);
 				bank_received_2.setEnabled(true);
 			} else if (payment_mode_2.getSelectedItem().equals("A/C TRANSFER")){
 				payment_num_2.setText("");
 				bank_name_2.setText("");
 				branch_nam_2.setText("");
-				issue_dat_2.setText("");
+				issue_dat_2.setDate(null);
 				bank_received_2.setSelectedIndex(0);
 				payment_num_2.setEditable(true);
 				bank_name_2.setEditable(false);
 				branch_nam_2.setEditable(false);
-				issue_dat_2.setEditable(true);
+				issue_dat_2.setEnabled(true);
 				bank_received_2.setEnabled(true);
 			}
 			
@@ -3628,7 +3634,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			cand_amt_p2.setText("");
 			payment_mode.setSelectedIndex(0);
 			payment_num.setText("");
-			issue_dat.setText("");
+			issue_dat.setDate(null);
 			bank_name.setText("");
 			branch_nam.setText("");
 			bank_received.setSelectedIndex(0);
@@ -3646,7 +3652,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			
 			payment_mode_2.setSelectedIndex(0);
 			payment_num_2.setText("");
-			issue_dat_2.setText("");
+			issue_dat_2.setDate(null);
 			bank_name_2.setText("");
 			branch_nam_2.setText("");
 			bank_received_2.setSelectedIndex(0);
@@ -3706,7 +3712,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					Telegraph tele = new Telegraph("Enter Cheque/D.D No.", "Cheque/D.D number can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 					que.add(tele);
 													
-			} else if((payment_mode.getSelectedIndex() != 0) && (issue_dat.getText().length() == 0)) {
+			} else if((payment_mode.getSelectedIndex() != 0) && (issue_dat.getDate() == null)) {
 				Telegraph tele = new Telegraph("Enter Cheque/Transfer Date", "Cheque/Transfer Date can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 												
@@ -3733,15 +3739,16 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        // add application code here
 				
 		        try {
+		        	
 		        	String realizationDate = "";
 		        	if(payment_mode.getSelectedItem().equals("CASH"))
 		        		realizationDate = standardFormat.format(simpleFormat.parse(date.getText()));
 		        	else if(payment_mode.getSelectedItem().equals("CHQ"))
 		        		realizationDate = "";
 		        	else
-		        		realizationDate = issue_dat.getText();
+		        		realizationDate = standardFormat.format(issue_dat.getDate());
 					Statement stm = conn.createStatement();					
-					String st = "insert into bill values("+receipt_no.getText()+", '"+ standardFormat.format(simpleFormat.parse(date.getText())) +"', '"+donationTypeCombo.getSelectedItem()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+addr_32.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+cand_pan_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+issue_dat.getText()+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+realizationDate+"', '"+bank_received.getSelectedItem()+"', 'cleared'"+")";
+					String st = "insert into bill values("+receipt_no.getText()+", '"+ standardFormat.format(simpleFormat.parse(date.getText())) +"', '"+donationTypeCombo.getSelectedItem()+"', '"+num_p2.getText()+"', '"+cand_initial_p2.getText()+"', '"+cand_nam_p2.getText()+"'"+","+"'"+addr_12.getText()+"'"+", '"+addr_22.getText()+"', '"+addr_32.getText()+"', '"+area_2.getText()+"', '"+city_town2.getText()+"', '"+pin_code_2.getText()+"', '"+cand_ph_p2.getText()+"', '"+cand_email_p2.getText()+"', '"+cand_pan_p2.getText()+"', '"+don_type.getSelectedItem()+"', "+cand_amt_p2.getText()+", '"+payment_mode.getSelectedItem()+"', '"+payment_num.getText()+"', '"+standardFormat.format(issue_dat.getDate())+"', '"+bank_name.getText()+"', '"+branch_nam.getText()+"', '"+realizationDate+"', '"+bank_received.getSelectedItem()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					
 					//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
@@ -3918,12 +3925,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			paymentDetails += "Mode Of Receipt: "+payment_mode.getSelectedItem();
 			switch(payment_mode.getSelectedItem().toString()){
 				case "CHQ":
-					paymentDetails += "\n" + "CHEQUE NO : " + payment_num.getText()  + "\n" +"Date: " + issue_dat.getText();
+					paymentDetails += "\n" + "CHEQUE NO : " + payment_num.getText()  + "\n" +"Date: " + dateFormat.format(issue_dat.getDate());
 					paymentDetails += "\n" + "Bank Drawn: " + bank_name.getText();
 					paymentDetails += "\n" + "Branch: " + branch_nam.getText();
 					break;
 				case "A/C TRANSFER":
-					paymentDetails += "\n" + "TRNF NO : " + payment_num.getText()  + "\n" +"Date: " + issue_dat.getText();
+					paymentDetails += "\n" + "TRNF NO : " + payment_num.getText()  + "\n" +"Date: " + dateFormat.format(issue_dat.getDate());
 					break;
 			}
 			
@@ -4425,7 +4432,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			cand_amt_p2.setText("");
 			payment_mode.setSelectedIndex(0);
 			payment_num.setText("");
-			issue_dat.setText("");
+			issue_dat.setDate(null);
 			bank_name.setText("");
 			branch_nam.setText("");			
 			bank_received.setSelectedIndex(0);
@@ -4492,7 +4499,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 					Telegraph tele = new Telegraph("Enter Cheque/D.D No.", "Cheque/D.D number can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 					que.add(tele);
 													
-			} else if((payment_mode_2.getSelectedIndex() != 0) && (issue_dat_2.getText().length() == 0)) {
+			} else if((payment_mode_2.getSelectedIndex() != 0) && (issue_dat_2.getDate() == null)) {
 				Telegraph tele = new Telegraph("Enter Cheque/Transfer Date", "Cheque/Transfer Date can't be empty", TelegraphType.NOTIFICATION_WARNING, WindowPosition.BOTTOMRIGHT, 4000);				
 				que.add(tele);
 												
@@ -4521,13 +4528,13 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 		        try {
 		        	String realizationDate = "";
 		        	if(payment_mode_2.getSelectedItem().equals("CASH"))
-		        		realizationDate = date.getText();
+		        		realizationDate = standardFormat.format(simpleFormat.parse(date.getText()));
 		        	else if(payment_mode_2.getSelectedItem().equals("CHQ"))
 		        		realizationDate = "";
 		        	else
-		        		realizationDate = issue_dat_2.getText();
+		        		realizationDate = standardFormat.format(issue_dat_2.getDate());
 					Statement stm = conn.createStatement();
-					String st = "insert into rent values("+receipt_no_2.getText()+", '" + standardFormat.format(simpleFormat.parse(date_2.getText())) + "', '"+tenantName.getText()+"'"+","+"'"+addr_14.getText()+"'"+", '"+addr_24.getText()+"', '"+addr_34.getText()+"', '"+area_4.getText()+"', '"+city_town4.getText()+"', '"+pin_code_4.getText()+"', '"+cand_ph_p4.getText()+"', '"+monthCombo.getSelectedItem()+"', '"+yearCombo.getSelectedItem()+"', "+cand_amt_p4.getText()+","+serviceTaxRate.getText()+", "+totalAmount.getText()+", '"+payment_mode_2.getSelectedItem()+"', '"+payment_num_2.getText()+"', '"+issue_dat_2.getText()+"', '"+bank_name_2.getText()+"', '"+branch_nam_2.getText()+"', '"+realizationDate+"', '"+bank_received_2.getSelectedItem()+"', 'cleared'"+")";
+					String st = "insert into rent values("+receipt_no_2.getText()+", '" + standardFormat.format(simpleFormat.parse(date_2.getText())) + "', '"+tenantName.getText()+"'"+","+"'"+addr_14.getText()+"'"+", '"+addr_24.getText()+"', '"+addr_34.getText()+"', '"+area_4.getText()+"', '"+city_town4.getText()+"', '"+pin_code_4.getText()+"', '"+cand_ph_p4.getText()+"', '"+monthCombo.getSelectedItem()+"', '"+yearCombo.getSelectedItem()+"', "+cand_amt_p4.getText()+","+serviceTaxRate.getText()+", "+totalAmount.getText()+", '"+payment_mode_2.getSelectedItem()+"', '"+payment_num_2.getText()+"', '"+standardFormat.format(issue_dat_2.getDate())+"', '"+bank_name_2.getText()+"', '"+branch_nam_2.getText()+"', '"+realizationDate+"', '"+bank_received_2.getSelectedItem()+"', 'cleared'"+")";
 					stm.executeUpdate(st);
 					
 					//currently this option is dropped storing the opening balance and then based on the donations in the bill table using the total amount donated
@@ -4684,12 +4691,12 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			paymentDetails += "Mode Of Receipt: "+payment_mode_2.getSelectedItem();
 			switch(payment_mode_2.getSelectedItem().toString()){
 				case "CHQ":
-					paymentDetails += "\n" + "CHEQUE NO : " + payment_num_2.getText()  + "\n" +"Date: " + issue_dat_2.getText();
+					paymentDetails += "\n" + "CHEQUE NO : " + payment_num_2.getText()  + "\n" +"Date: " + dateFormat.format(issue_dat_2.getDate());
 					paymentDetails += "\n" + "Bank Drawn: " + bank_name_2.getText();
 					paymentDetails += "\n" + "Branch: " + branch_nam_2.getText();
 					break;
 				case "A/C TRANSFER":
-					paymentDetails += "\n" + "TRNF NO : " + payment_num_2.getText()  + "\n" +"Date: " + issue_dat_2.getText();
+					paymentDetails += "\n" + "TRNF NO : " + payment_num_2.getText()  + "\n" +"Date: " + dateFormat.format(issue_dat_2.getDate());
 					break;
 			}
 			
@@ -4895,7 +4902,7 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			totalAmount.setText("");			
 			payment_mode_2.setSelectedIndex(0);
 			payment_num_2.setText("");
-			issue_dat_2.setText("");
+			issue_dat_2.setDate(null);
 			bank_name_2.setText("");
 			branch_nam_2.setText("");
 			bank_received_2.setSelectedIndex(0);
@@ -6017,9 +6024,9 @@ public class Vrnt_db extends JFrame implements ActionListener, MouseListener {
 			  int row = rentRegisterTable.rowAtPoint(e.getPoint());
 				
 				
-				String reliDat = rentRegisterTable.getModel().getValueAt(rentRegisterTable.convertRowIndexToModel(row), 13).toString();
+				String reliDat = rentRegisterTable.getModel().getValueAt(rentRegisterTable.convertRowIndexToModel(row), 12).toString();
 				String modeOfReceipt = rentRegisterTable.getModel().getValueAt(rentRegisterTable.convertRowIndexToModel(row), 7).toString();
-				if(rentCol == 13 && modeOfReceipt.equals("CHQ")){
+				if(rentCol == 12 && modeOfReceipt.equals("CHQ")){
 					DateFormat customFormat = new SimpleDateFormat("dd-MM-yyyy");
 					String dat = customFormat.format(Calendar.getInstance().getTime());
 					String realizationDate = JOptionPane.showInputDialog(null, "Enter Relization Date", dat);
